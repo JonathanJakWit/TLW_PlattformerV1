@@ -6,23 +6,78 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TLW_Plattformer.RipyGame.Globals;
+using TLW_Plattformer.RipyGame.Managers;
 
 namespace TLW_Plattformer.RipyGame.Models
 {
     public class Level
     {
+        //public Plattform[] Plattforms { get; set; }
+        //public Item[] Items { get; set; }
+        //public Player[] Players { get; set; }
+
         public List<Plattform> Plattforms { get; set; }
         public List<Item> Items { get; set; }
         public List<Player> Players { get; set; }
 
-        public Level(int levelIndex)
+        //public Level(int levelIndex, LoadLevelManager loadLevelManager)
+        public Level(int levelIndex, AnimationManager animationManager)
         {
-            if (levelIndex < 1)
+            if (levelIndex == 1)
             {
-                this.Plattforms = GetPlattforms(GamePaths.LevelOneDataPath);
-                this.Items = GetItems(GamePaths.LevelOneDataPath);
-                this.Players = GetPlayers(GamePaths.LevelOneDataPath);
+                LoadLevel(animationManager);
+
+                //Plattforms = loadLevelManager.FillEmptyPlattformArray();
+                //loadLevelManager.FillEmptyItemArray(Items);
+                //loadLevelManager.FillEmptyPlayerArray(Players);
+
+                //this.Plattforms = LoadedLevel.Plattforms;
+                //this.Items = LoadedLevel.Items;
+                //this.Players = LoadedLevel.Players;
+
+                //this.Plattforms = GetPlattforms(GamePaths.LevelOneDataPath);
+                //this.Items = GetItems(GamePaths.LevelOneDataPath);
+                //this.Players = GetPlayers(GamePaths.LevelOneDataPath);
             }
+        }
+
+        private void LoadLevel(AnimationManager animationManager)
+        {
+            // Change below code to actually load from a json file
+
+            #region PLattforms
+            Vector2 plattform1Pos = new Vector2(
+                GameValues.LevelStartPos.X + GameValues.ColumnWidth,
+                GameValues.LevelEndPos.Y - GameValues.RowHeight);
+            int plattform1Width = GameValues.ColumnWidth * 4;
+            int plattform1Height = GameValues.RowHeight;
+
+            Vector2 plattform2Pos = new Vector2(
+                plattform1Pos.X + GameValues.ColumnWidth * 2,
+                plattform1Pos.Y);
+            int plattform2Width = GameValues.ColumnWidth * 6;
+            int plattform2Height = GameValues.RowHeight;
+
+            Plattforms = new List<Plattform>();
+            Plattforms.Add(new Plattform(PlattformTypes.Solid, plattform1Pos, plattform1Width, plattform1Height));
+            Plattforms.Add(new Plattform(PlattformTypes.Solid, plattform2Pos, plattform2Width, plattform2Height));
+            #endregion PLattforms
+
+
+            #region Items
+            Items = new List<Item>();
+            #endregion Items
+
+            #region Players
+            Vector2 player1Pos = new Vector2(
+                GameValues.LevelStartPos.X + GameValues.ColumnWidth * 2,
+                GameValues.LevelEndPos.Y - GameValues.RowHeight * 2);
+            float p1Speed = 5F;
+            float p1JumpSpeed = 10F;
+
+            Players = new List<Player>();
+            Players.Add(new Player(PlayerIndex.One, animationManager, player1Pos, Color.White, p1Speed, p1JumpSpeed));
+            #endregion Players
         }
 
         private List<Plattform> GetPlattforms(string jsonPath)

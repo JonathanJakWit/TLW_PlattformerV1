@@ -42,8 +42,9 @@ namespace TLW_Plattformer
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            GameValues.Update(gameTime);
+            GameValues.UpdateStart(gameTime);
             _ripyGame.Update(gameTime);
+            GameValues.UpdateEnd();
 
             if (_ripyGame.FinishedPlaying)
                 Exit();

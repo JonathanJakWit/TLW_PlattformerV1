@@ -10,7 +10,7 @@ using TLW_Plattformer.RipyGame.Models;
 
 namespace TLW_Plattformer.RipyGame.Components
 {
-    internal class Button : Clickable
+    public class Button : Clickable
     {
         private string buttonText;
         private SpriteFont textFont;

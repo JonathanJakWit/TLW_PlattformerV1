@@ -19,7 +19,7 @@ namespace TLW_Plattformer.RipyGame.Components
         private int original_timeLimit;
         private float original_countDuration;
 
-        internal Timer(int timeCounter, int timeLimit, float countDuration, float currentTime)
+        public Timer(int timeCounter, int timeLimit, float countDuration, float currentTime)
         {
             this.TimerFinished = false;
 

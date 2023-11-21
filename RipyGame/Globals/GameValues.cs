@@ -6,19 +6,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Input;
 
 namespace TLW_Plattformer.RipyGame.Globals
 {
     public static class GameValues
     {
+        public static KeyboardState NewKeyboardState {  get; set; }
+        public static KeyboardState OldKeyboardState {  get; set; }
+
         public static bool DebugColorsActive { get; private set; }
         public static bool UseCustomLevels { get; private set; }
+
+        public static Keys P1_MoveLeftKey { get; private set; }
+        public static Keys P1_MoveRightKey { get; private set; }
+        public static Keys P1_JumpKey { get; private set; }
+        public static Keys P1_CrouchKey { get; private set; }
 
         public static int TileRowCount { get; private set; }
         public static int TileColumnCount { get; private set; }
         public static int TileWidth { get; private set; }
         public static int TileHeight { get; private set; }
         public static Vector2 TileScale { get; private set; }
+        public static int ColumnWidth { get; private set; }
+        public static int RowHeight { get; private set; }
         public static Vector2 WindowSize { get; private set; }
         public static Vector2 WindowCenter { get; private set; }
         public static Rectangle WindowBounds { get; private set; }
@@ -40,9 +51,15 @@ namespace TLW_Plattformer.RipyGame.Globals
 
         public static float Time { get; private set; }
 
-        public static void Update(GameTime gameTime)
+        public static void UpdateStart(GameTime gameTime)
         {
             Time = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            NewKeyboardState = Keyboard.GetState();
+        }
+        public static void UpdateEnd()
+        {
+            OldKeyboardState = NewKeyboardState;
         }
 
         public static void InitializeValues(ContentManager Content)
@@ -53,11 +70,18 @@ namespace TLW_Plattformer.RipyGame.Globals
             DebugColorsActive = true;
             UseCustomLevels = false;
 
+            P1_MoveLeftKey = Keys.A;
+            P1_MoveRightKey = Keys.D;
+            P1_JumpKey = Keys.Space;
+            P1_CrouchKey = Keys.S;
+
             TileRowCount = 9;
             TileColumnCount = 16;
             TileWidth = 32;
             TileHeight = 32;
             TileScale = new Vector2(1, 1);
+            ColumnWidth = TileWidth * (int)TileScale.X;
+            RowHeight = TileHeight * (int)TileScale.Y;
 
             int WindowSizeX = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             int WindowSizeY = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
@@ -79,6 +103,15 @@ namespace TLW_Plattformer.RipyGame.Globals
             PlayerBounds = new Rectangle((int)tempPlayerStartPos.X, (int)tempPlayerStartPos.Y, TileWidth * (int)PlayerScale.X, TileHeight * (int)PlayerScale.Y);
 
             ArcadeFont = Content.Load<SpriteFont>(GamePaths.ArcadeFontPath);
+        }
+
+        public static bool IsKeyPressed(Keys key)
+        {
+            if (NewKeyboardState.IsKeyDown(key) && OldKeyboardState.IsKeyUp(key))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

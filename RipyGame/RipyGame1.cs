@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using TLW_Plattformer.RipyGame.Globals;
 using TLW_Plattformer.RipyGame.Managers;
 using TLW_Plattformer.RipyGame.Handlers;
+using TLW_Plattformer.RipyGame.Models;
 
 namespace TLW_Plattformer.RipyGame
 {
@@ -43,7 +44,7 @@ namespace TLW_Plattformer.RipyGame
         //private bool isDataSaved { get; set; }
 
         private int currentHighscore;
-        private string currentTilemapDataPath;
+        //private string currentTilemapDataPath;
 
         public RipyGame1(ContentManager contentManager)
         {
@@ -56,13 +57,12 @@ namespace TLW_Plattformer.RipyGame
 
             this._TextureManager = new TextureManager(Content, CurrentLevelIndex);
             this._AnimationManager = new AnimationManager(Content, _TextureManager);
-            this._HighscoreManager = new HighscoreManager(Paths.GetPath(Path.HighscoreDataFile));
+            this._HighscoreManager = new HighscoreManager(GamePaths.HighscoreDataPath);
             this.currentHighscore = _HighscoreManager.GetHighscore();
-            this._HudManager = new HudManager(_TextureManager, GameValues.HudStartPos, GameValues.HudEndPos, _HighscoreManager.GetHighscore());
+            //this._HudManager = new HudManager(_TextureManager, GameValues.HudStartPos, GameValues.HudEndPos, _HighscoreManager.GetHighscore());
             this._UIManager = new UIManager(_TextureManager, CurrentGameState);
-            this._BackgroundTexture = _TextureManager.GetTexture(TextureTypes.MainMenuBackground);
 
-            this._LevelHandler = new LevelHandler(CurrentLevelIndex, _HudManager, _TextureManager, _AnimationManager, _HighscoreManager);
+            this._LevelHandler = new LevelHandler(_TextureManager, _AnimationManager, CurrentLevelIndex);
 
             this.oldMouseState = Mouse.GetState();
             this.newMouseState = oldMouseState;
@@ -72,6 +72,8 @@ namespace TLW_Plattformer.RipyGame
 
             this.isNewGameState = true;
             this.isPaused = false;
+
+            this._BackgroundTexture = _TextureManager.MainMenuBackgroundTex;
         }
 
         public void Initialize()
@@ -80,6 +82,13 @@ namespace TLW_Plattformer.RipyGame
             GameValues.InitializeValues(Content);
         }
 
+        private void SaveHighscoreData()
+        {
+            foreach (Player player in _LevelHandler.CurrentLevel.Players)
+            {
+                _HighscoreManager.UpdateAndSetScores(player.Name, player.Score);
+            }
+        }
         private void SaveData(bool saveScore = true)
         {
             //if (saveScore)
@@ -99,7 +108,8 @@ namespace TLW_Plattformer.RipyGame
             //    _HighscoreManager.UpdateAndSetScores(_LevelHandler.CurrentPlayerName, _LevelHandler.CurrentPlayerScore);
             //}
 
-            _HighscoreManager.UpdateAndSetScores(_LevelHandler.CurrentPlayerName, _LevelHandler.CurrentPlayerScore);
+            
+            SaveHighscoreData();
         }
 
         private void ResetLevel()
@@ -108,9 +118,9 @@ namespace TLW_Plattformer.RipyGame
             this.CurrentGameState = GameStates.Playing;
             this.CurrentLevelIndex = 1;
             //this._UIManager.Reset(CurrentGameState);
-            this.currentTilemapDataPath = Paths.GetPath(Path.Level1TilemapDataFile);
+            //this.currentTilemapDataPath = Paths.GetPath(Path.Level1TilemapDataFile);
 
-            this._LevelHandler.ResetLevel(currentTilemapDataPath);
+            this._LevelHandler.ResetLevel();
 
             this.oldMouseState = Mouse.GetState();
             this.newMouseState = oldMouseState;
@@ -148,6 +158,7 @@ namespace TLW_Plattformer.RipyGame
                 if (CurrentGameState == GameStates.Playing)
                 {
                     //BackgroundTexture = TextureManager.GetTexture(TextureTypes.LevelOneBackground);
+                    // Paralax here or in the levelhandler?
                 }
                 else if (CurrentGameState == GameStates.Replaying)
                 {
@@ -155,20 +166,20 @@ namespace TLW_Plattformer.RipyGame
                 }
                 else if (CurrentGameState == GameStates.MainMenu)
                 {
-                    _BackgroundTexture = _TextureManager.GetTexture(TextureTypes.MainMenuBackground);
+                    _BackgroundTexture = _TextureManager.MainMenuBackgroundTex;
                 }
                 else if (CurrentGameState == GameStates.HighscoreMenu)
                 {
-                    _BackgroundTexture = _TextureManager.GetTexture(TextureTypes.HighscoreMenuBackground);
-                    _HighscoreManager.UpdateAndSetScores(_LevelHandler.CurrentPlayerName, _LevelHandler.CurrentPlayerScore);
+                    _BackgroundTexture = _TextureManager.HighscoreMenuBackgroundTex;
+                    SaveHighscoreData();
                 }
                 else if (CurrentGameState == GameStates.GameOverWinMenu)
                 {
-                    _BackgroundTexture = _TextureManager.GetTexture(TextureTypes.GameOverWinMenuBackground);
+                    _BackgroundTexture = _TextureManager.GameOverWinMenuBackgroundTex;
                 }
                 else if (CurrentGameState == GameStates.GameOverLossMenu)
                 {
-                    _BackgroundTexture = _TextureManager.GetTexture(TextureTypes.GameOverLossMenuBackground);
+                    _BackgroundTexture = _TextureManager.GameOverLoseMenuBackgroundTex;
                 }
 
                 _UIManager.IsNewGameState = false;
@@ -177,35 +188,37 @@ namespace TLW_Plattformer.RipyGame
         }
         private void UpdatePlaying(GameTime gameTime)
         {
+            #region TestingPlaying
             if (oldKeyboardState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.T) && newKeyboardState.IsKeyUp(Microsoft.Xna.Framework.Input.Keys.T))
             {
-                _LevelHandler.PacManLooseHealth();
+                // Code for testing by pressing T while playing
             }
+            #endregion TestingPlaying
 
-            _LevelHandler.Update(gameTime, _HudManager.EditorTiles);
-            if (_LevelHandler.CurrentPlayerScore > currentHighscore)
+            _LevelHandler.Update(gameTime);
+            if (_LevelHandler.GetHighestPlayerScore() > currentHighscore)
             {
-                currentHighscore = _LevelHandler.CurrentPlayerScore;
+                currentHighscore = _LevelHandler.GetHighestPlayerScore();
             }
-            _HudManager.Update(currentHighscore, _LevelHandler.CurrentPlayerScore);
+            //_HudManager.Update(currentHighscore, _LevelHandler.CurrentPlayerScore);
 
-            if (_LevelHandler.level.LevelMap.powerPelletCount <= 0)
+            if (false) // Change false to [Win/Increase level condition]
             {
-                if (_LevelHandler.LevelIndex == 2)
+                if (_LevelHandler.CurrentLevelIndex == 2)
                 {
                     gameIsDone = true;
-                    _LevelHandler.CurrentLevelGameState = GameStates.GameOverWinMenu;
+                    _LevelHandler.LevelGameState = GameStates.GameOverWinMenu;
                 }
 
-                if (_LevelHandler.LevelIndex == 1)
+                if (_LevelHandler.CurrentLevelIndex == 1)
                 {
-                    _LevelHandler.ChangeLevelTo(LevelNumbers.LevelTwo);
+                    _LevelHandler.ChangeLevelBy(1);
                 }
             }
-            else if (_LevelHandler.CurrentPlayerHealth <= 0)
+            else if (_LevelHandler.GetLowestPlayerHealth() <= 0)
             {
                 gameIsDone = true;
-                _LevelHandler.CurrentLevelGameState = GameStates.GameOverLossMenu;
+                _LevelHandler.LevelGameState = GameStates.GameOverLossMenu;
             }
         }
 
@@ -214,7 +227,7 @@ namespace TLW_Plattformer.RipyGame
             newKeyboardState = Keyboard.GetState();
             if (oldKeyboardState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Q) && newKeyboardState.IsKeyUp(Microsoft.Xna.Framework.Input.Keys.Q))
             {
-                _LevelHandler.level.LevelMap.SaveMapData(Paths.GetPath(Path.EditedLevel1TilemapDataFile));
+                //_LevelHandler.level.LevelMap.SaveMapData(Paths.GetPath(Path.EditedLevel1TilemapDataFile));
             }
 
             if (oldKeyboardState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Space) && newKeyboardState.IsKeyUp(Microsoft.Xna.Framework.Input.Keys.Space))
@@ -226,16 +239,16 @@ namespace TLW_Plattformer.RipyGame
             {
                 SaveData();
 
-                if (_LevelHandler.CurrentLevelGameState == GameStates.GameOverWinMenu)
+                if (_LevelHandler.LevelGameState == GameStates.GameOverWinMenu)
                 {
                     CurrentGameState = GameStates.GameOverWinMenu;
-                    _BackgroundTexture = _TextureManager.GetTexture(TextureTypes.GameOverWinMenuBackground);
+                    _BackgroundTexture = _TextureManager.GameOverWinMenuBackgroundTex;
                     gameIsDone = false;
                 }
-                else if (_LevelHandler.CurrentLevelGameState == GameStates.GameOverLossMenu)
+                else if (_LevelHandler.LevelGameState == GameStates.GameOverLossMenu)
                 {
                     CurrentGameState = GameStates.GameOverLossMenu;
-                    _BackgroundTexture = _TextureManager.GetTexture(TextureTypes.GameOverLossMenuBackground);
+                    _BackgroundTexture = _TextureManager.GameOverLoseMenuBackgroundTex;
                     gameIsDone = false;
                 }
             }
@@ -262,17 +275,17 @@ namespace TLW_Plattformer.RipyGame
             _UIManager.Draw(spriteBatch);
             if (CurrentGameState == GameStates.HighscoreMenu)
             {
-                _HighscoreManager.Draw(spriteBatch, Paths.GetPath(Path.HighscoreDataFile));
+                _HighscoreManager.Draw(spriteBatch, GamePaths.HighscoreDataPath);
             }
         }
         private void DrawPlaying(SpriteBatch spriteBatch)
         {
             if (isPaused)
             {
-                spriteBatch.Draw(_TextureManager.GetTexture(TextureTypes.PauseIcon), _TextureManager.PauseIconDestRect, Color.White);
+                spriteBatch.Draw(_TextureManager.PauseIcon, _TextureManager.PauseIconDestRect, Color.White);
             }
-            _LevelHandler.Draw(spriteBatch, _HudManager.EditorTiles);
-            _HudManager.Draw(spriteBatch);
+            //_LevelHandler.Draw(spriteBatch, _HudManager.EditorTiles);
+            //_HudManager.Draw(spriteBatch);
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -286,7 +299,7 @@ namespace TLW_Plattformer.RipyGame
             }
             else
             {
-                spriteBatch.Draw(_BackgroundTexture, GameValues.WindowBounds, Color.White);
+                spriteBatch.Draw(_BackgroundTexture, GameValues.LevelBounds, Color.White);
                 DrawMenu(spriteBatch);
             }
 

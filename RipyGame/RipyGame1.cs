@@ -284,6 +284,7 @@ namespace TLW_Plattformer.RipyGame
             {
                 spriteBatch.Draw(_TextureManager.PauseIcon, _TextureManager.PauseIconDestRect, Color.White);
             }
+            _LevelHandler.Draw(spriteBatch);
             //_LevelHandler.Draw(spriteBatch, _HudManager.EditorTiles);
             //_HudManager.Draw(spriteBatch);
         }

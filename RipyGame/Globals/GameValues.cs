@@ -79,7 +79,7 @@ namespace TLW_Plattformer.RipyGame.Globals
             TileColumnCount = 16;
             TileWidth = 32;
             TileHeight = 32;
-            TileScale = new Vector2(1, 1);
+            TileScale = new Vector2(2, 2);
             ColumnWidth = TileWidth * (int)TileScale.X;
             RowHeight = TileHeight * (int)TileScale.Y;
 

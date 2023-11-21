@@ -50,7 +50,7 @@ namespace TLW_Plattformer.RipyGame.Models
         private Vector2 original_velocity;
         private Rectangle original_bounds;
 
-        public AnimatedSprite(Vector2 position, Vector2 velocity, Rectangle bounds, Color color, float scale = 1F, float drawLayerIndex = 0.2F, SpriteEffects spriteEffects = SpriteEffects.None, float rotation = 0F)
+        public AnimatedSprite(Vector2 position, Vector2 velocity, Rectangle bounds, Color color, float scale, float drawLayerIndex = 0.1F, SpriteEffects spriteEffects = SpriteEffects.None, float rotation = 0F)
             : base(position, velocity, bounds)
         {
             this.baseAnim = null;

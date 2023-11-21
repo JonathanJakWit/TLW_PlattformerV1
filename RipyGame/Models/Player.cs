@@ -48,8 +48,8 @@ namespace TLW_Plattformer.RipyGame.Models
         public int Score { get; private set; }
         public int Health { get; set; }
 
-        public Player(PlayerIndex playerIndex, AnimationManager animationManager, Vector2 position, Color color, float speed, float jumpSpeed)
-            : base(position, new(0, 0), new((int)position.X, (int)position.Y, GameValues.PlayerBounds.Width, GameValues.PlayerBounds.Height), color, 1F, GameValues.PlayerDrawLayer)
+        public Player(PlayerIndex playerIndex, AnimationManager animationManager, Vector2 position, Color color, float scale, float speed, float jumpSpeed)
+            : base(position, new(0, 0), new((int)position.X, (int)position.Y, GameValues.PlayerBounds.Width, GameValues.PlayerBounds.Height), color, scale, GameValues.PlayerDrawLayer)
         {
             this._playerIndex = playerIndex;
             switch (playerIndex)
@@ -89,8 +89,10 @@ namespace TLW_Plattformer.RipyGame.Models
             IsGrounded = true;
             Bounds = new Rectangle((int)Position.X, (int)Position.Y, Bounds.Width, Bounds.Height);
             animations = animationManager.GetPlayerAnimations();
+            //activeAnimation = animations.GetValueOrDefault(PlayerActions.Idle);
 
             // Temp
+            activeAnimation = animations.GetValueOrDefault(PlayerActions.MoveLeft);
             Name = "Jonathan";
             Health = 10;
             // Temp

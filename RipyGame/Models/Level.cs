@@ -72,11 +72,12 @@ namespace TLW_Plattformer.RipyGame.Models
             Vector2 player1Pos = new Vector2(
                 GameValues.LevelStartPos.X + GameValues.ColumnWidth * 2,
                 GameValues.LevelEndPos.Y - GameValues.RowHeight * 2);
+            float p1Scale = 4F;
             float p1Speed = 5F;
             float p1JumpSpeed = 10F;
 
             Players = new List<Player>();
-            Players.Add(new Player(PlayerIndex.One, animationManager, player1Pos, Color.White, p1Speed, p1JumpSpeed));
+            Players.Add(new Player(PlayerIndex.One, animationManager, player1Pos, Color.White, p1Scale, p1Speed, p1JumpSpeed));
             #endregion Players
         }
 

@@ -55,7 +55,8 @@ namespace TLW_Plattformer.RipyGame.Managers
             Vector2 buttonScale = new Vector2(4, 4);
 
             buttonTexture = textureManager.MenuButton;
-            float yDisplacement = GameValues.TileHeight * GameValues.TileScale.Y * 8;
+            //float yDisplacement = GameValues.TileHeight * GameValues.TileScale.Y * 8;
+            float yDisplacement = GameValues.WindowBounds.Height / 4;
             firstButtonPos = new Vector2(GameValues.WindowCenter.X - buttonTexture.Width * 8, GameValues.WindowCenter.Y + buttonTexture.Height / 2 + yDisplacement);
             secondButtonPos = new Vector2(GameValues.WindowCenter.X - buttonTexture.Width / 2, GameValues.WindowCenter.Y + buttonTexture.Height / 2 + yDisplacement);
             thirdButtonPos = new Vector2(GameValues.WindowCenter.X + buttonTexture.Width * 8, GameValues.WindowCenter.Y + buttonTexture.Height / 2 + yDisplacement);

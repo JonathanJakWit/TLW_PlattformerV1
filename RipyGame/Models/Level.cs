@@ -110,17 +110,20 @@ namespace TLW_Plattformer.RipyGame.Models
         {
             foreach (Player player in Players)
             {
-                if (player.IsGrounded)
-                {
-                    continue;
-                }
-                foreach (Plattform plattform in Plattforms)
-                {
-                    if (player.Bounds.Intersects(plattform.Bounds))
-                    {
-                        player.IsGrounded = true;
-                    }
-                }
+                //player.UpdateAllowedDirections(Plattforms);
+                player.TestFreePlayer();
+
+                //if (player.IsGrounded)
+                //{
+                //continue;
+                //}
+                //foreach (Plattform plattform in Plattforms)
+                //{
+                //    if (player.Bounds.Intersects(plattform.Bounds))
+                //    {
+                //        player.IsGrounded = true;
+                //    }
+                //}
             }
         }
 

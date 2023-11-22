@@ -70,10 +70,10 @@ namespace TLW_Plattformer.RipyGame.Models
                     break;
             }
 
-            this.canMoveLeft = false;
-            this.canMoveRight = false;
-            this.canJump = false;
-            this.canCrouch = false;
+            this.canMoveLeft = true;
+            this.canMoveRight = true;
+            this.canJump = true;
+            this.canCrouch = true;
 
             this.isMoving = false;
             this.isJumping = false;
@@ -84,7 +84,8 @@ namespace TLW_Plattformer.RipyGame.Models
             this.directionCooldown = 0.5F;
             this.directionTimer = new Timer(1, 1, directionCooldown, GameValues.Time);
             this.jumpCooldown = 1F;
-            this.jumpTimer = new Timer((int)jumpCooldown, GameValues.Time);
+            //this.jumpTimer = new Timer((int)jumpCooldown, GameValues.Time);
+            this.jumpTimer = new Timer(1, GameValues.Time);
 
             IsGrounded = true;
             Bounds = new Rectangle((int)Position.X, (int)Position.Y, Bounds.Width, Bounds.Height);
@@ -119,7 +120,7 @@ namespace TLW_Plattformer.RipyGame.Models
             isMoving = true;
             currentDirectionX = MoveableDirections.Left;
             Velocity = new Vector2(-speed, Velocity.Y);
-            canMoveLeft = false; canMoveRight = false;
+            //canMoveLeft = false; canMoveRight = false;
             directionTimer.Reset(GameValues.Time);
             activeAnimation = animations.GetValueOrDefault(PlayerActions.MoveLeft);
         }
@@ -128,7 +129,7 @@ namespace TLW_Plattformer.RipyGame.Models
             isMoving = true;
             currentDirectionX = MoveableDirections.Right;
             Velocity = new Vector2(speed, Velocity.Y);
-            canMoveLeft = false; canMoveRight = false;
+            //canMoveLeft = false; canMoveRight = false;
             directionTimer.Reset(GameValues.Time);
             activeAnimation = animations.GetValueOrDefault(PlayerActions.MoveRight);
         }
@@ -138,7 +139,7 @@ namespace TLW_Plattformer.RipyGame.Models
             isMoving = true;
             isJumping = true;
             currentDirectionY = MoveableDirections.Up;
-            Velocity = new Vector2(Velocity.X, -jumpSpeed);
+            Velocity = new Vector2(Velocity.X, + jumpSpeed);
             canJump = false;
             jumpTimer.Reset(GameValues.Time);
             activeAnimation = animations.GetValueOrDefault(PlayerActions.Jump);
@@ -147,7 +148,7 @@ namespace TLW_Plattformer.RipyGame.Models
         {
             isJumping = false;
             currentDirectionY = MoveableDirections.Down;
-            Velocity = new Vector2(Velocity.X, jumpSpeed);
+            Velocity = new Vector2(Velocity.X, Velocity.Y - jumpSpeed);
         }
         private void Crouch()
         {
@@ -209,47 +210,99 @@ namespace TLW_Plattformer.RipyGame.Models
             }
         }
 
+        private bool IsAnyInput()
+        {
+            if (GameValues.NewKeyboardState.IsKeyDown(moveLeftKey) || GameValues.NewKeyboardState.IsKeyDown(moveRightKey) || GameValues.NewKeyboardState.IsKeyDown(jumpKey) || GameValues.NewKeyboardState.IsKeyDown(crouchKey))
+            {
+                return true;
+            }
+            return false;
+        }
+
         private void UpdateMovementInputs()
         {
+            if (!IsAnyInput())
+            {
+                GoIdle(); // Change to check for outside forces affecting movement velocity before going idle
+                return;
+            }
+
             if (canMoveLeft)
             {
-                if (GameValues.IsKeyPressed(moveLeftKey))
+                if (GameValues.NewKeyboardState.IsKeyDown(moveLeftKey))
                 {
                     MoveLeft();
-                    return;
                 }
             }
             if (canMoveRight)
             {
-                if (GameValues.IsKeyPressed(moveRightKey))
+                if (GameValues.NewKeyboardState.IsKeyDown(moveRightKey))
                 {
                     MoveRight();
-                    return;
                 }
             }
             if (canJump)
             {
-                if (GameValues.IsKeyPressed(jumpKey))
+                if (GameValues.NewKeyboardState.IsKeyDown(jumpKey))
                 {
                     StartJump();
-                    return;
                 }
             }
+
+            //if (canMoveLeft)
+            //{
+            //    if (GameValues.IsKeyPressed(moveLeftKey))
+            //    {
+            //        MoveLeft();
+            //        return;
+            //    }
+            //}
+            //if (canMoveRight)
+            //{
+            //    if (GameValues.IsKeyPressed(moveRightKey))
+            //    {
+            //        MoveRight();
+            //        return;
+            //    }
+            //}
+            //if (canJump)
+            //{
+            //    if (GameValues.IsKeyPressed(jumpKey))
+            //    {
+            //        StartJump();
+            //        return;
+            //    }
+            //}
+        }
+
+        public void TestFreePlayer()
+        {
+            canMoveLeft = true;
+            canMoveRight = true;
+            canMoveUp = true;
+            canMoveDown = true;
+            canJump = true;
         }
 
         public override void Update(GameTime gameTime)
         {
             if (!IsAlive) { return; }
 
-            if (currentDirectionX == MoveableDirections.Idle && currentDirectionY == MoveableDirections.Idle)
+            //if (currentDirectionX == MoveableDirections.Idle && currentDirectionY == MoveableDirections.Idle)
+            //{
+            //    GoIdle();
+            //}
+
+            if (Velocity.X == 0 && Velocity.Y == 0)
             {
                 GoIdle();
             }
 
-            if (!isMoving)
-            {
-                UpdateMovementInputs();
-            }
+            //if (!isMoving)
+            //{
+            //    UpdateMovementInputs();
+            //}
+            UpdateMovementInputs();
 
             if (isMoving)
             {
@@ -300,12 +353,12 @@ namespace TLW_Plattformer.RipyGame.Models
                         break;
                 }
 
-                directionTimer.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
-                if (directionTimer.TimerFinished)
-                {
-                    isMoving = false;
-                    Velocity = new Vector2(0, Velocity.Y);
-                }
+                //directionTimer.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+                //if (directionTimer.TimerFinished)
+                //{
+                //    isMoving = false;
+                //    Velocity = new Vector2(0, Velocity.Y);
+                //}
 
             }
             if (isJumping)
@@ -313,8 +366,9 @@ namespace TLW_Plattformer.RipyGame.Models
                 jumpTimer.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
                 if (jumpTimer.TimerFinished)
                 {
-                    isJumping = false;
-                    Velocity = new Vector2(Velocity.X, Velocity.Y + jumpSpeed);
+                    EndJump();
+                    //isJumping = false;
+                    //Velocity = new Vector2(Velocity.X, Velocity.Y + jumpSpeed);
                 }
             }
 

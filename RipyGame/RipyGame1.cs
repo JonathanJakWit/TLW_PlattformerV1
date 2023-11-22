@@ -230,7 +230,7 @@ namespace TLW_Plattformer.RipyGame
                 //_LevelHandler.level.LevelMap.SaveMapData(Paths.GetPath(Path.EditedLevel1TilemapDataFile));
             }
 
-            if (oldKeyboardState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Space) && newKeyboardState.IsKeyUp(Microsoft.Xna.Framework.Input.Keys.Space))
+            if (oldKeyboardState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.P) && newKeyboardState.IsKeyUp(Microsoft.Xna.Framework.Input.Keys.P))
             {
                 TogglePause();
             }

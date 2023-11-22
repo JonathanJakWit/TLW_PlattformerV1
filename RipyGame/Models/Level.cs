@@ -111,7 +111,7 @@ namespace TLW_Plattformer.RipyGame.Models
             foreach (Player player in Players)
             {
                 //player.UpdateAllowedDirections(Plattforms);
-                player.TestFreePlayer();
+                //player.TestFreePlayer();
 
                 //if (player.IsGrounded)
                 //{

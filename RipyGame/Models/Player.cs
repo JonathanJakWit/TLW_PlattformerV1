@@ -40,6 +40,7 @@ namespace TLW_Plattformer.RipyGame.Models
 
         private float speed;
         private float jumpSpeed;
+        private float fallSpeed;
 
         public bool IsGrounded { get; set; }
         private Dictionary<PlayerActions, Animation> animations { get; set; }
@@ -102,6 +103,7 @@ namespace TLW_Plattformer.RipyGame.Models
 
             this.speed = speed;
             this.jumpSpeed = jumpSpeed;
+            this.fallSpeed = speed;
         }
 
         public void HandleItemInteraction(Item item)
@@ -223,7 +225,10 @@ namespace TLW_Plattformer.RipyGame.Models
         {
             if (!IsAnyInput())
             {
-                GoIdle(); // Change to check for outside forces affecting movement velocity before going idle
+                if (!isMoving)
+                {
+                    GoIdle(); // Change to check for outside forces affecting movement velocity before going idle
+                }
                 return;
             }
 
@@ -275,14 +280,14 @@ namespace TLW_Plattformer.RipyGame.Models
             //}
         }
 
-        public void TestFreePlayer()
-        {
-            canMoveLeft = true;
-            canMoveRight = true;
-            canMoveUp = true;
-            canMoveDown = true;
-            canJump = true;
-        }
+        //public void TestFreePlayer()
+        //{
+        //    canMoveLeft = true;
+        //    canMoveRight = true;
+        //    canMoveUp = true;
+        //    canMoveDown = true;
+        //    canJump = true;
+        //}
 
         public override void Update(GameTime gameTime)
         {
@@ -293,9 +298,22 @@ namespace TLW_Plattformer.RipyGame.Models
             //    GoIdle();
             //}
 
+            if (!IsGrounded)
+            {
+                if (canMoveDown)
+                {
+                    Position = new Vector2(Position.X, Position.Y + fallSpeed);
+                }
+                else
+                {
+                    IsGrounded = true;
+                }
+            }
+
             if (Velocity.X == 0 && Velocity.Y == 0)
             {
-                GoIdle();
+                //GoIdle();
+                isMoving = false;
             }
 
             //if (!isMoving)

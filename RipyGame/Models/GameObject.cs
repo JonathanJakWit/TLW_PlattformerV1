@@ -32,6 +32,13 @@ namespace TLW_Plattformer.RipyGame.Models
             Velocity = velocity;
         }
 
+        public virtual void MoveBy(Vector2 distance)
+        {
+            Position += distance;
+            Center += distance;
+            Bounds = new Rectangle((int)Position.X, (int)Position.Y, Bounds.Width, Bounds.Height);
+        }
+
         public virtual void Update(GameTime gameTime)
         {
             Position += Velocity;

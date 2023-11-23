@@ -84,7 +84,7 @@ namespace TLW_Plattformer.RipyGame
 
         private void SaveHighscoreData()
         {
-            foreach (Player player in _LevelHandler.CurrentLevel.Players)
+            foreach (Player player in LoadedGameLevel.Players)
             {
                 _HighscoreManager.UpdateAndSetScores(player.Name, player.Score);
             }

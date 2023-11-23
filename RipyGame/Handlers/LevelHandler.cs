@@ -17,11 +17,8 @@ namespace TLW_Plattformer.RipyGame.Handlers
         private Texture2D levelTilesetTex;
 
         public int CurrentLevelIndex {  get; private set; }
-
-        //private LoadLevelManager loadLevelManager;
-        public Level CurrentLevel {  get; private set; }
-
         public GameStates LevelGameState { get; set; }
+        public Level CurrentLevel { get; private set; }
 
         public LevelHandler(TextureManager textureManager, AnimationManager animationManager, int levelIndex)
         {
@@ -29,14 +26,22 @@ namespace TLW_Plattformer.RipyGame.Handlers
             this.levelTilesetTex = textureManager.LevelOneTilesetTex;
 
             this.CurrentLevelIndex = levelIndex;
+            this.LevelGameState = GameStates.Playing;
 
-            //this.loadLevelManager = new LoadLevelManager(GamePaths.LevelOneDataPath, animationManager);
-            //this.CurrentLevel = new Level(levelIndex, loadLevelManager);
+            if (CurrentLevelIndex == 1)
+            {
+                LoadedGameLevel.Load(GamePaths.LevelOneDataPath, animationManager);
+            }
+            else
+            {
+                LoadedGameLevel.Load(GamePaths.LevelOneDataPath, animationManager);
+            }
+
+            this.CurrentLevel = new Level();
 
             //LoadedLevel.Load(GamePaths.LevelOneDataPath, animationManager);
-            this.CurrentLevel = new Level(levelIndex, animationManager);
+            //this.CurrentLevel = new Level(levelIndex, animationManager);
 
-            this.LevelGameState = GameStates.Playing;
         }
 
         public void ResetLevel()
@@ -56,7 +61,7 @@ namespace TLW_Plattformer.RipyGame.Handlers
         public int GetHighestPlayerScore()
         {
             int hPS = 0;
-            foreach (Player player in CurrentLevel.Players)
+            foreach (Player player in LoadedGameLevel.Players)
             {
                 if (player.Score > hPS)
                 {
@@ -69,7 +74,7 @@ namespace TLW_Plattformer.RipyGame.Handlers
         public int GetLowestPlayerHealth()
         {
             int lPH = 100;
-            foreach (Player player in CurrentLevel.Players)
+            foreach (Player player in LoadedGameLevel.Players)
             {
                 if (player.Health < lPH)
                 {

@@ -105,9 +105,18 @@ namespace TLW_Plattformer.RipyGame.Models
             }
         }
 
-        public void Draw(Vector2 position, SpriteBatch spriteBatch, float scale, float layerIndex)
+        public void Draw(Vector2 position, SpriteBatch spriteBatch, float scale, float layerIndex, SpriteEffects spriteEffects=SpriteEffects.None)
         {
-            spriteBatch.Draw(_texture, position, _sourceRectangles[_frame], _color, 0, Vector2.Zero, scale, _spriteEffect, layerIndex);
+            if (spriteEffects == SpriteEffects.None)
+            {
+                // Draw with original animation spriteeffects
+                spriteBatch.Draw(_texture, position, _sourceRectangles[_frame], _color, 0, Vector2.Zero, scale, _spriteEffect, layerIndex);
+            }
+            else
+            {
+                // Draw with parameter spriteeffects
+                spriteBatch.Draw(_texture, position, _sourceRectangles[_frame], _color, 0, Vector2.Zero, scale, spriteEffects, layerIndex);
+            }
         }
     }
 }

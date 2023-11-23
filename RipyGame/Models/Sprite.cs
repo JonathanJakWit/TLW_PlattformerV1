@@ -72,6 +72,11 @@ namespace TLW_Plattformer.RipyGame.Models
             this.animationQueue = new List<Animation>();
         }
 
+        public void ChangeSpriteEffect(SpriteEffects newSpriteEffects)
+        {
+            spriteEffects = newSpriteEffects;
+        }
+
         public virtual void Reset()
         {
             Position = original_position;
@@ -98,7 +103,7 @@ namespace TLW_Plattformer.RipyGame.Models
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            activeAnimation.Draw(Position, spriteBatch, scale, drawLayerIndex);
+            activeAnimation.Draw(Position, spriteBatch, scale, drawLayerIndex, spriteEffects);
         }
     }
 }

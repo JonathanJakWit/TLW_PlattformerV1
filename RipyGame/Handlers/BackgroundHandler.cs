@@ -22,14 +22,17 @@ namespace TLW_Plattformer.RipyGame.Handlers
         {
             backgroundSource = background;
 
-            sourceRectWidth = backgroundSource.Width / 5;
+            sourceRectWidth = backgroundSource.Width / 7;
             sourceRectHeight = backgroundSource.Height;
+            
             destPositions = new List<Vector2>();
             destPositions.Add(new Vector2(0, 0));
             destPositions.Add(new Vector2(sourceRectWidth * 1, 0));
             destPositions.Add(new Vector2(sourceRectWidth * 2, 0));
             destPositions.Add(new Vector2(sourceRectWidth * 3, 0));
             destPositions.Add(new Vector2(sourceRectWidth * 4, 0));
+            destPositions.Add(new Vector2(sourceRectWidth * 5, 0));
+            destPositions.Add(new Vector2(sourceRectWidth * 6, 0));
 
             sourceRects = new List<Rectangle>();
             sourceRects.Add(new Rectangle(0, 0, sourceRectWidth, sourceRectHeight));
@@ -37,6 +40,8 @@ namespace TLW_Plattformer.RipyGame.Handlers
             sourceRects.Add(new Rectangle(sourceRectWidth * 2, 0, sourceRectWidth, sourceRectHeight));
             sourceRects.Add(new Rectangle(sourceRectWidth * 3, 0, sourceRectWidth, sourceRectHeight));
             sourceRects.Add(new Rectangle(sourceRectWidth * 4, 0, sourceRectWidth, sourceRectHeight));
+            sourceRects.Add(new Rectangle(sourceRectWidth * 5, 0, sourceRectWidth, sourceRectHeight));
+            sourceRects.Add(new Rectangle(sourceRectWidth * 6, 0, sourceRectWidth, sourceRectHeight));
 
             totalDistanceTraveled = new Vector2(0, 0);
         }
@@ -44,8 +49,10 @@ namespace TLW_Plattformer.RipyGame.Handlers
         private static void UpdateAndCheckDistance(Vector2 alignment)
         {
             totalDistanceTraveled += alignment;
-            if (totalDistanceTraveled.X > sourceRectWidth)
+            if (totalDistanceTraveled.X > sourceRectWidth * 2)
             {
+                destPositions.Add(new Vector2(destPositions[destPositions.Count - 1].X + sourceRectWidth, 0));
+                destPositions.RemoveAt(0);
                 destPositions.Add(new Vector2(destPositions[destPositions.Count - 1].X + sourceRectWidth, 0));
                 destPositions.RemoveAt(0);
                 totalDistanceTraveled = Vector2.Zero;
@@ -64,11 +71,18 @@ namespace TLW_Plattformer.RipyGame.Handlers
 
         public static void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(backgroundSource, destPositions[0], sourceRects[0], Color.White);
-            spriteBatch.Draw(backgroundSource, destPositions[1], sourceRects[1], Color.White);
-            spriteBatch.Draw(backgroundSource, destPositions[2], sourceRects[2], Color.White);
-            spriteBatch.Draw(backgroundSource, destPositions[3], sourceRects[3], Color.White);
-            spriteBatch.Draw(backgroundSource, destPositions[4], sourceRects[4], Color.White);
+            for (int i = 0; i < destPositions.Count; i++)
+            {
+                spriteBatch.Draw(backgroundSource, destPositions[i], sourceRects[i], Color.White);
+            }
+
+            //spriteBatch.Draw(backgroundSource, destPositions[0], sourceRects[0], Color.White);
+            //spriteBatch.Draw(backgroundSource, destPositions[1], sourceRects[1], Color.White);
+            //spriteBatch.Draw(backgroundSource, destPositions[2], sourceRects[2], Color.White);
+            //spriteBatch.Draw(backgroundSource, destPositions[3], sourceRects[3], Color.White);
+            //spriteBatch.Draw(backgroundSource, destPositions[4], sourceRects[4], Color.White);
+            //spriteBatch.Draw(backgroundSource, destPositions[5], sourceRects[5], Color.White);
+            //spriteBatch.Draw(backgroundSource, destPositions[6], sourceRects[6], Color.White);
         }
     }
 }

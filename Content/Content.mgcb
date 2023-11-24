@@ -49,7 +49,7 @@
 /processorParam:TextureFormat=Color
 /build:Backgrounds/highscore_menu_background.jpg
 
-#begin Backgrounds/level_one_background.jpg
+#begin Backgrounds/level_one_background_AI.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -59,7 +59,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Backgrounds/level_one_background.jpg
+/build:Backgrounds/level_one_background_AI.jpg
 
 #begin Backgrounds/main_menu_background.jpg
 /importer:TextureImporter
@@ -91,6 +91,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:fullTex.png
+
+#begin Hud/icon.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Hud/icon.png
 
 #begin Hud/menu_button.png
 /importer:TextureImporter

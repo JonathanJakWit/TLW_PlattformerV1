@@ -67,7 +67,8 @@ namespace TLW_Plattformer.RipyGame.Globals
             HighscoreMenuBackgroundPath = BackgroundsPath + "highscore_menu_background";
             GameOverWinMenuBackgroundPath = BackgroundsPath + "game_over_win_background";
             GameOverLoseMenuBackgroundPath = BackgroundsPath + "game_over_lose_background";
-            LevelOneBackgroundPath = BackgroundsPath + "level_one_background";
+            LevelOneBackgroundPath = BackgroundsPath + "level_one_background_AI"; // Placeholder for now
+            //LevelOneBackgroundPath = BackgroundsPath + "level_one_background";
 
             SpritesPath = "Sprites/";
 

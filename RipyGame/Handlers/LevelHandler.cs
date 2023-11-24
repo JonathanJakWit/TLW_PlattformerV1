@@ -14,6 +14,7 @@ namespace TLW_Plattformer.RipyGame.Handlers
     public class LevelHandler
     {
         private Texture2D backgroundTex;
+        //private BackgroundHandler backgroundHandler;
         private Texture2D levelTilesetTex;
 
         public int CurrentLevelIndex {  get; private set; }
@@ -23,6 +24,8 @@ namespace TLW_Plattformer.RipyGame.Handlers
         public LevelHandler(TextureManager textureManager, AnimationManager animationManager, int levelIndex)
         {
             this.backgroundTex = textureManager.LevelOneBackgroundTex;
+            //this.backgroundHandler = new BackgroundHandler(backgroundTex);
+            BackgroundHandler.LoadBackground(this.backgroundTex);
             this.levelTilesetTex = textureManager.LevelOneTilesetTex;
 
             this.CurrentLevelIndex = levelIndex;
@@ -91,7 +94,8 @@ namespace TLW_Plattformer.RipyGame.Handlers
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(backgroundTex, GameValues.LevelBounds, Color.White);
+            //spriteBatch.Draw(backgroundTex, GameValues.LevelBounds, Color.White);
+            BackgroundHandler.Draw(spriteBatch);
             CurrentLevel.Draw(spriteBatch, levelTilesetTex);
         }
 

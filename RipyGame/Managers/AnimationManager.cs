@@ -16,9 +16,10 @@ namespace TLW_Plattformer.RipyGame.Managers
         private readonly Animation noneAnim;
 
         private readonly Animation playerIdleAnim;
-        private readonly Animation playerMoveLeftAnim;
-        private readonly Animation playerMoveRightAnim;
+        //private readonly Animation playerMoveLeftAnim;
+        private readonly Animation playerMoveAnim;
         private readonly Animation playerJumpAnim;
+        private readonly Animation playerFallAnim;
         private readonly Animation playerCrouchAnim;
         private readonly Dictionary<PlayerActions, Animation> playerActionAnimations;
 
@@ -26,6 +27,7 @@ namespace TLW_Plattformer.RipyGame.Managers
 
         public AnimationManager(ContentManager contentManager, TextureManager textureManager)
         {
+            #region None Anim
             int noneAnimDurationSeconds = 1;
             int noneFramesX = 1;
             float noneFrameTime = 0.1f;
@@ -46,6 +48,7 @@ namespace TLW_Plattformer.RipyGame.Managers
                 noneSpriteEffects,
                 noneFrameWidth, noneFrameHeight
             );
+            #endregion None Anim
 
             #region Player Animations
             this.playerActionAnimations = new Dictionary<PlayerActions, Animation>();
@@ -78,39 +81,40 @@ namespace TLW_Plattformer.RipyGame.Managers
             float playerMoveFrameTime = 0.25f;
             Color playerMoveColor = Color.White;
 
-            Vector2 playerMoveLeftStartPos = new Vector2(0, 0);
-            Vector2 playerMoveRightStartPos = new Vector2(0, 0);
+            //Vector2 playerMoveLeftStartPos = new Vector2(0, 0);
+            Vector2 playerMoveStartPos = new Vector2(0, 0);
             Vector2 playerJumpStartPos = new Vector2(0, 16);
+            Vector2 playerFallStartPos = new Vector2(0, 32);
             Vector2 playerCrouchStartPos = new Vector2(0, 16);
 
             bool playerMoveIsRepeating = true;
-            SpriteEffects playerMoveLeftSpriteEffects = SpriteEffects.FlipHorizontally;
-            SpriteEffects playerMoveRightSpriteEffects = SpriteEffects.None;
+            //SpriteEffects playerMoveLeftSpriteEffects = SpriteEffects.FlipHorizontally;
+            SpriteEffects playerMoveSpriteEffects = SpriteEffects.None;
             SpriteEffects playerJumpSpriteEffects = SpriteEffects.None;
-            SpriteEffects playerCrouchSpriteEffects = SpriteEffects.FlipVertically;
+            SpriteEffects playerCrouchSpriteEffects = SpriteEffects.None;
             int playerMoveFrameWidth = 16; int playerMoveFrameHeight = 16;
-            this.playerMoveLeftAnim = new Animation
+            //this.playerMoveLeftAnim = new Animation
+            //(
+            //    playerMoveAnimDurationSeconds,
+            //    textureManager.PlayerSpritesheet,
+            //    playerMoveFramesX,
+            //    playerMoveFrameTime,
+            //    playerMoveColor,
+            //    playerMoveLeftStartPos,
+            //    playerMoveIsRepeating,
+            //    playerMoveLeftSpriteEffects,
+            //    playerMoveFrameWidth, playerMoveFrameHeight
+            //);
+            this.playerMoveAnim = new Animation
             (
                 playerMoveAnimDurationSeconds,
                 textureManager.PlayerSpritesheet,
                 playerMoveFramesX,
                 playerMoveFrameTime,
                 playerMoveColor,
-                playerMoveLeftStartPos,
+                playerMoveStartPos,
                 playerMoveIsRepeating,
-                playerMoveLeftSpriteEffects,
-                playerMoveFrameWidth, playerMoveFrameHeight
-            );
-            this.playerMoveRightAnim = new Animation
-            (
-                playerMoveAnimDurationSeconds,
-                textureManager.PlayerSpritesheet,
-                playerMoveFramesX,
-                playerMoveFrameTime,
-                playerMoveColor,
-                playerMoveRightStartPos,
-                playerMoveIsRepeating,
-                playerMoveRightSpriteEffects,
+                playerMoveSpriteEffects,
                 playerMoveFrameWidth, playerMoveFrameHeight
             );
             this.playerJumpAnim = new Animation
@@ -121,6 +125,18 @@ namespace TLW_Plattformer.RipyGame.Managers
                 playerMoveFrameTime,
                 playerMoveColor,
                 playerJumpStartPos,
+                playerMoveIsRepeating,
+                playerJumpSpriteEffects,
+                playerMoveFrameWidth, playerMoveFrameHeight
+            );
+            this.playerFallAnim = new Animation
+            (
+                playerMoveAnimDurationSeconds,
+                textureManager.PlayerSpritesheet,
+                playerMoveFramesX,
+                playerMoveFrameTime,
+                playerMoveColor,
+                playerFallStartPos,
                 playerMoveIsRepeating,
                 playerJumpSpriteEffects,
                 playerMoveFrameWidth, playerMoveFrameHeight
@@ -141,9 +157,10 @@ namespace TLW_Plattformer.RipyGame.Managers
             //this.playerActionAnimations.Add(PlayerActions.Idle, playerIdleAnim);
             this.playerActionAnimations.Add(PlayerActions.HealthIdle, playerIdleAnim); // Ändra till en icon anim senare
             this.playerActionAnimations.Add(PlayerActions.Idle, playerIdleAnim);
-            this.playerActionAnimations.Add(PlayerActions.MoveLeft, playerMoveLeftAnim);
-            this.playerActionAnimations.Add(PlayerActions.MoveRight, playerMoveRightAnim);
+            this.playerActionAnimations.Add(PlayerActions.MoveLeft, playerMoveAnim);
+            this.playerActionAnimations.Add(PlayerActions.MoveRight, playerMoveAnim);
             this.playerActionAnimations.Add(PlayerActions.Jump, playerJumpAnim);
+            this.playerActionAnimations.Add(PlayerActions.Fall, playerFallAnim);
             this.playerActionAnimations.Add(PlayerActions.Crouch, playerCrouchAnim);
             #endregion Player Animations
         }

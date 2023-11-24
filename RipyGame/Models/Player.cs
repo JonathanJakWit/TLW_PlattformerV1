@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TLW_Plattformer.RipyGame.Components;
 using TLW_Plattformer.RipyGame.Globals;
+using TLW_Plattformer.RipyGame.Handlers;
 using TLW_Plattformer.RipyGame.Managers;
 
 namespace TLW_Plattformer.RipyGame.Models
@@ -32,6 +33,7 @@ namespace TLW_Plattformer.RipyGame.Models
 
         private bool isMoving;
         private bool isJumping;
+        private bool isFalling;
 
         //private float directionCooldown;
         //private Timer directionTimer;
@@ -83,6 +85,7 @@ namespace TLW_Plattformer.RipyGame.Models
 
             this.isMoving = false;
             this.isJumping = false;
+            this.isFalling = false;
 
             this.currentDirectionX = MoveableDirections.Idle;
             this.currentDirectionY = MoveableDirections.Idle;
@@ -117,6 +120,29 @@ namespace TLW_Plattformer.RipyGame.Models
 
         }
 
+        private bool IsPlayerCentered()
+        {
+            if (Position.X > GameValues.WindowCenter.X - Bounds.Width)
+            {
+                if (Position.X < GameValues.WindowCenter.X + Bounds.Width)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        private void MovePlayerBy(Vector2 distance)
+        {
+            if (IsPlayerCentered()) // Player is in the centre of the window
+            {
+                BackgroundHandler.MoveBy(distance);
+            }
+            else
+            {
+                MoveBy(distance);
+            }
+        }
+
         private void StartGoIdle()
         {
             //isMoving = false;
@@ -130,7 +156,7 @@ namespace TLW_Plattformer.RipyGame.Models
             //isMoving = true;
             currentDirectionX = MoveableDirections.Left;
             activeAnimation = animations.GetValueOrDefault(PlayerActions.MoveLeft);
-            ChangeSpriteEffect(SpriteEffects.None);
+            ChangeSpriteEffect(SpriteEffects.FlipHorizontally);
             //Velocity = new Vector2(-speed, Velocity.Y);
             //canMoveLeft = false; canMoveRight = false;
             //directionTimer.Reset(GameValues.Time);
@@ -139,8 +165,8 @@ namespace TLW_Plattformer.RipyGame.Models
         {
             //isMoving = true;
             currentDirectionX = MoveableDirections.Right;
-            activeAnimation = animations.GetValueOrDefault(PlayerActions.MoveLeft);
-            ChangeSpriteEffect(SpriteEffects.FlipHorizontally);
+            activeAnimation = animations.GetValueOrDefault(PlayerActions.MoveRight);
+            ChangeSpriteEffect(SpriteEffects.None);
             //Velocity = new Vector2(speed, Velocity.Y);
             //canMoveLeft = false; canMoveRight = false;
             //directionTimer.Reset(GameValues.Time);
@@ -166,22 +192,31 @@ namespace TLW_Plattformer.RipyGame.Models
         {
             activeAnimation = animations.GetValueOrDefault(PlayerActions.Crouch);
         }
+        private void StartFall()
+        {
+            isFalling = true;
+            activeAnimation = animations.GetValueOrDefault(PlayerActions.Fall);
+        }
 
         private void UpdateMoveLeft()
         {
-            MoveBy(moveLeftSpeed);
+            MovePlayerBy(moveLeftSpeed);
+            activeAnimation = animations.GetValueOrDefault(PlayerActions.MoveLeft);
         }
         private void UpdateMoveRight()
         {
-            MoveBy(moveRightSpeed);
+            MovePlayerBy(moveRightSpeed);
+            activeAnimation = animations.GetValueOrDefault(PlayerActions.MoveRight);
         }
         private void UpdateJump()
         {
             MoveBy(jumpSpeed);
+            activeAnimation = animations.GetValueOrDefault(PlayerActions.Jump);
         }
         private void UpdateFall()
         {
             MoveBy(fallSpeed);
+            activeAnimation = animations.GetValueOrDefault(PlayerActions.Fall);
         }
 
         #region VIKTIGT SENARE
@@ -250,6 +285,7 @@ namespace TLW_Plattformer.RipyGame.Models
             if (IsGrounded)
             {
                 canJump = true;
+                canMoveDown = false;
             }
 
             //if (isJumping && !canMoveDown)
@@ -297,7 +333,10 @@ namespace TLW_Plattformer.RipyGame.Models
                 }
                 else if (currentDirectionX != MoveableDirections.Idle && currentDirectionY != MoveableDirections.Idle)
                 {
-                    StartGoIdle(); // Change to check for outside forces affecting movement velocity before going idle
+                    if (!isJumping && !isFalling)
+                    {
+                        StartGoIdle(); // Change to check for outside forces affecting movement velocity before going idle
+                    }
                 }
             }
 
@@ -353,12 +392,25 @@ namespace TLW_Plattformer.RipyGame.Models
             {
                 if (canMoveDown)
                 {
-                    UpdateFall();
+                    if (isFalling)
+                    {
+                        UpdateFall();
+                    }
+                    else
+                    {
+                        StartFall();
+                    }
                 }
-                else
-                {
-                    IsGrounded = true;
-                }
+            }
+            if (IsGrounded)
+            {
+                isFalling = false;
+                canJump = true;
+            }
+
+            if (IsGrounded && !IsAnyInput())
+            {
+                activeAnimation = animations.GetValueOrDefault(PlayerActions.Idle);
             }
 
             if (Velocity.X == 0 && Velocity.Y == 0)
@@ -448,7 +500,7 @@ namespace TLW_Plattformer.RipyGame.Models
     {
         HealthIdle, Idle,
         MoveLeft, MoveRight,
-        Jump, Crouch, Dash, Slide,
+        Jump, Fall, Crouch, Dash, Slide,
         BasicAttack, HeavyAttack, RangedAttack
     }
 }

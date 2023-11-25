@@ -42,7 +42,7 @@ namespace TLW_Plattformer.RipyGame.Models
         protected Animation activeAnimation;
         protected List<Animation> animationQueue;
         protected float rotation;
-        protected float scale;
+        public float scale { get; protected set; }
         protected float drawLayerIndex;
         protected SpriteEffects spriteEffects;
 

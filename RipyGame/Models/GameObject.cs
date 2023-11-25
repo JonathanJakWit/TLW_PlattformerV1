@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TLW_Plattformer.RipyGame.Globals;
 
 namespace TLW_Plattformer.RipyGame.Models
 {
@@ -16,6 +17,18 @@ namespace TLW_Plattformer.RipyGame.Models
         public bool IsAlive { get; protected set; }
 
         public GameObject Parent { get; protected set; }
+
+        public bool IsCentered()
+        {
+            if (Position.X > GameValues.WindowCenter.X - Bounds.Width)
+            {
+                if (Position.X < GameValues.WindowCenter.X + Bounds.Width)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
     public class MoveableGameObject : GameObject

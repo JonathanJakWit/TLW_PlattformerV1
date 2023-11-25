@@ -35,9 +35,9 @@ namespace TLW_Plattformer.RipyGame.Globals
         public static Rectangle WindowBounds { get; private set; }
         public static Vector2 HudStartPos { get; private set; }
         public static Vector2 HudEndPos { get; private set; }
-        public static Vector2 LevelStartPos { get; private set; }
-        public static Vector2 LevelEndPos { get; private set; }
-        public static Rectangle LevelBounds { get; private set; }
+        public static Vector2 LevelStartPos { get; set; }
+        public static Vector2 LevelEndPos { get; set; }
+        public static Rectangle LevelBounds { get; set; }
 
         public static float MapDrawLayer { get; private set; }
         public static float ItemDrawLayer { get; private set; }
@@ -92,11 +92,12 @@ namespace TLW_Plattformer.RipyGame.Globals
             LevelStartPos = new Vector2(0, 0);
             LevelEndPos = new Vector2(WindowSizeX, WindowSizeY);
             LevelBounds = new Rectangle(LevelStartPos.ToPoint(), LevelEndPos.ToPoint());
+            //LevelBounds = new Rectangle(0, 0, 1920*2, 1080);
 
-            MapDrawLayer = 0.1F;
-            ItemDrawLayer = 0.2F;
-            EnemyDrawLayer = 0.3F;
-            PlayerDrawLayer = 0.4F;
+            MapDrawLayer = 0.01F;
+            ItemDrawLayer = 0.5F;
+            EnemyDrawLayer = 0.6F;
+            PlayerDrawLayer = 0.10F;
 
             Vector2 tempPlayerStartPos = new Vector2(0, 0);
             PlayerScale = new Vector2(1, 1);

@@ -25,7 +25,11 @@ namespace TLW_Plattformer.RipyGame.Globals
         public static string HighscoreMenuBackgroundPath { get; private set; }
         public static string GameOverWinMenuBackgroundPath { get; private set; }
         public static string GameOverLoseMenuBackgroundPath { get; private set; }
-        public static string LevelOneBackgroundPath { get; private set; }
+
+        public static string LevelOneBackgroundsPath { get; private set; }
+        public static string LevelOneFarBackgroundPath { get; private set; }
+        public static string LevelOneMiddleBackgroundPath { get; private set; }
+        public static string LevelOneNearBackgroundPath { get; private set; }
         #endregion Backgrounds
 
         #region Sprites
@@ -67,7 +71,11 @@ namespace TLW_Plattformer.RipyGame.Globals
             HighscoreMenuBackgroundPath = BackgroundsPath + "highscore_menu_background";
             GameOverWinMenuBackgroundPath = BackgroundsPath + "game_over_win_background";
             GameOverLoseMenuBackgroundPath = BackgroundsPath + "game_over_lose_background";
-            LevelOneBackgroundPath = BackgroundsPath + "level_one_background_AI"; // Placeholder for now
+            //LevelOneBackgroundPath = BackgroundsPath + "level_one_background_AI"; // Placeholder for now
+            LevelOneBackgroundsPath = BackgroundsPath + "LevelOne/";
+            LevelOneFarBackgroundPath = LevelOneBackgroundsPath + "level_one_far_background";
+            LevelOneMiddleBackgroundPath = LevelOneBackgroundsPath + "level_one_middle_background";
+            LevelOneNearBackgroundPath = LevelOneBackgroundsPath + "level_one_near_background";
             //LevelOneBackgroundPath = BackgroundsPath + "level_one_background";
 
             SpritesPath = "Sprites/";

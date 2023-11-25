@@ -13,8 +13,10 @@ namespace TLW_Plattformer.RipyGame.Handlers
 {
     public class LevelHandler
     {
-        private Texture2D backgroundTex;
+        //private Texture2D backgroundTex;
         //private BackgroundHandler backgroundHandler;
+        public Camera LevelCamera {  get; set; }
+        private ParallaxBG parallaxBG;
         private Texture2D levelTilesetTex;
 
         public int CurrentLevelIndex {  get; private set; }
@@ -23,9 +25,10 @@ namespace TLW_Plattformer.RipyGame.Handlers
 
         public LevelHandler(TextureManager textureManager, AnimationManager animationManager, int levelIndex)
         {
-            this.backgroundTex = textureManager.LevelOneBackgroundTex;
+            //this.backgroundTex = textureManager.LevelOneBackgroundTex;
+            this.parallaxBG = GetParallaxBG(textureManager);
             //this.backgroundHandler = new BackgroundHandler(backgroundTex);
-            BackgroundHandler.LoadBackground(this.backgroundTex);
+            //BackgroundHandler.LoadBackground(this.backgroundTex);
             this.levelTilesetTex = textureManager.LevelOneTilesetTex;
 
             this.CurrentLevelIndex = levelIndex;
@@ -41,10 +44,22 @@ namespace TLW_Plattformer.RipyGame.Handlers
             }
 
             this.CurrentLevel = new Level();
+            this.LevelCamera = new Camera();
 
             //LoadedLevel.Load(GamePaths.LevelOneDataPath, animationManager);
             //this.CurrentLevel = new Level(levelIndex, animationManager);
 
+        }
+
+        private ParallaxBG GetParallaxBG(TextureManager textureManager)
+        {
+            float farSpeed = 1F;
+            float middleSpeed = 2F;
+            float nearSpeed = 3F;
+
+            ParallaxBG newPxBG = new ParallaxBG(textureManager.LevelOneFarBackgroundTex, textureManager.LevelOneMiddleBackgroundTex, textureManager.LevelOneNearBackgroundTex,
+                GameValues.MapDrawLayer, farSpeed, middleSpeed, nearSpeed);
+            return newPxBG;
         }
 
         public void ResetLevel()
@@ -90,12 +105,17 @@ namespace TLW_Plattformer.RipyGame.Handlers
         public void Update(GameTime gameTime)
         {
             CurrentLevel.Update(gameTime);
+            LevelCamera.Update(LoadedGameLevel.Players[0]);
+            parallaxBG.Update(LevelCamera);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            //spriteBatch.Draw(backgroundTex, GameValues.LevelBounds, Color.White);
-            BackgroundHandler.Draw(spriteBatch);
+            //Vector2 pog = new Vector2(LevelCamera.Transform.Translation.X - GameValues.WindowCenter.X, 0);
+            //spriteBatch.Draw(backgroundTex, pog, Color.White);
+
+            parallaxBG.Draw(spriteBatch);
+         
             CurrentLevel.Draw(spriteBatch, levelTilesetTex);
         }
 

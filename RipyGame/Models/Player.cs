@@ -120,20 +120,22 @@ namespace TLW_Plattformer.RipyGame.Models
 
         }
 
-        private bool IsPlayerCentered()
-        {
-            if (Position.X > GameValues.WindowCenter.X - Bounds.Width)
-            {
-                if (Position.X < GameValues.WindowCenter.X + Bounds.Width)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+        //private bool IsPlayerCentered()
+        //{
+        //    if (Position.X > GameValues.WindowCenter.X - Bounds.Width)
+        //    {
+        //        if (Position.X < GameValues.WindowCenter.X + Bounds.Width)
+        //        {
+        //            return true;
+        //        }
+        //    }
+        //    return false;
+        //}
+
         private void MovePlayerBy(Vector2 distance)
         {
-            if (IsPlayerCentered()) // Player is in the centre of the window
+            //if (IsPlayerCentered()) // Player is in the centre of the window
+            if (false) // Player is in the centre of the window
             {
                 BackgroundHandler.MoveBy(distance);
             }
@@ -286,6 +288,15 @@ namespace TLW_Plattformer.RipyGame.Models
             {
                 canJump = true;
                 canMoveDown = false;
+            }
+
+            if (Position.X < GameValues.LevelBounds.X)
+            {
+                canMoveLeft = false;
+            }
+            if (Position.X + Bounds.Width > GameValues.LevelBounds.X + GameValues.LevelBounds.Width)
+            {
+                canMoveRight = false;
             }
 
             //if (isJumping && !canMoveDown)

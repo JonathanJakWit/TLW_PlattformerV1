@@ -19,6 +19,10 @@ namespace TLW_Plattformer.RipyGame.Globals
         {
             // Change below to actually load from the json file
 
+            int levelOneWidth = 2688 * 4;
+            GameValues.LevelEndPos = new Vector2(GameValues.LevelStartPos.X + levelOneWidth, GameValues.LevelEndPos.Y);
+            GameValues.LevelBounds = new Rectangle(GameValues.LevelStartPos.ToPoint(), GameValues.LevelEndPos.ToPoint());
+
             #region PLattforms
             Vector2 plattform1Pos = new Vector2(
                 GameValues.LevelStartPos.X + GameValues.ColumnWidth,
@@ -46,9 +50,9 @@ namespace TLW_Plattformer.RipyGame.Globals
                 GameValues.LevelStartPos.X + GameValues.ColumnWidth * 2,
                 GameValues.LevelEndPos.Y - GameValues.RowHeight * 2);
             float p1Scale = 4F;
-            float p1MoveSpeed = 5F;
-            float p1JumpSpeed = 2F;
-            float p1FallSpeed = 1F;
+            float p1MoveSpeed = 10F;
+            float p1JumpSpeed = 8F;
+            float p1FallSpeed = 5F;
 
             Players = new List<Player>();
             Players.Add(new Player(PlayerIndex.One, animationManager, player1Pos, Color.White, p1Scale, p1MoveSpeed, p1JumpSpeed, p1FallSpeed));

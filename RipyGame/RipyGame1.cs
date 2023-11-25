@@ -291,20 +291,21 @@ namespace TLW_Plattformer.RipyGame
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            SamplerState gameSamplerState = SamplerState.PointClamp;
-            spriteBatch.Begin(samplerState: gameSamplerState);
-
             if (CurrentGameState == GameStates.Playing)
             {
+                spriteBatch.Begin(transformMatrix: _LevelHandler.LevelCamera.Transform);
                 DrawPlaying(spriteBatch);
+                spriteBatch.End();
             }
             else
             {
+                SamplerState gameSamplerState = SamplerState.PointClamp;
+                spriteBatch.Begin(samplerState: gameSamplerState);
                 spriteBatch.Draw(_BackgroundTexture, GameValues.LevelBounds, Color.White);
                 DrawMenu(spriteBatch);
+                spriteBatch.End();
             }
 
-            spriteBatch.End();
         }
     }
 

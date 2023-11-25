@@ -28,7 +28,10 @@ namespace TLW_Plattformer.RipyGame.Managers
         public Texture2D HighscoreMenuBackgroundTex { get; private set; }
         public Texture2D GameOverWinMenuBackgroundTex { get; private set; }
         public Texture2D GameOverLoseMenuBackgroundTex { get; private set; }
-        public Texture2D LevelOneBackgroundTex { get; private set; }
+
+        public Texture2D LevelOneFarBackgroundTex { get; private set; }
+        public Texture2D LevelOneMiddleBackgroundTex { get; private set; }
+        public Texture2D LevelOneNearBackgroundTex { get; private set; }
         #endregion Backgrounds
 
         #region Tilesets
@@ -74,7 +77,9 @@ namespace TLW_Plattformer.RipyGame.Managers
             GameOverWinMenuBackgroundTex = Content.Load<Texture2D>(GamePaths.GameOverWinMenuBackgroundPath);
             GameOverLoseMenuBackgroundTex = Content.Load<Texture2D>(GamePaths.GameOverLoseMenuBackgroundPath);
 
-            LevelOneBackgroundTex = Content.Load<Texture2D>(GamePaths.LevelOneBackgroundPath);
+            LevelOneFarBackgroundTex = Content.Load<Texture2D>(GamePaths.LevelOneFarBackgroundPath);
+            LevelOneMiddleBackgroundTex = Content.Load<Texture2D>(GamePaths.LevelOneMiddleBackgroundPath);
+            LevelOneNearBackgroundTex = Content.Load<Texture2D>(GamePaths.LevelOneNearBackgroundPath);
             #endregion Backgrounds
 
             #region Tilesets

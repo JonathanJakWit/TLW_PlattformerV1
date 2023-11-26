@@ -13,10 +13,12 @@ namespace TLW_Plattformer.RipyGame.Models
         public Vector2 Position { get; protected set; }
         public Vector2 Center { get; protected set; }
         public Rectangle Bounds { get; protected set; }
-
+        public Vector2 HitBoxPosition { get; protected set; }
+        public Rectangle HitBox { get; protected set; }
+        public bool HasHitBox { get; protected set; }
         public bool IsAlive { get; protected set; }
 
-        public GameObject Parent { get; protected set; }
+        //public GameObject Parent { get; protected set; }
 
         public bool IsCentered()
         {
@@ -63,8 +65,10 @@ namespace TLW_Plattformer.RipyGame.Models
         public virtual void MoveBy(Vector2 distance)
         {
             Position += distance;
+            HitBoxPosition += distance;
             Center += distance;
             Bounds = new Rectangle((int)Position.X, (int)Position.Y, Bounds.Width, Bounds.Height);
+            HitBox = new Rectangle((int)HitBoxPosition.X, (int)HitBoxPosition.Y, HitBox.Width, HitBox.Height);
         }
 
         public virtual void Update(GameTime gameTime)

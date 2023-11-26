@@ -12,46 +12,56 @@ namespace TLW_Plattformer.RipyGame.Models
 {
     public class GameObjectPencil
     {
+        private TextureManager textureManager;
+
         public GameObjectTypes SelectedType { get; set; }
-        public Vector2 SelectedPosition { get; set; }
+        //public Vector2 SelectedPosition { get; set; }
 
-        public Plattform SelectedPlattform { get; set; }
-        public Item SelectedItem { get; set; }
-        public Player SelectedPlayer { get; set; }
+        //public Plattform SelectedPlattform { get; set; }
+        //public Item SelectedItem { get; set; }
+        //public Player SelectedPlayer { get; set; }
 
-        private List<GameObject> drawnGameObjects;
+        public List<GameObject> DrawnGameObjects { get; set; }
 
         public GameObjectPencil(TextureManager textureManager)
         {
+            this.textureManager = textureManager;
             SelectedType = GameObjectTypes.Plattform;
-            SelectedPlattform = GetDefaultPlattform(textureManager);
-            drawnGameObjects = new List<GameObject>();
+            //SelectedPlattform = GetDefaultPlattform();
+            DrawnGameObjects = new List<GameObject>();
         }
 
-        private Plattform GetDefaultPlattform(TextureManager textureManager)
+        private Plattform GetDefaultPlattform()
         {
             Plattform plattform = new Plattform(textureManager, PlattformTypes.Solid, new(0, 0), GameValues.ColumnWidth, GameValues.TileHeight);
             return plattform;
         }
-        //private void GetPlattform(TextureManager textureManager, Platt)
-        //{
-        //    Plattform plattform = new Plattform(textureManager, )
-        //}
-
-        private void UpdateSelectedObjects(TextureManager textureManager)
+        private Plattform GetPlattform(TextureManager textureManager, PlattformTypes plattformType, Vector2 position)
         {
-            SelectedPlattform.MoveTo(SelectedPosition);
+            Plattform plattform = new Plattform(textureManager, plattformType, position, GameValues.ColumnWidth, GameValues.RowHeight);
+            return plattform;
+        }
+
+        private void UpdateSelectedObjects()
+        {
+            //SelectedPlattform.MoveTo(SelectedPosition);
+            //SelectedPlattform = new Plattform(textureManager, PlattformTypes.Solid, GameValues.)
         }
 
         public void Update()
         {
             if (GameValues.IsLeftMouseClicked())
             {
-                SelectedPosition = new Vector2(GameValues.NewMouseState.X / GameValues.ColumnWidth, GameValues.NewMouseState.Y / GameValues.RowHeight);
+                //SelectedPosition = new Vector2(GameValues.NewMouseState.X / GameValues.ColumnWidth, GameValues.NewMouseState.Y / GameValues.RowHeight);
+                //SelectedPosition = new Vector2(GameValues.NewMouseState.X, GameValues.NewMouseState.Y);
+                //SelectedPosition = new Vector2(GameValues.WindowCenter.X, GameValues.WindowCenter.Y);
+                //UpdateSelectedObjects();
                 switch (SelectedType)
                 {
                     case GameObjectTypes.Plattform:
-                        drawnGameObjects.Add(SelectedPlattform);
+                        DrawnGameObjects.Add(GetPlattform(textureManager, PlattformTypes.Solid, GameValues.NewMouseState.Position.ToVector2()));
+                        //DrawnGameObjects.Add(new Plattform(textureManager, PlattformTypes.Solid, GameValues.WindowCenter, new(GameValues.WindowCenter.X + 32, GameValues.WindowCenter.Y)));
+                        //DrawnGameObjects.Add(SelectedPlattform);
                         break;
                     case GameObjectTypes.Item:
                         break;

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SharpDX.Direct3D9;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,8 @@ namespace TLW_Plattformer.RipyGame.Models
             this.Position = position;
             this.Width = width;
             this.Height = height;
-            this.Bounds = new Rectangle((int)position.X, (int)position.Y, width * (int)GameValues.TileScale.X, height);
+            this.Bounds = new Rectangle((int)position.X, (int)position.Y, width * (int)GameValues.TileScale.X, height * (int)GameValues.TileScale.Y);
+            this.Center = new Vector2(position.X + Bounds.Width / 2, position.Y + Bounds.Height / 2);
 
             this.tileRowCount = height / GameValues.TileHeight;
             this.tileColumnCount = width / GameValues.TileWidth;
@@ -43,6 +45,29 @@ namespace TLW_Plattformer.RipyGame.Models
             this._sourceRects = new List<Rectangle>();
             InitializeSourceRectangles(textureManager.PlattformSourceRectangles);
         }
+
+        //public Plattform(TextureManager textureManager, PlattformTypes plattformType, Vector2 startPos, Vector2 endPos)
+        //{
+        //    this.PlattformType = plattformType;
+        //    this.Position = startPos;
+        //    this.Width = (int)endPos.X - (int)startPos.X;
+        //    Width = Width / GameValues.ColumnWidth;
+        //    Height = GameValues.RowHeight;
+        //    this.Bounds = new Rectangle((int)Position.X, (int)Position.Y, Width * (int)GameValues.TileScale.X, Height);
+
+        //    this.tileRowCount = Height / GameValues.TileHeight;
+        //    this.tileColumnCount = Width / GameValues.TileWidth;
+
+        //    this._destinationRectangles = new List<Rectangle>();
+        //    int tileCount = Width / GameValues.TileWidth;
+        //    for (int i = 0; i < tileCount; i++)
+        //    {
+        //        _destinationRectangles.Add(new Rectangle((int)Position.X + GameValues.ColumnWidth * i, (int)Position.Y, GameValues.ColumnWidth, GameValues.RowHeight));
+        //    }
+
+        //    this._sourceRects = new List<Rectangle>();
+        //    InitializeSourceRectangles(textureManager.PlattformSourceRectangles);
+        //}
 
         public void InitializeSourceRectangles(Dictionary<PlattformTextureTypes, List<Rectangle>> plattformSourceRects)
         {
@@ -61,6 +86,7 @@ namespace TLW_Plattformer.RipyGame.Models
         {
             Position = newPos;
             //Center = Position;
+            Center = new Vector2(Position.X + Bounds.Width / 2, Position.Y + Bounds.Height / 2);
             Bounds = new Rectangle((int)Position.X, (int)Position.Y, Bounds.Width, Bounds.Height);
         }
 

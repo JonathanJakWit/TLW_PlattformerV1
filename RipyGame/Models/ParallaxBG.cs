@@ -184,7 +184,7 @@ namespace TLW_Plattformer.RipyGame.Models
             }
 
 
-            Debug.WriteLine("fP1: " + farPos1.ToString());
+            //Debug.WriteLine("fP1: " + farPos1.ToString());
             //Debug.WriteLine("farDistanceT: " + farDistanceTraveled.ToString());
             //Debug.WriteLine("farBGW: " + (farBG.Width / (GameValues.PlayerBounds.Width / 2)).ToString());
         }

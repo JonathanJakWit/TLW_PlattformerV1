@@ -87,6 +87,9 @@ namespace TLW_Plattformer.RipyGame.Models
             this.isJumping = false;
             this.isFalling = false;
 
+            this.canMoveDown = true;
+            this.IsGrounded = false;
+
             this.currentDirectionX = MoveableDirections.Idle;
             this.currentDirectionY = MoveableDirections.Idle;
 
@@ -96,10 +99,10 @@ namespace TLW_Plattformer.RipyGame.Models
             this.jumpCooldown = 2;
             this.jumpTimer = new Timer(jumpCooldown, GameValues.Time);
 
-            this.canMoveDown = true;
-            IsGrounded = false;
-
             Bounds = new Rectangle((int)Position.X, (int)Position.Y, Bounds.Width, Bounds.Height);
+            HitBox = new Rectangle((int)Position.X, (int)Position.Y, Bounds.Width, Bounds.Height);
+            //HitBox = new Rectangle(Bounds.X - (int)moveSpeed, Bounds.Y, Bounds.Width + (int)moveSpeed, Bounds.Height + (int)fallSpeed);
+            HasHitBox = true;
             animations = animationManager.GetPlayerAnimations();
             //activeAnimation = animations.GetValueOrDefault(PlayerActions.Idle);
 
@@ -121,10 +124,46 @@ namespace TLW_Plattformer.RipyGame.Models
         {
             if (other is Plattform)
             {
-                if (IsGrounded)
-                {
-                    return;
-                }
+                return;
+                //if (Center.Y < other.Center.Y)
+                //{
+                //    IsGrounded = true;
+                //    canMoveDown = false;
+                //}
+                //else if (Center.Y > other.Center.Y)
+                //{
+                //    canMoveUp = false;
+                //    canJump = false;
+                //}
+                //else if (Position.X + Bounds.Width < other.Center.X)
+                //{
+                //    canMoveRight = false;
+                //}
+                //else if (Center.X > other.Position.X + other.Bounds.Width)
+                //{
+                //    canMoveLeft = false;
+                //}
+
+                //switch (otherRelativePos)
+                //{
+                //    case MoveableDirections.Left:
+                //        canMoveLeft = false;
+                //        break;
+                //    case MoveableDirections.Right:
+                //        canMoveRight = false;
+                //        break;
+                //    case MoveableDirections.Up:
+                //        canMoveUp = false;
+                //        break;
+                //    case MoveableDirections.Down:
+                //        canMoveDown = false;
+                //        IsGrounded = true;
+                //        break;
+                //    case MoveableDirections.Idle:
+                //        break;
+                //    default:
+                //        break;
+                //}
             }
 
             //base.HandleCollision(other);
@@ -268,9 +307,9 @@ namespace TLW_Plattformer.RipyGame.Models
         public void UpdateAllowedDirections()
         {
             #region TEMP TESTING
-            canMoveLeft = true;
-            canMoveRight = true;
-            canMoveUp = true;
+            //canMoveLeft = true;
+            //canMoveRight = true;
+            //canMoveUp = true;
 
             if (!isJumping)
             {
@@ -284,7 +323,53 @@ namespace TLW_Plattformer.RipyGame.Models
                 {
                     if (Bounds.Intersects(plattform.Bounds))
                     {
-                        IsGrounded = true;
+                        if (Position.X + Bounds.Width - 10 < plattform.Position.X)
+                        {
+                            canMoveRight = false;
+                        }
+                        else if (plattform.Position.X + plattform.Bounds.Width - 10 < Position.X)
+                        {
+                            canMoveLeft = false;
+                        }
+
+                        if (Position.Y + Bounds.Height - 10 < plattform.Position.Y)
+                        {
+                            canMoveDown = false;
+                            IsGrounded = true;
+                        }
+                        else if (plattform.Position.Y + plattform.Height - 10 < Position.Y)
+                        {
+                            canMoveUp = false;
+                            canJump = false;
+                        }
+                        else
+                        {
+                            IsGrounded = true;
+                        }
+
+                        //if (Position.X + Bounds.Width - moveLeftSpeed.X < plattform.Position.X)
+                        //{
+                        //    canMoveRight = false;
+                        //}
+                        //else if (plattform.Position.X + plattform.Bounds.Width < Position.X + moveRightSpeed.X)
+                        //{
+                        //    canMoveLeft = false;
+                        //}
+                        //else if (Position.Y + Bounds.Height - fallSpeed.Y < plattform.Position.Y)
+                        //{
+                        //    canMoveDown = false;
+                        //    IsGrounded = true;
+                        //}
+                        //else if (plattform.Position.Y + plattform.Height < Position.Y + jumpSpeed.Y)
+                        //{
+                        //    canMoveUp = false;
+                        //    canJump = false;
+                        //}
+                        //else
+                        //{
+                        //    IsGrounded = true;
+                        //}
+                        //IsGrounded = true;
                     }
                 }
             }
@@ -527,8 +612,11 @@ namespace TLW_Plattformer.RipyGame.Models
         public void UpdatePlayer(GameTime gameTime)
         {
             UpdateAllowedDirections();
-
             Update(gameTime);
+            canMoveLeft = true;
+            canMoveRight = true;
+            canMoveUp = true;
+            canMoveDown = true;
         }
 
         public override void Draw(SpriteBatch spriteBatch)

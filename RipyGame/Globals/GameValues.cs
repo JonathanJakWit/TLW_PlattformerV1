@@ -104,7 +104,7 @@ namespace TLW_Plattformer.RipyGame.Globals
             PlayerDrawLayer = 0.10F;
 
             Vector2 tempPlayerStartPos = new Vector2(0, 0);
-            PlayerScale = new Vector2(1, 1);
+            PlayerScale = new Vector2(2, 2);
             PlayerBounds = new Rectangle((int)tempPlayerStartPos.X, (int)tempPlayerStartPos.Y, TileWidth * (int)PlayerScale.X, TileHeight * (int)PlayerScale.Y);
 
             ArcadeFont = Content.Load<SpriteFont>(GamePaths.ArcadeFontPath);
@@ -134,6 +134,42 @@ namespace TLW_Plattformer.RipyGame.Globals
                 return true;
             }
             return false;
+        }
+
+        public static MoveableDirections GetCollisionDirection(Rectangle rect, Rectangle otherRect)
+        {
+            //float leftDistance = 0F;
+            //float rightDistance = 0F;
+            //float topDistance = 0F;
+            //float bottomDistance = 0F;
+
+            //if (firstRect.X + firstRect.Width < secondRect.X)
+            //{
+            //    leftDistance = secondRect.X - firstRect.X + firstRect.Width;
+            //    if (firstRect.Y + firstRect.Height < secondRect.Y)
+            //    {
+            //        topDistance = secondRect.Y - 
+            //    }
+            //}
+
+            if (otherRect.Right < rect.Left)
+            {
+                return MoveableDirections.Left;
+            }
+            else if (otherRect.Left > rect.Right)
+            {
+                return MoveableDirections.Right;
+            }
+            else if (otherRect.Bottom < rect.Top)
+            {
+                return MoveableDirections.Up;
+            }
+            else if (otherRect.Top > rect.Bottom)
+            {
+                return MoveableDirections.Down;
+            }
+
+            return MoveableDirections.Idle;
         }
     }
 }

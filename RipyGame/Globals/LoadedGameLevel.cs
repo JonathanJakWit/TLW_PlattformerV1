@@ -19,7 +19,7 @@ namespace TLW_Plattformer.RipyGame.Globals
         //public static Dictionary<GameObjectTypes, List<GameObject>> GameObjects { get; set; }
         public static Dictionary<GameObjectTypes, List<GameObject>> GameObjects { get; set; }
 
-        public static void AddPlattform(Plattform plattformObj)
+        public static void AddPlattform(GameObject plattformObj)
         {
             GameObjects.GetValueOrDefault(GameObjectTypes.Plattform).Add(plattformObj);
         }
@@ -45,9 +45,16 @@ namespace TLW_Plattformer.RipyGame.Globals
                 {
                     if (player.Bounds.Intersects(plattform.Bounds))
                     {
+                        //MoveableDirections mD = GameValues.GetCollisionDirection(player.Bounds, plattform.Bounds);
                         player.HandleCollision(plattform);
                         //plattform.HandleCollision(player);
                     }
+
+                    //if (player.Bounds.Intersects(plattform.Bounds))
+                    //{
+                    //    player.HandleCollision(plattform);
+                    //    //plattform.HandleCollision(player);
+                    //}
                 }
                 player.UpdatePlayer(gameTime);
             }
@@ -107,7 +114,7 @@ namespace TLW_Plattformer.RipyGame.Globals
             Vector2 plattform1Pos = new Vector2(
                 GameValues.LevelStartPos.X + GameValues.ColumnWidth,
                 GameValues.LevelEndPos.Y - GameValues.RowHeight);
-            int plattform1Width = GameValues.ColumnWidth * 4;
+            int plattform1Width = GameValues.ColumnWidth * 25;
             int plattform1Height = GameValues.RowHeight;
 
             Vector2 plattform2Pos = new Vector2(
@@ -117,9 +124,9 @@ namespace TLW_Plattformer.RipyGame.Globals
             int plattform2Height = GameValues.RowHeight;
 
             List<GameObject> plattforms = new List<GameObject>();
-            plattforms.Add(new Plattform(textureManager, PlattformTypes.Solid, p1TestPos, p1TestWidth, p1TestHeight));
+            //plattforms.Add(new Plattform(textureManager, PlattformTypes.Solid, p1TestPos, p1TestWidth, p1TestHeight));
             plattforms.Add(new Plattform(textureManager, PlattformTypes.Solid, plattform1Pos, plattform1Width, plattform1Height));
-            plattforms.Add(new Plattform(textureManager, PlattformTypes.Solid, plattform2Pos, plattform2Width, plattform2Height));
+            //plattforms.Add(new Plattform(textureManager, PlattformTypes.Solid, plattform2Pos, plattform2Width, plattform2Height));
 
             GameObjects.Add(GameObjectTypes.Plattform, plattforms);
 

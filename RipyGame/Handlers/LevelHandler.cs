@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,8 @@ namespace TLW_Plattformer.RipyGame.Handlers
         public int CurrentLevelIndex {  get; private set; }
         public GameStates LevelGameState { get; set; }
 
-        private GameObjectPencil gameObjectPencil { get; set; }
+        private LevelEditor levelEditor;
+        private bool isEditing;
 
         public LevelHandler(TextureManager textureManager, AnimationManager animationManager, int levelIndex)
         {
@@ -40,6 +42,8 @@ namespace TLW_Plattformer.RipyGame.Handlers
             }
 
             this.LevelCamera = new Camera();
+            this.levelEditor = new LevelEditor(textureManager, animationManager);
+            this.isEditing = false;
         }
 
         private ParallaxBG GetParallaxBG(TextureManager textureManager)
@@ -98,16 +102,33 @@ namespace TLW_Plattformer.RipyGame.Handlers
 
         public void Update(GameTime gameTime)
         {
-            LevelCamera.Update(LoadedGameLevel.GameObjects.GetValueOrDefault(GameObjectTypes.PLayer)[0]);
-            parallaxBG.Update(LevelCamera);
+            if (GameValues.IsKeyPressed(Keys.Enter))
+            {
+                isEditing = !isEditing;
+            }
 
-            LoadedGameLevel.Update(gameTime);
+            if (isEditing)
+            {
+                LevelCamera.Update(levelEditor.cameraTarget);
+                parallaxBG.Update(LevelCamera);
+                levelEditor.Update();
+            }
+            else
+            {
+                LevelCamera.Update(LoadedGameLevel.GameObjects.GetValueOrDefault(GameObjectTypes.PLayer)[0]);
+                parallaxBG.Update(LevelCamera);
+                LoadedGameLevel.Update(gameTime);
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             parallaxBG.Draw(spriteBatch);
             LoadedGameLevel.Draw(spriteBatch, levelTilesetTex);
+            if (isEditing)
+            {
+                levelEditor.Draw(spriteBatch);
+            }
         }
 
     }

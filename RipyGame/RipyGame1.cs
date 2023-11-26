@@ -84,7 +84,7 @@ namespace TLW_Plattformer.RipyGame
 
         private void SaveHighscoreData()
         {
-            foreach (Player player in LoadedGameLevel.Players)
+            foreach (Player player in LoadedGameLevel.GameObjects.GetValueOrDefault(GameObjectTypes.PLayer))
             {
                 _HighscoreManager.UpdateAndSetScores(player.Name, player.Score);
             }
@@ -301,7 +301,7 @@ namespace TLW_Plattformer.RipyGame
             {
                 SamplerState gameSamplerState = SamplerState.PointClamp;
                 spriteBatch.Begin(samplerState: gameSamplerState);
-                spriteBatch.Draw(_BackgroundTexture, GameValues.LevelBounds, Color.White);
+                spriteBatch.Draw(_BackgroundTexture, GameValues.WindowBounds, Color.White);
                 DrawMenu(spriteBatch);
                 spriteBatch.End();
             }

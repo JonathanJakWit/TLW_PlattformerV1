@@ -92,8 +92,8 @@ namespace TLW_Plattformer.RipyGame.Managers
             #endregion Initialize Textures
 
             #region Initialize Rectangles
-            int tileWidth = 32;
-            int tileHeight = 32;
+            int tileWidth = 16;
+            int tileHeight = 16;
 
             #region Plattforms
             plattformMiddle_1 = new Rectangle(tileWidth * 0, tileHeight * 0, tileWidth, tileHeight);

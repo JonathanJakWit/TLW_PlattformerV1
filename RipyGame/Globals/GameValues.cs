@@ -14,6 +14,8 @@ namespace TLW_Plattformer.RipyGame.Globals
     {
         public static KeyboardState NewKeyboardState {  get; set; }
         public static KeyboardState OldKeyboardState {  get; set; }
+        public static MouseState NewMouseState { get; set; }
+        public static MouseState OldMouseState { get; set; }
 
         public static bool DebugColorsActive { get; private set; }
         public static bool UseCustomLevels { get; private set; }
@@ -56,10 +58,12 @@ namespace TLW_Plattformer.RipyGame.Globals
             Time = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             NewKeyboardState = Keyboard.GetState();
+            NewMouseState = Mouse.GetState();
         }
         public static void UpdateEnd()
         {
             OldKeyboardState = NewKeyboardState;
+            OldMouseState = NewMouseState;
         }
 
         public static void InitializeValues(ContentManager Content)
@@ -109,6 +113,23 @@ namespace TLW_Plattformer.RipyGame.Globals
         public static bool IsKeyPressed(Keys key)
         {
             if (NewKeyboardState.IsKeyDown(key) && OldKeyboardState.IsKeyUp(key))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public static bool IsLeftMouseClicked()
+        {
+            if (NewMouseState.LeftButton == ButtonState.Pressed && OldMouseState.LeftButton == ButtonState.Released)
+            {
+                return true;
+            }
+            return false;
+        }
+        public static bool IsRightMouseClicked()
+        {
+            if (NewMouseState.RightButton == ButtonState.Pressed && OldMouseState.RightButton == ButtonState.Released)
             {
                 return true;
             }

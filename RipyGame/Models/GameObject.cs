@@ -29,6 +29,21 @@ namespace TLW_Plattformer.RipyGame.Models
             }
             return false;
         }
+
+        public virtual void HandleCollision(GameObject other)
+        {
+            return;
+
+            //if (other == null)
+            //{
+            //    return;
+            //}
+        }
+
+        //public virtual void Update(GameTime gameTime)
+        //{
+
+        //}
     }
 
     public class MoveableGameObject : GameObject
@@ -58,5 +73,13 @@ namespace TLW_Plattformer.RipyGame.Models
             Center += Velocity;
             Bounds = new Rectangle((int)Position.X, (int)Position.Y, Bounds.Width, Bounds.Height);
         }
+    }
+
+    public enum GameObjectTypes
+    {
+        Plattform,
+        Item,
+        PLayer,
+        Enemy
     }
 }

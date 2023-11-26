@@ -10,54 +10,65 @@ using TLW_Plattformer.RipyGame.Managers;
 
 namespace TLW_Plattformer.RipyGame.Models
 {
-    public class Plattform
+    public class Plattform : GameObject
     {
         public PlattformTypes PlattformType { get; set; }
-        public Vector2 Position { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
-        public Rectangle Bounds { get; set; }
 
         private int tileRowCount;
         private int tileColumnCount;
 
+        private List<Rectangle> _destinationRectangles;
         private List<Rectangle> _sourceRects;
 
-        public Plattform(PlattformTypes plattformType, Vector2 position, int width, int height)
+        public Plattform(TextureManager textureManager, PlattformTypes plattformType, Vector2 position, int width, int height)
         {
             this.PlattformType = plattformType;
             this.Position = position;
             this.Width = width;
             this.Height = height;
-            this.Bounds = new Rectangle((int)position.X, (int)position.Y, width, height);
+            this.Bounds = new Rectangle((int)position.X, (int)position.Y, width * (int)GameValues.TileScale.X, height);
 
             this.tileRowCount = height / GameValues.TileHeight;
             this.tileColumnCount = width / GameValues.TileWidth;
 
+            this._destinationRectangles = new List<Rectangle>();
+            int tileCount = width / GameValues.TileWidth;
+            for (int i = 0; i < tileCount; i++)
+            {
+                _destinationRectangles.Add(new Rectangle((int)position.X + GameValues.ColumnWidth * i, (int)position.Y, GameValues.ColumnWidth, GameValues.RowHeight));
+            }
+
             this._sourceRects = new List<Rectangle>();
+            InitializeSourceRectangles(textureManager.PlattformSourceRectangles);
         }
 
-        public void InitializeSourceRectangles(Dictionary<PlattformTextureTypes, Rectangle> plattformSourceRects)
+        public void InitializeSourceRectangles(Dictionary<PlattformTextureTypes, List<Rectangle>> plattformSourceRects)
         {
             if (PlattformType == PlattformTypes.Solid)
             {
-                _sourceRects.Add(plattformSourceRects.GetValueOrDefault(PlattformTextureTypes.Plattform_Left));
+                _sourceRects.Add(plattformSourceRects.GetValueOrDefault(PlattformTextureTypes.Plattform_Left)[0]);
                 for (int i = 0; i < tileColumnCount - 2; i++)
                 {
-                    _sourceRects.Add(plattformSourceRects.GetValueOrDefault(PlattformTextureTypes.Plattform_Middle));
+                    _sourceRects.Add(plattformSourceRects.GetValueOrDefault(PlattformTextureTypes.Plattform_Middle)[0]);
                 }
-                _sourceRects.Add(plattformSourceRects.GetValueOrDefault(PlattformTextureTypes.Plattform_Right));
+                _sourceRects.Add(plattformSourceRects.GetValueOrDefault(PlattformTextureTypes.Plattform_Right)[0]);
             }
+        }
+
+        public void MoveTo(Vector2 newPos)
+        {
+            Position = newPos;
+            //Center = Position;
+            Bounds = new Rectangle((int)Position.X, (int)Position.Y, Bounds.Width, Bounds.Height);
         }
 
         public void Draw(SpriteBatch spriteBatch, Texture2D tileSet)
         {
-            int tileIndex = 0;
-            foreach (Rectangle srcRect in _sourceRects)
+            for (int i = 0; i < tileColumnCount; i++)
             {
-                Vector2 currentRectPos = new Vector2(Position.X * tileIndex * GameValues.TileWidth * (int)GameValues.TileScale.X, Position.Y);
-                spriteBatch.Draw(tileSet, currentRectPos, srcRect, Color.White);
-                tileIndex++;
+                spriteBatch.Draw(tileSet, _destinationRectangles[i], _sourceRects[i], Color.White);
             }
         }
     }

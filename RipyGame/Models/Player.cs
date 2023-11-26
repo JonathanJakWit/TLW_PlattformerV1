@@ -96,7 +96,9 @@ namespace TLW_Plattformer.RipyGame.Models
             this.jumpCooldown = 2;
             this.jumpTimer = new Timer(jumpCooldown, GameValues.Time);
 
-            IsGrounded = true;
+            this.canMoveDown = true;
+            IsGrounded = false;
+
             Bounds = new Rectangle((int)Position.X, (int)Position.Y, Bounds.Width, Bounds.Height);
             animations = animationManager.GetPlayerAnimations();
             //activeAnimation = animations.GetValueOrDefault(PlayerActions.Idle);
@@ -115,22 +117,31 @@ namespace TLW_Plattformer.RipyGame.Models
             this.fallSpeed = new Vector2(0, +fallSpeed);
         }
 
-        public void HandleItemInteraction(Item item)
+        public override void HandleCollision(GameObject other)
         {
+            if (other is Plattform)
+            {
+                if (IsGrounded)
+                {
+                    return;
+                }
+            }
 
+            //base.HandleCollision(other);
+
+            //if (other is Player)
+            //{
+            //    return;
+            //}
+            //else if (other is Plattform)
+            //{
+            //    if (!IsGrounded)
+            //    {
+            //        canMoveDown = false;
+            //        IsGrounded = true;
+            //    }
+            //}
         }
-
-        //private bool IsPlayerCentered()
-        //{
-        //    if (Position.X > GameValues.WindowCenter.X - Bounds.Width)
-        //    {
-        //        if (Position.X < GameValues.WindowCenter.X + Bounds.Width)
-        //        {
-        //            return true;
-        //        }
-        //    }
-        //    return false;
-        //}
 
         private void MovePlayerBy(Vector2 distance)
         {
@@ -147,48 +158,35 @@ namespace TLW_Plattformer.RipyGame.Models
 
         private void StartGoIdle()
         {
-            //isMoving = false;
             currentDirectionX = MoveableDirections.Idle;
             currentDirectionY = MoveableDirections.Idle;
             activeAnimation = animations.GetValueOrDefault(PlayerActions.Idle);
-            //Velocity = new Vector2(0, 0);
         }
         private void StartMoveLeft()
         {
-            //isMoving = true;
             currentDirectionX = MoveableDirections.Left;
             activeAnimation = animations.GetValueOrDefault(PlayerActions.MoveLeft);
             ChangeSpriteEffect(SpriteEffects.FlipHorizontally);
-            //Velocity = new Vector2(-speed, Velocity.Y);
-            //canMoveLeft = false; canMoveRight = false;
-            //directionTimer.Reset(GameValues.Time);
         }
         private void StartMoveRight()
         {
-            //isMoving = true;
             currentDirectionX = MoveableDirections.Right;
             activeAnimation = animations.GetValueOrDefault(PlayerActions.MoveRight);
             ChangeSpriteEffect(SpriteEffects.None);
-            //Velocity = new Vector2(speed, Velocity.Y);
-            //canMoveLeft = false; canMoveRight = false;
-            //directionTimer.Reset(GameValues.Time);
         }
         private void StartJump()
         {
             IsGrounded = false;
-            //isMoving = true;
             isJumping = true;
             canJump = false;
             currentDirectionY = MoveableDirections.Up;
             activeAnimation = animations.GetValueOrDefault(PlayerActions.Jump);
             jumpTimer.Reset(GameValues.Time);
-            //Velocity = new Vector2(Velocity.X, + jumpSpeed);
         }
         private void EndJump()
         {
             isJumping = false;
-            //currentDirectionY = MoveableDirections.Down;
-            //Velocity = new Vector2(Velocity.X, Velocity.Y - jumpSpeed);
+            isFalling = true;
         }
         private void StartCrouch()
         {
@@ -273,16 +271,56 @@ namespace TLW_Plattformer.RipyGame.Models
             canMoveLeft = true;
             canMoveRight = true;
             canMoveUp = true;
-            if (Position.Y + Bounds.Height < GameValues.WindowBounds.Height - Bounds.Height - 5)
+
+            if (!isJumping)
+            {
+                isFalling = true;
+            }
+
+            if (isFalling)
+            {
+                IsGrounded = false;
+                foreach (Plattform plattform in LoadedGameLevel.GameObjects.GetValueOrDefault(GameObjectTypes.Plattform))
+                {
+                    if (Bounds.Intersects(plattform.Bounds))
+                    {
+                        IsGrounded = true;
+                    }
+                }
+            }
+
+            if (!IsGrounded)
             {
                 canMoveDown = true;
-                IsGrounded = false;
             }
             else
             {
                 canMoveDown = false;
-                IsGrounded = true;
             }
+
+            //if (Position.Y + Bounds.Height < GameValues.WindowBounds.Height - Bounds.Height - 5)
+            //{
+            //    canMoveDown = true;
+            //    IsGrounded = false;
+            //}
+            //else
+            //{
+            //    canMoveDown = false;
+            //    IsGrounded = true;
+            //}
+
+            //if (!IsGrounded)
+            //{
+            //    Rectangle checkerBounds = new Rectangle(Bounds.X, Bounds.Y + Bounds.Height / 2, Bounds.Width, Bounds.Height);
+            //    foreach (Plattform plattform in LoadedGameLevel.Plattforms)
+            //    {
+            //        if (checkerBounds.Intersects(plattform.Bounds))
+            //        {
+            //            canMoveDown = false;
+            //            IsGrounded = true;
+            //        }
+            //    }
+            //}
 
             if (IsGrounded)
             {
@@ -298,12 +336,6 @@ namespace TLW_Plattformer.RipyGame.Models
             {
                 canMoveRight = false;
             }
-
-            //if (isJumping && !canMoveDown)
-            //{
-            //    //canJump = true;
-            //    //EndJump();
-            //}
             #endregion TEMP TESTING
 
             #region VIKTIGT SENARE

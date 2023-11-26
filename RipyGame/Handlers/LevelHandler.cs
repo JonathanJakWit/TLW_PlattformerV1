@@ -13,22 +13,18 @@ namespace TLW_Plattformer.RipyGame.Handlers
 {
     public class LevelHandler
     {
-        //private Texture2D backgroundTex;
-        //private BackgroundHandler backgroundHandler;
         public Camera LevelCamera {  get; set; }
         private ParallaxBG parallaxBG;
         private Texture2D levelTilesetTex;
 
         public int CurrentLevelIndex {  get; private set; }
         public GameStates LevelGameState { get; set; }
-        public Level CurrentLevel { get; private set; }
+
+        private GameObjectPencil gameObjectPencil { get; set; }
 
         public LevelHandler(TextureManager textureManager, AnimationManager animationManager, int levelIndex)
         {
-            //this.backgroundTex = textureManager.LevelOneBackgroundTex;
             this.parallaxBG = GetParallaxBG(textureManager);
-            //this.backgroundHandler = new BackgroundHandler(backgroundTex);
-            //BackgroundHandler.LoadBackground(this.backgroundTex);
             this.levelTilesetTex = textureManager.LevelOneTilesetTex;
 
             this.CurrentLevelIndex = levelIndex;
@@ -36,19 +32,14 @@ namespace TLW_Plattformer.RipyGame.Handlers
 
             if (CurrentLevelIndex == 1)
             {
-                LoadedGameLevel.Load(GamePaths.LevelOneDataPath, animationManager);
+                LoadedGameLevel.Load(GamePaths.LevelOneDataPath, animationManager, textureManager);
             }
             else
             {
-                LoadedGameLevel.Load(GamePaths.LevelOneDataPath, animationManager);
+                LoadedGameLevel.Load(GamePaths.LevelOneDataPath, animationManager, textureManager);
             }
 
-            this.CurrentLevel = new Level();
             this.LevelCamera = new Camera();
-
-            //LoadedLevel.Load(GamePaths.LevelOneDataPath, animationManager);
-            //this.CurrentLevel = new Level(levelIndex, animationManager);
-
         }
 
         private ParallaxBG GetParallaxBG(TextureManager textureManager)
@@ -79,11 +70,14 @@ namespace TLW_Plattformer.RipyGame.Handlers
         public int GetHighestPlayerScore()
         {
             int hPS = 0;
-            foreach (Player player in LoadedGameLevel.Players)
+            foreach (Player gameObject in LoadedGameLevel.GameObjects.GetValueOrDefault(GameObjectTypes.PLayer))
             {
-                if (player.Score > hPS)
+                if (gameObject is Player)
                 {
-                    hPS = player.Score;
+                    if (gameObject.Score > hPS)
+                    {
+                        hPS = gameObject.Score;
+                    }
                 }
             }
             return hPS;
@@ -92,7 +86,7 @@ namespace TLW_Plattformer.RipyGame.Handlers
         public int GetLowestPlayerHealth()
         {
             int lPH = 100;
-            foreach (Player player in LoadedGameLevel.Players)
+            foreach (Player player in LoadedGameLevel.GameObjects.GetValueOrDefault(GameObjectTypes.PLayer))
             {
                 if (player.Health < lPH)
                 {
@@ -104,19 +98,16 @@ namespace TLW_Plattformer.RipyGame.Handlers
 
         public void Update(GameTime gameTime)
         {
-            CurrentLevel.Update(gameTime);
-            LevelCamera.Update(LoadedGameLevel.Players[0]);
+            LevelCamera.Update(LoadedGameLevel.GameObjects.GetValueOrDefault(GameObjectTypes.PLayer)[0]);
             parallaxBG.Update(LevelCamera);
+
+            LoadedGameLevel.Update(gameTime);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            //Vector2 pog = new Vector2(LevelCamera.Transform.Translation.X - GameValues.WindowCenter.X, 0);
-            //spriteBatch.Draw(backgroundTex, pog, Color.White);
-
             parallaxBG.Draw(spriteBatch);
-         
-            CurrentLevel.Draw(spriteBatch, levelTilesetTex);
+            LoadedGameLevel.Draw(spriteBatch, levelTilesetTex);
         }
 
     }

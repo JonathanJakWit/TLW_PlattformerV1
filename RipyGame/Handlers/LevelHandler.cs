@@ -17,6 +17,7 @@ namespace TLW_Plattformer.RipyGame.Handlers
         public Camera LevelCamera {  get; set; }
         private ParallaxBG parallaxBG;
         private Texture2D levelTilesetTex;
+        private Texture2D plattformTilesetTex;
 
         public int CurrentLevelIndex {  get; private set; }
         public GameStates LevelGameState { get; set; }
@@ -28,6 +29,7 @@ namespace TLW_Plattformer.RipyGame.Handlers
         {
             this.parallaxBG = GetParallaxBG(textureManager);
             this.levelTilesetTex = textureManager.LevelOneTilesetTex;
+            this.plattformTilesetTex = textureManager.StonePlattformTilesetTex;
 
             this.CurrentLevelIndex = levelIndex;
             this.LevelGameState = GameStates.Playing;
@@ -124,7 +126,7 @@ namespace TLW_Plattformer.RipyGame.Handlers
         public void Draw(SpriteBatch spriteBatch)
         {
             parallaxBG.Draw(spriteBatch);
-            LoadedGameLevel.Draw(spriteBatch, levelTilesetTex);
+            LoadedGameLevel.Draw(spriteBatch, levelTilesetTex, plattformTilesetTex);
             if (isEditing)
             {
                 levelEditor.Draw(spriteBatch);

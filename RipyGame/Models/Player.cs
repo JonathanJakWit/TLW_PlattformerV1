@@ -184,15 +184,7 @@ namespace TLW_Plattformer.RipyGame.Models
 
         private void MovePlayerBy(Vector2 distance)
         {
-            //if (IsPlayerCentered()) // Player is in the centre of the window
-            if (false) // Player is in the centre of the window
-            {
-                BackgroundHandler.MoveBy(distance);
-            }
-            else
-            {
-                MoveBy(distance);
-            }
+            MoveBy(distance);
         }
 
         private void StartGoIdle()
@@ -327,7 +319,7 @@ namespace TLW_Plattformer.RipyGame.Models
                         {
                             canMoveRight = false;
                         }
-                        else if (plattform.Position.X + plattform.Bounds.Width - 10 < Position.X)
+                        if (plattform.Position.X + plattform.Bounds.Width - 10 < Position.X)
                         {
                             canMoveLeft = false;
                         }
@@ -337,15 +329,15 @@ namespace TLW_Plattformer.RipyGame.Models
                             canMoveDown = false;
                             IsGrounded = true;
                         }
-                        else if (plattform.Position.Y + plattform.Height - 10 < Position.Y)
+                        if (plattform.Position.Y + plattform.Height + 10 < Position.Y) // Not working
                         {
                             canMoveUp = false;
                             canJump = false;
                         }
-                        else
-                        {
-                            IsGrounded = true;
-                        }
+                        //else
+                        //{
+                        //    IsGrounded = true;
+                        //}
 
                         //if (Position.X + Bounds.Width - moveLeftSpeed.X < plattform.Position.X)
                         //{

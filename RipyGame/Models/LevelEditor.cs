@@ -15,6 +15,7 @@ namespace TLW_Plattformer.RipyGame.Models
     {
         private TextureManager textureManager;
         private Texture2D levelTileset;
+        private Texture2D plattformTileset;
 
         public FreePlayer cameraTarget;
         private GameObjectPencil objectPencil;
@@ -24,6 +25,7 @@ namespace TLW_Plattformer.RipyGame.Models
         {
             this.textureManager = textureManager;
             this.levelTileset = textureManager.LevelOneTilesetTex;
+            this.plattformTileset = textureManager.StonePlattformTilesetTex;
             this.cameraTarget = new FreePlayer();
             this.objectPencil = new GameObjectPencil(textureManager);
             this.editorTiles = new List<EditorTile>();
@@ -68,8 +70,20 @@ namespace TLW_Plattformer.RipyGame.Models
         {
             foreach (EditorTile editorTile in editorTiles)
             {
-                editorTile.Draw(spriteBatch, levelTileset);
+                if (editorTile.objectType == GameObjectTypes.Plattform)
+                {
+                    editorTile.Draw(spriteBatch, plattformTileset);
+                }
+                else
+                {
+                    editorTile.Draw(spriteBatch, levelTileset);
+                }
             }
+
+            //foreach (GameObject gameObject in objectPencil.DrawnGameObjects)
+            //{
+            //    gameObject
+            //}
         }
     }
 }

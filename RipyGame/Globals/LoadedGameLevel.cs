@@ -77,11 +77,11 @@ namespace TLW_Plattformer.RipyGame.Globals
             //}
         }
 
-        public static void Draw(SpriteBatch spriteBatch, Texture2D levelTileset)
+        public static void Draw(SpriteBatch spriteBatch, Texture2D levelTileset, Texture2D plattformTileset)
         {
             foreach (Plattform plattform in GameObjects.GetValueOrDefault(GameObjectTypes.Plattform))
             {
-                plattform.Draw(spriteBatch, levelTileset);
+                plattform.Draw(spriteBatch, plattformTileset);
             }
 
             foreach (Item item in GameObjects.GetValueOrDefault(GameObjectTypes.Item))
@@ -107,37 +107,23 @@ namespace TLW_Plattformer.RipyGame.Globals
             GameValues.LevelBounds = new Rectangle(GameValues.LevelStartPos.ToPoint(), GameValues.LevelEndPos.ToPoint());
 
             #region PLattforms
-            Vector2 p1TestPos = new Vector2(10, 10);
-            int p1TestWidth = GameValues.ColumnWidth;
-            int p1TestHeight = GameValues.RowHeight;
-
             Vector2 plattform1Pos = new Vector2(
                 GameValues.LevelStartPos.X + GameValues.ColumnWidth,
                 GameValues.LevelEndPos.Y - GameValues.RowHeight);
-            int plattform1Width = GameValues.ColumnWidth * 25;
+            int plattform1Width = GameValues.ColumnWidth * 128;
             int plattform1Height = GameValues.RowHeight;
 
             Vector2 plattform2Pos = new Vector2(
-                plattform1Pos.X + GameValues.ColumnWidth * 12,
-                plattform1Pos.Y);
-            int plattform2Width = GameValues.ColumnWidth * 6;
+                GameValues.LevelStartPos.X + GameValues.ColumnWidth * 6,
+                GameValues.LevelEndPos.Y - GameValues.RowHeight * 4);
+            int plattform2Width = GameValues.ColumnWidth * 8;
             int plattform2Height = GameValues.RowHeight;
 
             List<GameObject> plattforms = new List<GameObject>();
-            //plattforms.Add(new Plattform(textureManager, PlattformTypes.Solid, p1TestPos, p1TestWidth, p1TestHeight));
             plattforms.Add(new Plattform(textureManager, PlattformTypes.Solid, plattform1Pos, plattform1Width, plattform1Height));
-            //plattforms.Add(new Plattform(textureManager, PlattformTypes.Solid, plattform2Pos, plattform2Width, plattform2Height));
+            plattforms.Add(new Plattform(textureManager, PlattformTypes.Solid, plattform2Pos, plattform2Width, plattform2Height));
 
             GameObjects.Add(GameObjectTypes.Plattform, plattforms);
-
-            //GameObjects.Add(new Plattform(textureManager, PlattformTypes.Solid, p1TestPos, p1TestWidth, p1TestHeight));
-            //GameObjects.Add(new Plattform(textureManager, PlattformTypes.Solid, plattform1Pos, plattform1Width, plattform1Height));
-            //GameObjects.Add(new Plattform(textureManager, PlattformTypes.Solid, plattform2Pos, plattform2Width, plattform2Height));
-
-            //Plattforms = new List<Plattform>();
-            //Plattforms.Add(new Plattform(textureManager, PlattformTypes.Solid, p1TestPos, p1TestWidth, p1TestHeight));
-            //Plattforms.Add(new Plattform(textureManager, PlattformTypes.Solid, plattform1Pos, plattform1Width, plattform1Height));
-            //Plattforms.Add(new Plattform(textureManager, PlattformTypes.Solid, plattform2Pos, plattform2Width, plattform2Height));
             #endregion PLattforms
 
             #region Items
@@ -151,9 +137,9 @@ namespace TLW_Plattformer.RipyGame.Globals
                 GameValues.LevelStartPos.X + GameValues.ColumnWidth * 2,
                 GameValues.LevelEndPos.Y - GameValues.RowHeight * 4);
             float p1Scale = 4F;
-            float p1MoveSpeed = 10F;
-            float p1JumpSpeed = 8F;
-            float p1FallSpeed = 5F;
+            float p1MoveSpeed = 12F;
+            float p1JumpSpeed = 16F;
+            float p1FallSpeed = 8F;
 
             List<GameObject> players = new List<GameObject>();
             players.Add(new Player(PlayerIndex.One, animationManager, player1Pos, Color.White, p1Scale, p1MoveSpeed, p1JumpSpeed, p1FallSpeed));

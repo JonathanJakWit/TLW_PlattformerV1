@@ -36,6 +36,7 @@ namespace TLW_Plattformer.RipyGame.Managers
 
         #region Tilesets
         public Texture2D LevelOneTilesetTex { get; private set; }
+        public Texture2D StonePlattformTilesetTex { get; private set; }
         #endregion Tilesets
 
         #region SpriteSheets
@@ -84,6 +85,7 @@ namespace TLW_Plattformer.RipyGame.Managers
 
             #region Tilesets
             LevelOneTilesetTex = Content.Load<Texture2D>(GamePaths.LevelOneTilesetPath);
+            StonePlattformTilesetTex = Content.Load<Texture2D>(GamePaths.StonePlattformTilesetPath);
             #endregion Tilesets
 
             #region Spritesheets
@@ -92,16 +94,16 @@ namespace TLW_Plattformer.RipyGame.Managers
             #endregion Initialize Textures
 
             #region Initialize Rectangles
-            int tileWidth = 16;
-            int tileHeight = 16;
+            int tileWidth = 824 / 10;
+            int tileHeight = 640 / 10;
 
             #region Plattforms
-            plattformMiddle_1 = new Rectangle(tileWidth * 0, tileHeight * 0, tileWidth, tileHeight);
-            plattformMiddle_2 = new Rectangle(tileWidth * 1, tileHeight * 0, tileWidth, tileHeight);
-            plattformMiddle_3 = new Rectangle(tileWidth * 2, tileHeight * 0, tileWidth, tileHeight);
+            plattformMiddle_1 = new Rectangle(tileWidth * 1, tileHeight * 0, tileWidth, tileHeight);
+            plattformMiddle_2 = new Rectangle(tileWidth * 2, tileHeight * 0, tileWidth, tileHeight);
+            plattformMiddle_3 = new Rectangle(tileWidth * 3, tileHeight * 0, tileWidth, tileHeight);
 
-            plattformLeft = new Rectangle(tileWidth * 0, tileHeight * 1, tileWidth, tileHeight);
-            plattformRight = new Rectangle(tileWidth * 1, tileHeight * 1, tileWidth, tileHeight);
+            plattformLeft = new Rectangle(tileWidth * 0, tileHeight * 0, tileWidth, tileHeight);
+            plattformRight = new Rectangle(tileWidth * 4, tileHeight * 0, tileWidth, tileHeight);
 
             plattformPortal = new Rectangle(tileWidth * 0, tileHeight * 2, tileWidth, tileHeight);
             plattformBreakable = new Rectangle(tileWidth * 1, tileHeight * 2, tileWidth, tileHeight);

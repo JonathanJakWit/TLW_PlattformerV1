@@ -44,6 +44,7 @@ namespace TLW_Plattformer.RipyGame.Globals
         #region Tilesets
         public static string TilesetsPath { get; private set; }
         public static string LevelOneTilesetPath { get; private set; }
+        public static string StonePlattformTilesetPath { get; private set; }
         #endregion Tilesets
 
         #region DataFiles
@@ -85,6 +86,7 @@ namespace TLW_Plattformer.RipyGame.Globals
 
             TilesetsPath = "Tilesets/";
             LevelOneTilesetPath = TilesetsPath + "level_one_tileset";
+            StonePlattformTilesetPath = TilesetsPath + "stone_plattform_tileset2";
 
             DataFilesPath = "../../../RipyGame/DataFiles/";
             HighscoreDataPath = DataFilesPath + "Highscores/highscoreData.xml";

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,10 @@ namespace TLW_Plattformer.RipyGame.Globals
         //public static List<Player> Players { get; set; }
 
         //public static Dictionary<GameObjectTypes, List<GameObject>> GameObjects { get; set; }
+
+        private static Texture2D hitBoxTex {  get; set; }
+        public static bool DrawHitboxes { get; set; }
+
         public static Dictionary<GameObjectTypes, List<GameObject>> GameObjects { get; set; }
 
         public static void AddPlattform(GameObject plattformObj)
@@ -34,10 +39,10 @@ namespace TLW_Plattformer.RipyGame.Globals
 
         public static void Update(GameTime gameTime)
         {
-            //foreach (var item in collection)
-            //{
-
-            //}
+            if (GameValues.IsKeyPressed(Keys.H))
+            {
+                DrawHitboxes = !DrawHitboxes;
+            }
 
             foreach (Player player in GameObjects.GetValueOrDefault(GameObjectTypes.PLayer))
             {
@@ -77,27 +82,46 @@ namespace TLW_Plattformer.RipyGame.Globals
             //}
         }
 
+        public static void DrawHitBox(SpriteBatch spriteBatch, GameObject gameObject)
+        {
+            spriteBatch.Draw(hitBoxTex, gameObject.Bounds, Color.Red);
+        }
+
         public static void Draw(SpriteBatch spriteBatch, Texture2D levelTileset, Texture2D plattformTileset)
         {
             foreach (Plattform plattform in GameObjects.GetValueOrDefault(GameObjectTypes.Plattform))
             {
+                if (DrawHitboxes)
+                {
+                    DrawHitBox(spriteBatch, plattform);
+                }
                 plattform.Draw(spriteBatch, plattformTileset);
             }
 
             foreach (Item item in GameObjects.GetValueOrDefault(GameObjectTypes.Item))
             {
+                if (DrawHitboxes)
+                {
+                    DrawHitBox(spriteBatch, item);
+                }
                 item.Draw(spriteBatch);
             }
 
             foreach (Player player in GameObjects.GetValueOrDefault(GameObjectTypes.PLayer))
             {
+                if (DrawHitboxes)
+                {
+                    DrawHitBox(spriteBatch, player);
+                }
                 player.Draw(spriteBatch);
             }
         }
 
         public static void Load(string levelDataPath, AnimationManager animationManager, TextureManager textureManager)
         {
-            //GameObjects = new List<GameObject>();
+            hitBoxTex = textureManager.FullTex;
+            DrawHitboxes = true;
+
             GameObjects = new Dictionary<GameObjectTypes, List<GameObject>>();
 
             // Change below to actually load from the json file

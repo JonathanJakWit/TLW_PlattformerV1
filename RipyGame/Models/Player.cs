@@ -35,15 +35,12 @@ namespace TLW_Plattformer.RipyGame.Models
         private bool isMoving;
         private bool isJumping;
         private bool isFalling;
+        //private bool isMovementStarted;
 
-        //private float directionCooldown;
-        //private Timer directionTimer;
+        private int goIdleCooldown;
+        private Timer goIdleTimer;
         private int jumpCooldown;
         private Timer jumpTimer;
-
-        //private float speed;
-        //private float jumpSpeed;
-        //private float fallSpeed;
 
         private Vector2 moveLeftSpeed;
         private Vector2 moveRightSpeed;
@@ -81,31 +78,32 @@ namespace TLW_Plattformer.RipyGame.Models
 
             this.canMoveLeft = true;
             this.canMoveRight = true;
+            this.canMoveUp = true;
+            this.canMoveDown = true;
+
             this.canJump = true;
             this.canCrouch = true;
 
             this.isMoving = false;
             this.isJumping = false;
             this.isFalling = false;
-
-            this.canMoveDown = true;
+            //this.isMovementStarted = false;
             this.IsGrounded = false;
 
             this.currentDirectionX = MoveableDirections.Idle;
             this.currentDirectionY = MoveableDirections.Idle;
 
-            //this.directionCooldown = 0.5F;
-            //this.directionTimer = new Timer(1, 1, directionCooldown, GameValues.Time);
-            //this.jumpTimer = new Timer((int)jumpCooldown, GameValues.Time);
+            this.goIdleCooldown = 1;
+            this.goIdleTimer = new Timer(goIdleCooldown, GameValues.Time);
+            goIdleTimer.IsActive = false;
             this.jumpCooldown = 2;
             this.jumpTimer = new Timer(jumpCooldown, GameValues.Time);
 
             Bounds = new Rectangle((int)Position.X, (int)Position.Y, Bounds.Width, Bounds.Height);
             HitBox = new Rectangle((int)Position.X, (int)Position.Y, Bounds.Width, Bounds.Height);
-            //HitBox = new Rectangle(Bounds.X - (int)moveSpeed, Bounds.Y, Bounds.Width + (int)moveSpeed, Bounds.Height + (int)fallSpeed);
             HasHitBox = true;
+
             animations = animationManager.GetPlayerAnimations();
-            //activeAnimation = animations.GetValueOrDefault(PlayerActions.Idle);
 
             // Temp
             activeAnimation = animations.GetValueOrDefault(PlayerActions.Idle);
@@ -197,17 +195,37 @@ namespace TLW_Plattformer.RipyGame.Models
         }
         private void StartMoveLeft()
         {
+            //isMovementStarted = true;
+            if (currentDirectionX == MoveableDirections.Right)
+            {
+                velocity.X += moveLeftSpeed.X; // Reset it to 0 since it was moving right
+            }
             velocity.X += moveLeftSpeed.X;
             currentDirectionX = MoveableDirections.Left;
             activeAnimation = animations.GetValueOrDefault(PlayerActions.MoveLeft);
             ChangeSpriteEffect(SpriteEffects.FlipHorizontally);
         }
+        private void EndMoveLeft()
+        {
+            //isMovementStarted = false;
+            velocity.X -= moveLeftSpeed.X;
+        }
         private void StartMoveRight()
         {
+            //isMovementStarted = true;
+            if (currentDirectionX == MoveableDirections.Left)
+            {
+                velocity.X += moveRightSpeed.X; // Reset it to 0 since it was moving left
+            }
             velocity.X += moveRightSpeed.X;
             currentDirectionX = MoveableDirections.Right;
             activeAnimation = animations.GetValueOrDefault(PlayerActions.MoveRight);
             ChangeSpriteEffect(SpriteEffects.None);
+        }
+        private void EndMoveRight()
+        {
+            //isMovementStarted = false;
+            velocity.X -= moveRightSpeed.X;
         }
         private void StartJump()
         {
@@ -223,7 +241,6 @@ namespace TLW_Plattformer.RipyGame.Models
         {
             velocity.Y -= jumpSpeed.Y;
             isJumping = false;
-            isFalling = true;
         }
         private void StartCrouch()
         {
@@ -234,6 +251,11 @@ namespace TLW_Plattformer.RipyGame.Models
             velocity.Y += fallSpeed.Y;
             isFalling = true;
             activeAnimation = animations.GetValueOrDefault(PlayerActions.Fall);
+        }
+        private void EndFall()
+        {
+            velocity.Y -= fallSpeed.Y;
+            isFalling = false;
         }
 
         private void UpdateMoveLeft()
@@ -306,19 +328,16 @@ namespace TLW_Plattformer.RipyGame.Models
         public void UpdateAllowedDirections()
         {
             #region TEMP TESTING
-            //canMoveLeft = true;
-            //canMoveRight = true;
-            //canMoveUp = true;
-
-            if (!isJumping)
+            if (Position.X < GameValues.LevelBounds.X)
             {
-                isFalling = true;
+                canMoveLeft = false;
             }
-            if (isFalling)
+            if (Position.X + Bounds.Width > GameValues.LevelBounds.X + GameValues.LevelBounds.Width)
             {
-                IsGrounded = false;
+                canMoveRight = false;
             }
 
+            IsGrounded = false;
             foreach (Plattform plattform in LoadedGameLevel.GameObjects.GetValueOrDefault(GameObjectTypes.Plattform))
             {
                 if (Bounds.Intersects(plattform.Bounds))
@@ -336,105 +355,23 @@ namespace TLW_Plattformer.RipyGame.Models
                     else if (colDir == MoveableDirections.Up)
                     {
                         canMoveUp = false;
-                        canJump = false;
                     }
                     else if (colDir == MoveableDirections.Down)
                     {
-                        canMoveDown = false;
                         IsGrounded = true;
                     }
                 }
             }
 
-            if (false)
+            if (IsGrounded)
             {
-                //IsGrounded = false;
-                //foreach (Plattform plattform in LoadedGameLevel.GameObjects.GetValueOrDefault(GameObjectTypes.Plattform))
-                //{
-                //    if (Bounds.Intersects(plattform.Bounds))
-                //    {
-                //        MoveableDirections colDir = GameValues.GetCollisionDirection(this, plattform);
-                //        Debug.WriteLine(colDir.ToString());
-                //        if (colDir == MoveableDirections.Left)
-                //        {
-                //            canMoveLeft = false;
-                //        }
-                //        else if (colDir == MoveableDirections.Right)
-                //        {
-                //            canMoveRight = false;
-                //        }
-                //        else if (colDir == MoveableDirections.Up)
-                //        {
-                //            canMoveUp = false;
-                //            canJump = false;
-                //        }
-                //        else if (colDir == MoveableDirections.Down)
-                //        {
-                //            canMoveDown = false;
-                //            IsGrounded = true;
-                //        }
-                //    }
-                //}
-            }
-
-            if (!IsGrounded)
-            {
-                canMoveDown = true;
+                canMoveDown = false;
             }
             else
             {
-                canMoveDown = false;
-            }
-
-            //if (Position.Y + Bounds.Height < GameValues.WindowBounds.Height - Bounds.Height - 5)
-            //{
-            //    canMoveDown = true;
-            //    IsGrounded = false;
-            //}
-            //else
-            //{
-            //    canMoveDown = false;
-            //    IsGrounded = true;
-            //}
-
-            //if (!IsGrounded)
-            //{
-            //    Rectangle checkerBounds = new Rectangle(Bounds.X, Bounds.Y + Bounds.Height / 2, Bounds.Width, Bounds.Height);
-            //    foreach (Plattform plattform in LoadedGameLevel.Plattforms)
-            //    {
-            //        if (checkerBounds.Intersects(plattform.Bounds))
-            //        {
-            //            canMoveDown = false;
-            //            IsGrounded = true;
-            //        }
-            //    }
-            //}
-
-            if (IsGrounded)
-            {
-                canJump = true;
-                canMoveDown = false;
-            }
-
-            if (Position.X < GameValues.LevelBounds.X)
-            {
-                canMoveLeft = false;
-            }
-            if (Position.X + Bounds.Width > GameValues.LevelBounds.X + GameValues.LevelBounds.Width)
-            {
-                canMoveRight = false;
+                canMoveDown = true;
             }
             #endregion TEMP TESTING
-
-            #region VIKTIGT SENARE
-            //foreach (Plattform plattform in plattforms)
-            //{
-            //    if (plattform.PlattformType == PlattformTypes.Solid)
-            //    {
-            //        CheckCollisionAndUpdateDirections(plattform.Bounds);
-            //    }
-            //}
-            #endregion VIKTIGT SENARE
         }
 
         private bool IsAnyInput()
@@ -443,81 +380,106 @@ namespace TLW_Plattformer.RipyGame.Models
             {
                 return true;
             }
-            return false;
-        }
-        private bool IsStationary()
-        {
-            if (currentDirectionX == MoveableDirections.Idle && currentDirectionY == MoveableDirections.Idle)
+            if (false) // Check controller input
             {
                 return true;
             }
             return false;
         }
 
-        private void UpdateMovementInputs()
+        private bool IsLeftPressed()
+        {
+            if (GameValues.NewKeyboardState.IsKeyDown(moveLeftKey))
+            {
+                return true;
+            }
+            if (GamePad.GetState(_playerIndex).DPad.Left == ButtonState.Pressed)
+            {
+                return true;
+            }
+
+            return false;
+        }
+        private bool IsRightPressed()
+        {
+            if (GameValues.NewKeyboardState.IsKeyDown(moveRightKey))
+            {
+                return true;
+            }
+            if (GamePad.GetState(_playerIndex).DPad.Right == ButtonState.Pressed)
+            {
+                return true;
+            }
+
+            return false;
+        }
+        private bool IsJumpPressed()
+        {
+            if (GameValues.IsKeyPressed(jumpKey))
+            {
+                return true;
+            }
+            if (GamePad.GetState(_playerIndex).Buttons.A == ButtonState.Pressed) // Add check if was released
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private void UpdateInputs()
         {
             if (!IsAnyInput())
             {
-                if (IsStationary())
+                if (goIdleTimer.IsActive)
                 {
-                    return;
-                }
-                else if (currentDirectionX != MoveableDirections.Idle && currentDirectionY != MoveableDirections.Idle)
-                {
-                    if (!isJumping && !isFalling)
+                    goIdleTimer.Update(GameValues.Time);
+                    if (goIdleTimer.TimerFinished)
                     {
-                        StartGoIdle(); // Change to check for outside forces affecting movement velocity before going idle
+                        if (currentDirectionX == MoveableDirections.Left)
+                        {
+                            EndMoveLeft();
+                        }
+                        else if (currentDirectionX == MoveableDirections.Right)
+                        {
+                            EndMoveRight();
+                        }
+                        //goIdleTimer.IsActive = false;
                     }
                 }
+                else
+                {
+                    goIdleTimer.Reset(GameValues.Time);
+                    goIdleTimer.IsActive = true;
+                }
+
+                return;
             }
 
-            if (canMoveLeft && GameValues.NewKeyboardState.IsKeyDown(moveLeftKey))
+            if (canMoveLeft && IsLeftPressed())
             {
-                if (currentDirectionX == MoveableDirections.Left)
-                {
-                    UpdateMoveLeft();
-                }
-                else
-                {
-                    StartMoveLeft();
-                }
+                if (currentDirectionX == MoveableDirections.Left) { UpdateMoveLeft(); }
+                else { StartMoveLeft(); }
             }
-            if (canMoveRight && GameValues.NewKeyboardState.IsKeyDown(moveRightKey))
+            if (canMoveRight && IsRightPressed())
             {
-                if (currentDirectionX == MoveableDirections.Right)
-                {
-                    UpdateMoveRight();
-                }
-                else
-                {
-                    StartMoveRight();
-                }
+                if (currentDirectionX == MoveableDirections.Right) { UpdateMoveRight(); }
+                else { StartMoveRight(); }
             }
-            if (canJump || isJumping)
+            if (canMoveUp && canJump && IsJumpPressed())
             {
-                if (isJumping)
-                {
-                    UpdateJump();
-                }
-                else if (GameValues.IsKeyPressed(jumpKey))
-                {
-                    StartJump();
-                }
+                if (isJumping) { UpdateJump(); }
+                else { StartJump(); }
             }
         }
 
-        //public void TestFreePlayer()
-        //{
-        //    canMoveLeft = true;
-        //    canMoveRight = true;
-        //    canMoveUp = true;
-        //    canMoveDown = true;
-        //    canJump = true;
-        //}
-
+        #region V2
         public override void Update(GameTime gameTime)
         {
             if (!IsAlive) { return; }
+
+            UpdateAllowedDirections();
+            UpdateInputs();
 
             if (!IsGrounded)
             {
@@ -533,27 +495,25 @@ namespace TLW_Plattformer.RipyGame.Models
                     }
                 }
             }
-            if (IsGrounded)
+            else
             {
-                isFalling = false;
+                if (isFalling)
+                {
+                    EndFall();
+                }
+
                 canJump = true;
             }
 
-            if (IsGrounded && !IsAnyInput())
-            {
-                activeAnimation = animations.GetValueOrDefault(PlayerActions.Idle);
-            }
-
-            if (Velocity.X == 0 && Velocity.Y == 0)
-            {
-                isMoving = false;
-            }
-            else
-            {
-                isMoving = true;
-            }
-
-            UpdateMovementInputs();
+            //if (velocity.X != 0 && velocity.Y != 0)
+            //{
+            //    isMoving = true;
+            //}
+            //if (isMoving) { }
+            //else
+            //{
+            //    StartGoIdle();
+            //}
 
             if (isJumping)
             {
@@ -564,63 +524,184 @@ namespace TLW_Plattformer.RipyGame.Models
                 }
             }
 
-            if (!IsStationary())
-            {
-                // Stop movement if player can't move in the direction anymore
-                switch (currentDirectionX)
-                {
-                    case MoveableDirections.Left:
-                        if (!canMoveLeft)
-                        {
-                            Velocity = new Vector2(0, Velocity.Y);
-                            currentDirectionX = MoveableDirections.Idle;
-                        }
-                        break;
-                    case MoveableDirections.Right:
-                        if (!canMoveRight)
-                        {
-                            Velocity = new Vector2(0, Velocity.Y);
-                            currentDirectionX = MoveableDirections.Idle;
-                        }
-                        break;
-
-                    default:
-                        break;
-                }
-                switch (currentDirectionY)
-                {
-                    case MoveableDirections.Up:
-                        if (!canMoveUp)
-                        {
-                            Velocity = new Vector2(Velocity.X, 0);
-                            currentDirectionY = MoveableDirections.Idle;
-                        }
-                        break;
-                    case MoveableDirections.Down:
-                        if (!canMoveDown)
-                        {
-                            Velocity = new Vector2(Velocity.X, 0);
-                            currentDirectionY = MoveableDirections.Idle;
-                        }
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-
-            base.Update(gameTime);
-        }
-
-        public void UpdatePlayer(GameTime gameTime)
-        {
-            UpdateAllowedDirections();
-            Update(gameTime);
             canMoveLeft = true;
             canMoveRight = true;
             canMoveUp = true;
             canMoveDown = true;
+
+            base.Update(gameTime);
         }
+        #endregion V2
+
+        #region V1
+        //private bool IsStationary()
+        //{
+        //    if (currentDirectionX == MoveableDirections.Idle && currentDirectionY == MoveableDirections.Idle)
+        //    {
+        //        return true;
+        //    }
+        //    return false;
+        //}
+
+        //private void UpdateMovementInputs()
+        //{
+        //    if (!IsAnyInput())
+        //    {
+        //        if (IsStationary())
+        //        {
+        //            return;
+        //        }
+        //        else if (currentDirectionX != MoveableDirections.Idle && currentDirectionY != MoveableDirections.Idle)
+        //        {
+        //            if (!isJumping && !isFalling)
+        //            {
+        //                StartGoIdle(); // Change to check for outside forces affecting movement velocity before going idle
+        //            }
+        //        }
+        //    }
+
+        //    if (canMoveLeft && GameValues.NewKeyboardState.IsKeyDown(moveLeftKey))
+        //    {
+        //        if (currentDirectionX == MoveableDirections.Left)
+        //        {
+        //            UpdateMoveLeft();
+        //        }
+        //        else
+        //        {
+        //            StartMoveLeft();
+        //        }
+        //    }
+        //    if (canMoveRight && GameValues.NewKeyboardState.IsKeyDown(moveRightKey))
+        //    {
+        //        if (currentDirectionX == MoveableDirections.Right)
+        //        {
+        //            UpdateMoveRight();
+        //        }
+        //        else
+        //        {
+        //            StartMoveRight();
+        //        }
+        //    }
+        //    if (canJump || isJumping)
+        //    {
+        //        if (isJumping)
+        //        {
+        //            UpdateJump();
+        //        }
+        //        else if (GameValues.IsKeyPressed(jumpKey))
+        //        {
+        //            StartJump();
+        //        }
+        //    }
+        //}
+
+        //public override void Update(GameTime gameTime)
+        //{
+        //    if (!IsAlive) { return; }
+
+        //    if (!IsGrounded)
+        //    {
+        //        if (canMoveDown)
+        //        {
+        //            if (isFalling)
+        //            {
+        //                UpdateFall();
+        //            }
+        //            else
+        //            {
+        //                StartFall();
+        //            }
+        //        }
+        //    }
+        //    if (IsGrounded)
+        //    {
+        //        isFalling = false;
+        //        canJump = true;
+        //    }
+
+        //    if (IsGrounded && !IsAnyInput())
+        //    {
+        //        activeAnimation = animations.GetValueOrDefault(PlayerActions.Idle);
+        //    }
+
+        //    if (Velocity.X == 0 && Velocity.Y == 0)
+        //    {
+        //        isMoving = false;
+        //    }
+        //    else
+        //    {
+        //        isMoving = true;
+        //    }
+
+        //    UpdateMovementInputs();
+
+        //    if (isJumping)
+        //    {
+        //        jumpTimer.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+        //        if (jumpTimer.TimerFinished)
+        //        {
+        //            EndJump();
+        //        }
+        //    }
+
+        //    if (!IsStationary())
+        //    {
+        //        // Stop movement if player can't move in the direction anymore
+        //        switch (currentDirectionX)
+        //        {
+        //            case MoveableDirections.Left:
+        //                if (!canMoveLeft)
+        //                {
+        //                    Velocity = new Vector2(0, Velocity.Y);
+        //                    currentDirectionX = MoveableDirections.Idle;
+        //                }
+        //                break;
+        //            case MoveableDirections.Right:
+        //                if (!canMoveRight)
+        //                {
+        //                    Velocity = new Vector2(0, Velocity.Y);
+        //                    currentDirectionX = MoveableDirections.Idle;
+        //                }
+        //                break;
+
+        //            default:
+        //                break;
+        //        }
+        //        switch (currentDirectionY)
+        //        {
+        //            case MoveableDirections.Up:
+        //                if (!canMoveUp)
+        //                {
+        //                    Velocity = new Vector2(Velocity.X, 0);
+        //                    currentDirectionY = MoveableDirections.Idle;
+        //                }
+        //                break;
+        //            case MoveableDirections.Down:
+        //                if (!canMoveDown)
+        //                {
+        //                    Velocity = new Vector2(Velocity.X, 0);
+        //                    currentDirectionY = MoveableDirections.Idle;
+        //                }
+        //                break;
+
+        //            default:
+        //                break;
+        //        }
+        //    }
+
+        //    base.Update(gameTime);
+        //}
+
+        //public void UpdatePlayer(GameTime gameTime)
+        //{
+        //    UpdateAllowedDirections();
+        //    Update(gameTime);
+        //    canMoveLeft = true;
+        //    canMoveRight = true;
+        //    canMoveUp = true;
+        //    canMoveDown = true;
+        //}
+        #endregion V1
 
         public override void Draw(SpriteBatch spriteBatch)
         {

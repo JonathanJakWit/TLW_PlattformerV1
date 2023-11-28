@@ -60,7 +60,7 @@ namespace TLW_Plattformer.RipyGame.Globals
                     //    //plattform.HandleCollision(player);
                     //}
                 }
-                player.UpdatePlayer(gameTime);
+                player.Update(gameTime);
             }
 
             //foreach (GameObject current in GameObjects)

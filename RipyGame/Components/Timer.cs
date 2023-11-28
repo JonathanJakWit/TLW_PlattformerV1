@@ -9,6 +9,7 @@ namespace TLW_Plattformer.RipyGame.Components
     public class Timer
     {
         public bool TimerFinished;
+        public bool IsActive;
 
         private int timeCounter;
         private int timeLimit;
@@ -22,6 +23,7 @@ namespace TLW_Plattformer.RipyGame.Components
         public Timer(int timeCounter, int timeLimit, float countDuration, float currentTime)
         {
             this.TimerFinished = false;
+            this.IsActive = true;
 
             this.timeCounter = timeCounter;
             this.timeLimit = timeLimit;
@@ -36,6 +38,7 @@ namespace TLW_Plattformer.RipyGame.Components
         public Timer(int timeLimitSeconds, float currentGameTime)
         {
             this.TimerFinished = false;
+            this.IsActive = true;
 
             this.timeCounter = 1;
             this.timeLimit = timeLimitSeconds;

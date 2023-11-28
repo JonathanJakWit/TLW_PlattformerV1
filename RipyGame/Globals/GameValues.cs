@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
+using TLW_Plattformer.RipyGame.Models;
 
 namespace TLW_Plattformer.RipyGame.Globals
 {
@@ -136,40 +137,88 @@ namespace TLW_Plattformer.RipyGame.Globals
             return false;
         }
 
-        public static MoveableDirections GetCollisionDirection(Rectangle rect, Rectangle otherRect)
+        public static MoveableDirections GetCollisionDirection(GameObject mainObj, GameObject otherObj)
         {
-            //float leftDistance = 0F;
-            //float rightDistance = 0F;
-            //float topDistance = 0F;
-            //float bottomDistance = 0F;
+            MoveableDirections collisionDirX = MoveableDirections.None;
+            MoveableDirections collisionDirY = MoveableDirections.None;
+            MoveableDirections leastDistanceDir = MoveableDirections.None;
 
-            //if (firstRect.X + firstRect.Width < secondRect.X)
-            //{
-            //    leftDistance = secondRect.X - firstRect.X + firstRect.Width;
-            //    if (firstRect.Y + firstRect.Height < secondRect.Y)
-            //    {
-            //        topDistance = secondRect.Y - 
-            //    }
-            //}
+            float rightDistance = mainObj.Bounds.Right - otherObj.Bounds.Left;
+            float leftDistance = otherObj.Bounds.Right - mainObj.Bounds.Left;
+            float bottomDistance = mainObj.Bounds.Bottom - otherObj.Bounds.Top;
+            float topDistance = otherObj.Bounds.Bottom - mainObj.Bounds.Top;
 
-            if (otherRect.Right < rect.Left)
+            // Check which X and Y direction the collision is occuring
+            if (rightDistance > leftDistance)
             {
-                return MoveableDirections.Left;
+                collisionDirX = MoveableDirections.Left;
             }
-            else if (otherRect.Left > rect.Right)
+            else if (leftDistance > rightDistance)
             {
-                return MoveableDirections.Right;
+                collisionDirX = MoveableDirections.Right;
             }
-            else if (otherRect.Bottom < rect.Top)
+            if (bottomDistance > topDistance)
             {
-                return MoveableDirections.Up;
+                collisionDirY = MoveableDirections.Up;
             }
-            else if (otherRect.Top > rect.Bottom)
+            else if (topDistance > bottomDistance)
             {
-                return MoveableDirections.Down;
+                collisionDirY = MoveableDirections.Down;
             }
 
-            return MoveableDirections.Idle;
+            // Set the direction of the collision to the least distance between the X and the Y collision directions
+            if (collisionDirX == MoveableDirections.Left)
+            {
+                if (collisionDirY == MoveableDirections.Up)
+                {
+                    if (leftDistance > topDistance)
+                    {
+                        leastDistanceDir = MoveableDirections.Up;
+                    }
+                    else
+                    {
+                        leastDistanceDir = MoveableDirections.Left;
+                    }
+                }
+                else if (collisionDirY == MoveableDirections.Down)
+                {
+                    if (leftDistance > bottomDistance)
+                    {
+                        leastDistanceDir = MoveableDirections.Down;
+                    }
+                    else
+                    {
+                        leastDistanceDir = MoveableDirections.Left;
+                    }
+                }
+            }
+            else if (collisionDirX == MoveableDirections.Right)
+            {
+                if (collisionDirY == MoveableDirections.Up)
+                {
+                    if (rightDistance > bottomDistance)
+                    {
+                        leastDistanceDir = MoveableDirections.Up;
+                    }
+                    else
+                    {
+                        leastDistanceDir = MoveableDirections.Right;
+                    }
+                }
+                else if (collisionDirY == MoveableDirections.Down)
+                {
+                    if (rightDistance > bottomDistance)
+                    {
+                        leastDistanceDir = MoveableDirections.Down;
+                    }
+                    else
+                    {
+                        leastDistanceDir = MoveableDirections.Right;
+                    }
+                }
+            }
+
+            return leastDistanceDir;
         }
     }
 }

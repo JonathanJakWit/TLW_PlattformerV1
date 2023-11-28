@@ -32,7 +32,7 @@ namespace TLW_Plattformer.RipyGame.Models
             return false;
         }
 
-        public virtual void HandleCollision(GameObject other)
+        public virtual void HandleCollision(GameObject other, MoveableDirections collisionDirection)
         {
             return;
 
@@ -50,7 +50,12 @@ namespace TLW_Plattformer.RipyGame.Models
 
     public class MoveableGameObject : GameObject
     {
-        public Vector2 Velocity { get; protected set; }
+        public Vector2 velocity = Vector2.Zero;
+        public Vector2 Velocity 
+        {
+            get { return velocity; }
+            protected set { velocity = value; }
+        }
 
         public MoveableGameObject(Vector2 position, Vector2 velocity, Rectangle bounds)
         {

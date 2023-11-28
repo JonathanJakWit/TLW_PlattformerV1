@@ -19,6 +19,7 @@ namespace TLW_Plattformer.RipyGame.Globals
     public enum MoveableDirections
     {
         Left, Right, Up, Down,
-        Idle
+        Idle,
+        None
     }
 }

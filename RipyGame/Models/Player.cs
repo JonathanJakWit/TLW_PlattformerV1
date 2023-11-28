@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -120,7 +121,7 @@ namespace TLW_Plattformer.RipyGame.Models
             this.fallSpeed = new Vector2(0, +fallSpeed);
         }
 
-        public override void HandleCollision(GameObject other)
+        public override void HandleCollision(GameObject other, MoveableDirections collsionDirection)
         {
             if (other is Plattform)
             {
@@ -189,24 +190,28 @@ namespace TLW_Plattformer.RipyGame.Models
 
         private void StartGoIdle()
         {
+            velocity = Vector2.Zero;
             currentDirectionX = MoveableDirections.Idle;
             currentDirectionY = MoveableDirections.Idle;
             activeAnimation = animations.GetValueOrDefault(PlayerActions.Idle);
         }
         private void StartMoveLeft()
         {
+            velocity.X += moveLeftSpeed.X;
             currentDirectionX = MoveableDirections.Left;
             activeAnimation = animations.GetValueOrDefault(PlayerActions.MoveLeft);
             ChangeSpriteEffect(SpriteEffects.FlipHorizontally);
         }
         private void StartMoveRight()
         {
+            velocity.X += moveRightSpeed.X;
             currentDirectionX = MoveableDirections.Right;
             activeAnimation = animations.GetValueOrDefault(PlayerActions.MoveRight);
             ChangeSpriteEffect(SpriteEffects.None);
         }
         private void StartJump()
         {
+            velocity.Y += jumpSpeed.Y;
             IsGrounded = false;
             isJumping = true;
             canJump = false;
@@ -216,6 +221,7 @@ namespace TLW_Plattformer.RipyGame.Models
         }
         private void EndJump()
         {
+            velocity.Y -= jumpSpeed.Y;
             isJumping = false;
             isFalling = true;
         }
@@ -225,28 +231,29 @@ namespace TLW_Plattformer.RipyGame.Models
         }
         private void StartFall()
         {
+            velocity.Y += fallSpeed.Y;
             isFalling = true;
             activeAnimation = animations.GetValueOrDefault(PlayerActions.Fall);
         }
 
         private void UpdateMoveLeft()
         {
-            MovePlayerBy(moveLeftSpeed);
+            //MovePlayerBy(moveLeftSpeed);
             activeAnimation = animations.GetValueOrDefault(PlayerActions.MoveLeft);
         }
         private void UpdateMoveRight()
         {
-            MovePlayerBy(moveRightSpeed);
+            //MovePlayerBy(moveRightSpeed);
             activeAnimation = animations.GetValueOrDefault(PlayerActions.MoveRight);
         }
         private void UpdateJump()
         {
-            MoveBy(jumpSpeed);
+            //MoveBy(jumpSpeed);
             activeAnimation = animations.GetValueOrDefault(PlayerActions.Jump);
         }
         private void UpdateFall()
         {
-            MoveBy(fallSpeed);
+            //MoveBy(fallSpeed);
             activeAnimation = animations.GetValueOrDefault(PlayerActions.Fall);
         }
 
@@ -307,63 +314,67 @@ namespace TLW_Plattformer.RipyGame.Models
             {
                 isFalling = true;
             }
-
             if (isFalling)
             {
                 IsGrounded = false;
-                foreach (Plattform plattform in LoadedGameLevel.GameObjects.GetValueOrDefault(GameObjectTypes.Plattform))
+            }
+
+            foreach (Plattform plattform in LoadedGameLevel.GameObjects.GetValueOrDefault(GameObjectTypes.Plattform))
+            {
+                if (Bounds.Intersects(plattform.Bounds))
                 {
-                    if (Bounds.Intersects(plattform.Bounds))
+                    MoveableDirections colDir = GameValues.GetCollisionDirection(this, plattform);
+                    Debug.WriteLine(colDir.ToString());
+                    if (colDir == MoveableDirections.Left)
                     {
-                        if (Position.X + Bounds.Width - 10 < plattform.Position.X)
-                        {
-                            canMoveRight = false;
-                        }
-                        if (plattform.Position.X + plattform.Bounds.Width - 10 < Position.X)
-                        {
-                            canMoveLeft = false;
-                        }
-
-                        if (Position.Y + Bounds.Height - 10 < plattform.Position.Y)
-                        {
-                            canMoveDown = false;
-                            IsGrounded = true;
-                        }
-                        if (plattform.Position.Y + plattform.Height + 10 < Position.Y) // Not working
-                        {
-                            canMoveUp = false;
-                            canJump = false;
-                        }
-                        //else
-                        //{
-                        //    IsGrounded = true;
-                        //}
-
-                        //if (Position.X + Bounds.Width - moveLeftSpeed.X < plattform.Position.X)
-                        //{
-                        //    canMoveRight = false;
-                        //}
-                        //else if (plattform.Position.X + plattform.Bounds.Width < Position.X + moveRightSpeed.X)
-                        //{
-                        //    canMoveLeft = false;
-                        //}
-                        //else if (Position.Y + Bounds.Height - fallSpeed.Y < plattform.Position.Y)
-                        //{
-                        //    canMoveDown = false;
-                        //    IsGrounded = true;
-                        //}
-                        //else if (plattform.Position.Y + plattform.Height < Position.Y + jumpSpeed.Y)
-                        //{
-                        //    canMoveUp = false;
-                        //    canJump = false;
-                        //}
-                        //else
-                        //{
-                        //    IsGrounded = true;
-                        //}
-                        //IsGrounded = true;
+                        canMoveLeft = false;
+                    }
+                    else if (colDir == MoveableDirections.Right)
+                    {
+                        canMoveRight = false;
+                    }
+                    else if (colDir == MoveableDirections.Up)
+                    {
+                        canMoveUp = false;
+                        canJump = false;
+                    }
+                    else if (colDir == MoveableDirections.Down)
+                    {
+                        canMoveDown = false;
+                        IsGrounded = true;
                     }
                 }
+            }
+
+            if (false)
+            {
+                //IsGrounded = false;
+                //foreach (Plattform plattform in LoadedGameLevel.GameObjects.GetValueOrDefault(GameObjectTypes.Plattform))
+                //{
+                //    if (Bounds.Intersects(plattform.Bounds))
+                //    {
+                //        MoveableDirections colDir = GameValues.GetCollisionDirection(this, plattform);
+                //        Debug.WriteLine(colDir.ToString());
+                //        if (colDir == MoveableDirections.Left)
+                //        {
+                //            canMoveLeft = false;
+                //        }
+                //        else if (colDir == MoveableDirections.Right)
+                //        {
+                //            canMoveRight = false;
+                //        }
+                //        else if (colDir == MoveableDirections.Up)
+                //        {
+                //            canMoveUp = false;
+                //            canJump = false;
+                //        }
+                //        else if (colDir == MoveableDirections.Down)
+                //        {
+                //            canMoveDown = false;
+                //            IsGrounded = true;
+                //        }
+                //    }
+                //}
             }
 
             if (!IsGrounded)

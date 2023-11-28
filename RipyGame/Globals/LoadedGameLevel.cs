@@ -50,9 +50,8 @@ namespace TLW_Plattformer.RipyGame.Globals
                 {
                     if (player.Bounds.Intersects(plattform.Bounds))
                     {
-                        //MoveableDirections mD = GameValues.GetCollisionDirection(player.Bounds, plattform.Bounds);
-                        player.HandleCollision(plattform);
-                        //plattform.HandleCollision(player);
+                        MoveableDirections colDir = GameValues.GetCollisionDirection(player, plattform);
+                        player.HandleCollision(plattform, colDir);
                     }
 
                     //if (player.Bounds.Intersects(plattform.Bounds))

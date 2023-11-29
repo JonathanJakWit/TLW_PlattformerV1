@@ -48,7 +48,7 @@ namespace TLW_Plattformer.RipyGame.Models
             //SelectedPlattform = new Plattform(textureManager, PlattformTypes.Solid, GameValues.)
         }
 
-        public void Update()
+        public void Update(Vector2 displacedPosition)
         {
             if (GameValues.IsLeftMouseClicked())
             {
@@ -59,6 +59,7 @@ namespace TLW_Plattformer.RipyGame.Models
                 switch (SelectedType)
                 {
                     case GameObjectTypes.Plattform:
+                        Vector2 cursorPos = new Vector2(GameValues.NewMouseState.X + displacedPosition.X, GameValues.NewMouseState.Y);
                         DrawnGameObjects.Add(GetPlattform(textureManager, PlattformTypes.Solid, GameValues.NewMouseState.Position.ToVector2()));
                         //DrawnGameObjects.Add(new Plattform(textureManager, PlattformTypes.Solid, GameValues.WindowCenter, new(GameValues.WindowCenter.X + 32, GameValues.WindowCenter.Y)));
                         //DrawnGameObjects.Add(SelectedPlattform);

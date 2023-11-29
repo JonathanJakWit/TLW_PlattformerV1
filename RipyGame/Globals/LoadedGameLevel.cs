@@ -25,13 +25,18 @@ namespace TLW_Plattformer.RipyGame.Globals
         {
             GameObjects.GetValueOrDefault(GameObjectTypes.Plattform).Add(plattformObj);
         }
-        public static void AddItem(Item item)
+        public static void AddItem(GameObject itemObj)
         {
-
+            //GameObjects.GetValueOrDefault(GameObjectTypes.Item).Add(itemObj);
+            // Add if time
         }
-        public static void AddPlayer(Player player)
+        public static void AddPlayer(GameObject playerObj)
         {
-
+            GameObjects.GetValueOrDefault(GameObjectTypes.PLayer).Add(playerObj);
+        }
+        public static void AddEnemy(GameObject enemyObj)
+        {
+            GameObjects.GetValueOrDefault(GameObjectTypes.Enemy).Add(enemyObj);
         }
 
         public static void Update(GameTime gameTime)
@@ -58,6 +63,11 @@ namespace TLW_Plattformer.RipyGame.Globals
                     //}
                 }
                 player.Update(gameTime);
+            }
+
+            foreach (Enemy enemy in GameObjects.GetValueOrDefault(GameObjectTypes.Enemy))
+            {
+                enemy.Update(gameTime);
             }
 
             //foreach (GameObject current in GameObjects)
@@ -101,6 +111,15 @@ namespace TLW_Plattformer.RipyGame.Globals
                     DrawHitBox(spriteBatch, item);
                 }
                 item.Draw(spriteBatch);
+            }
+
+            foreach (Enemy enemy in GameObjects.GetValueOrDefault(GameObjectTypes.Enemy))
+            {
+                if (DrawHitboxes)
+                {
+                    DrawHitBox(spriteBatch, enemy);
+                }
+                enemy.Draw(spriteBatch);
             }
 
             foreach (Player player in GameObjects.GetValueOrDefault(GameObjectTypes.PLayer))
@@ -201,24 +220,23 @@ namespace TLW_Plattformer.RipyGame.Globals
 
         public static void WriteLevel(string path)
         {
-            if (File.Exists(path))
-            {
-                JsonParser.WriteJsonToFile(path);
-            }
-            else
-            {
-                throw new Exception("Level File Does Not Exist");
-            }
+            JsonParser.WriteJsonToFile(path);
+
+            //if (File.Exists(path))
+            //{
+            //    JsonParser.WriteJsonToFile(path);
+            //}
+            //else
+            //{
+            //    throw new Exception("Level File Does Not Exist");
+            //}
         }
 
         public static void Load(AnimationManager animationManager, TextureManager textureManager)
         {
             hitBoxTex = textureManager.FullTex;
             DrawHitboxes = true;
-
             GameObjects = new Dictionary<GameObjectTypes, List<GameObject>>();
-
-            // Change below to actually load from the json file
 
             int levelOneWidth = 2688 * 4;
             GameValues.LevelEndPos = new Vector2(GameValues.LevelStartPos.X + levelOneWidth, GameValues.LevelEndPos.Y);
@@ -263,11 +281,20 @@ namespace TLW_Plattformer.RipyGame.Globals
             players.Add(new Player(PlayerIndex.One, animationManager, player1Pos, Color.White, p1Scale, p1MoveSpeed, p1JumpSpeed, p1FallSpeed));
 
             GameObjects.Add(GameObjectTypes.PLayer, players);
-            //GameObjects.Add(new Player(PlayerIndex.One, animationManager, player1Pos, Color.White, p1Scale, p1MoveSpeed, p1JumpSpeed, p1FallSpeed));
-
-            //Players = new List<Player>();
-            //Players.Add(new Player(PlayerIndex.One, animationManager, player1Pos, Color.White, p1Scale, p1MoveSpeed, p1JumpSpeed, p1FallSpeed));
             #endregion Players
+
+            #region Enemies
+            Vector2 enemy1Pos = new Vector2(
+                GameValues.LevelStartPos.X + GameValues.ColumnWidth * 24,
+                GameValues.LevelEndPos.Y - GameValues.RowHeight * 4);
+            float e1Scale = 1F;
+            Rectangle e1Bounds = new Rectangle((int)enemy1Pos.X, (int)enemy1Pos.Y, GameValues.ColumnWidth * (int)e1Scale, GameValues.RowHeight * 2 * (int)e1Scale);
+
+            List<GameObject> enemies = new List<GameObject>();
+            enemies.Add(new Enemy(EnemyTypes.CrystalGuardian, animationManager,  e1Bounds, new(0, 0)));
+
+            GameObjects.Add(GameObjectTypes.Enemy, enemies);
+            #endregion Enemies
         }
     }
 }

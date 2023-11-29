@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TLW_Plattformer.RipyGame.Globals;
 using TLW_Plattformer.RipyGame.Models;
 
 namespace TLW_Plattformer.RipyGame.Managers
@@ -15,6 +16,7 @@ namespace TLW_Plattformer.RipyGame.Managers
     {
         private readonly Animation noneAnim;
 
+        #region Player Animations
         private readonly Animation playerIdleAnim;
         //private readonly Animation playerMoveLeftAnim;
         private readonly Animation playerMoveAnim;
@@ -22,8 +24,13 @@ namespace TLW_Plattformer.RipyGame.Managers
         private readonly Animation playerFallAnim;
         private readonly Animation playerCrouchAnim;
         private readonly Dictionary<PlayerActions, Animation> playerActionAnimations;
+        #endregion Player Animations
 
-        private readonly Animation Anim;
+        #region Enemy Animations
+        private readonly Animation crystalGuardianIdleAnim;
+        private readonly Dictionary<EnemyActions, Animation> crystalGuardianActionAnimations;
+        //private readonly Animation frostWraithIdleAnim;
+        #endregion Enemy Animations
 
         public AnimationManager(ContentManager contentManager, TextureManager textureManager)
         {
@@ -163,6 +170,35 @@ namespace TLW_Plattformer.RipyGame.Managers
             this.playerActionAnimations.Add(PlayerActions.Fall, playerFallAnim);
             this.playerActionAnimations.Add(PlayerActions.Crouch, playerCrouchAnim);
             #endregion Player Animations
+
+            #region Enemy Animations
+            this.crystalGuardianActionAnimations = new Dictionary<EnemyActions, Animation>();
+
+            // Idle Animation
+            int crystalGuardianIdleAnimDurationSeconds = 3;
+            int crystalGuardianIdleFramesX = 6;
+            float crystalGuardianIdleFrameTime = 0.2f;
+            Color crystalGuardianIdleColor = Color.White;
+            Vector2 crystalGuardianIdleStartPos = new Vector2(0, 20);
+            bool crystalGuardianIdleIsRepeating = true;
+            SpriteEffects crystalGuardianIdleSpriteEffects = SpriteEffects.None;
+            //int crystalGuardianIdleFrameWidth = GameValues.ColumnWidth * 2; int crystalGuardianIdleFrameHeight = GameValues.RowHeight * 4;
+            int crystalGuardianIdleFrameWidth = 340; int crystalGuardianIdleFrameHeight = 963;
+            this.crystalGuardianIdleAnim = new Animation
+            (
+                crystalGuardianIdleAnimDurationSeconds,
+                textureManager.EmberaxIdleSpritesheet,
+                crystalGuardianIdleFramesX,
+                crystalGuardianIdleFrameTime,
+                crystalGuardianIdleColor,
+                crystalGuardianIdleStartPos,
+                crystalGuardianIdleIsRepeating,
+                crystalGuardianIdleSpriteEffects,
+                crystalGuardianIdleFrameWidth, crystalGuardianIdleFrameHeight
+            );
+
+            crystalGuardianActionAnimations.Add(EnemyActions.Idle, crystalGuardianIdleAnim);
+            #endregion Enemy Animations
         }
 
         public Animation GetAnimation(AnimationType animationType)
@@ -182,6 +218,24 @@ namespace TLW_Plattformer.RipyGame.Managers
         public Dictionary<PlayerActions, Animation> GetPlayerAnimations()
         {
             return playerActionAnimations;
+        }
+
+        public Dictionary<EnemyActions, Animation> GetEnemyAnimations(EnemyTypes enemyType)
+        {
+            switch (enemyType)
+            {
+                case EnemyTypes.CrystalGuardian:
+                    return crystalGuardianActionAnimations;
+                    break;
+                case EnemyTypes.FrostWraith:
+                    break;
+                case EnemyTypes.ShadowPhantom:
+                    break;
+                default:
+                    break;
+            }
+
+            return crystalGuardianActionAnimations;
         }
     }
 

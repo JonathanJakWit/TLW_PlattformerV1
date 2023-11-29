@@ -39,10 +39,11 @@ namespace TLW_Plattformer.RipyGame.Models
             editorTiles.Add(new EditorTile(plattformRect, GameObjectTypes.Plattform, firstTilePos));
         }
 
-        public void Update()
+        public void Update(Camera camera)
         {
             cameraTarget.Update();
-            objectPencil.Update();
+            Vector2 displacedPos = new Vector2(camera.Transform.Translation.X, 0);
+            objectPencil.Update(displacedPos);
 
             foreach (EditorTile editorTile in editorTiles)
             {

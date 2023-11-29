@@ -197,7 +197,7 @@ namespace TLW_Plattformer.RipyGame
 
             if (GameValues.IsKeyPressed(Keys.L))
             {
-                LoadedGameLevel.WriteLevel(GamePaths.JsonLevelDataFilesPath + "testLevel.json");
+                LoadedGameLevel.WriteLevel(GamePaths.JsonLevelDataFilesPath + "test_level_data.json");
             }
 
             _LevelHandler.Update(gameTime);

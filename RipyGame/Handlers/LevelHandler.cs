@@ -115,7 +115,7 @@ namespace TLW_Plattformer.RipyGame.Handlers
             {
                 LevelCamera.Update(levelEditor.cameraTarget);
                 parallaxBG.Update(LevelCamera);
-                levelEditor.Update();
+                levelEditor.Update(LevelCamera);
             }
             else
             {

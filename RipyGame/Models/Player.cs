@@ -35,6 +35,7 @@ namespace TLW_Plattformer.RipyGame.Models
         private bool isMoving;
         private bool isJumping;
         private bool isFalling;
+        private bool isIdle;
         //private bool isMovementStarted;
 
         private int goIdleCooldown;
@@ -87,6 +88,7 @@ namespace TLW_Plattformer.RipyGame.Models
             this.isMoving = false;
             this.isJumping = false;
             this.isFalling = false;
+            this.isIdle = false;
             //this.isMovementStarted = false;
             this.IsGrounded = false;
 
@@ -188,7 +190,8 @@ namespace TLW_Plattformer.RipyGame.Models
 
         private void StartGoIdle()
         {
-            velocity = Vector2.Zero;
+            isIdle = true;
+            velocity.X = 0;
             currentDirectionX = MoveableDirections.Idle;
             currentDirectionY = MoveableDirections.Idle;
             activeAnimation = animations.GetValueOrDefault(PlayerActions.Idle);
@@ -196,6 +199,7 @@ namespace TLW_Plattformer.RipyGame.Models
         private void StartMoveLeft()
         {
             //isMovementStarted = true;
+            isIdle = false;
             if (currentDirectionX == MoveableDirections.Right)
             {
                 velocity.X += moveLeftSpeed.X; // Reset it to 0 since it was moving right
@@ -213,6 +217,7 @@ namespace TLW_Plattformer.RipyGame.Models
         private void StartMoveRight()
         {
             //isMovementStarted = true;
+            isIdle = false;
             if (currentDirectionX == MoveableDirections.Left)
             {
                 velocity.X += moveRightSpeed.X; // Reset it to 0 since it was moving left
@@ -229,6 +234,7 @@ namespace TLW_Plattformer.RipyGame.Models
         }
         private void StartJump()
         {
+            isIdle = false;
             velocity.Y += jumpSpeed.Y;
             IsGrounded = false;
             isJumping = true;
@@ -248,6 +254,7 @@ namespace TLW_Plattformer.RipyGame.Models
         }
         private void StartFall()
         {
+            isIdle = false;
             velocity.Y += fallSpeed.Y;
             isFalling = true;
             activeAnimation = animations.GetValueOrDefault(PlayerActions.Fall);
@@ -363,6 +370,20 @@ namespace TLW_Plattformer.RipyGame.Models
                 }
             }
 
+            if (!canMoveLeft && velocity.X < 0)
+            {
+                velocity.X = 0;
+            }
+            if (!canMoveRight && velocity.X > 0)
+            {
+                velocity.X = 0;
+            }
+
+            if (isJumping && !canMoveUp)
+            {
+                EndJump();
+            }
+
             if (IsGrounded)
             {
                 canMoveDown = false;
@@ -431,29 +452,19 @@ namespace TLW_Plattformer.RipyGame.Models
         {
             if (!IsAnyInput())
             {
+                if (!isIdle)
+                {
+                    goIdleTimer.Reset(GameValues.Time);
+                    goIdleTimer.IsActive = true;
+                }
                 if (goIdleTimer.IsActive)
                 {
                     goIdleTimer.Update(GameValues.Time);
                     if (goIdleTimer.TimerFinished)
                     {
-                        if (currentDirectionX == MoveableDirections.Left)
-                        {
-                            EndMoveLeft();
-                        }
-                        else if (currentDirectionX == MoveableDirections.Right)
-                        {
-                            EndMoveRight();
-                        }
-                        //goIdleTimer.IsActive = false;
+                        StartGoIdle();
                     }
                 }
-                else
-                {
-                    goIdleTimer.Reset(GameValues.Time);
-                    goIdleTimer.IsActive = true;
-                }
-
-                return;
             }
 
             if (canMoveLeft && IsLeftPressed())
@@ -504,16 +515,6 @@ namespace TLW_Plattformer.RipyGame.Models
 
                 canJump = true;
             }
-
-            //if (velocity.X != 0 && velocity.Y != 0)
-            //{
-            //    isMoving = true;
-            //}
-            //if (isMoving) { }
-            //else
-            //{
-            //    StartGoIdle();
-            //}
 
             if (isJumping)
             {

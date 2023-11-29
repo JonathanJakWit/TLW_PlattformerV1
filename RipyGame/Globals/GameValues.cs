@@ -105,7 +105,7 @@ namespace TLW_Plattformer.RipyGame.Globals
             PlayerDrawLayer = 0.10F;
 
             Vector2 tempPlayerStartPos = new Vector2(0, 0);
-            PlayerScale = new Vector2(2, 2);
+            PlayerScale = new Vector2(4, 10);
             PlayerBounds = new Rectangle((int)tempPlayerStartPos.X, (int)tempPlayerStartPos.Y, TileWidth * (int)PlayerScale.X, TileHeight * (int)PlayerScale.Y);
 
             ArcadeFont = Content.Load<SpriteFont>(GamePaths.ArcadeFontPath);

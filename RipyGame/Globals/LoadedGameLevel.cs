@@ -6,8 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using TLW_Plattformer.RipyGame.Managers;
 using TLW_Plattformer.RipyGame.Models;
+using System.IO;
 
 namespace TLW_Plattformer.RipyGame.Globals
 {
@@ -116,6 +118,36 @@ namespace TLW_Plattformer.RipyGame.Globals
             }
         }
 
+        private static void LoadPlattforms(string levelDataJson)
+        {
+            List<GameObject> plattforms = new List<GameObject>();
+
+        }
+        private static void LoadPlayers(string levelDataJson)
+        {
+            List<GameObject> players = new List<GameObject>();
+        }
+        private static void LoadEnemies(string levelDataJson)
+        {
+            List<GameObject> enemies = new List<GameObject>();
+        }
+        private static void LoadItems(string levelDataJson)
+        {
+            // Later if time
+        }
+        public static void LoadLevel(string levelDataPath, AnimationManager animationManager, TextureManager textureManager)
+        {
+            hitBoxTex = textureManager.FullTex;
+            DrawHitboxes = true;
+
+            GameObjects = new Dictionary<GameObjectTypes, List<GameObject>>();
+
+            if (File.Exists(levelDataPath))
+            {
+                string lvlDataJson = File.ReadAllText(levelDataPath);
+            }
+        }
+
         public static void Load(string levelDataPath, AnimationManager animationManager, TextureManager textureManager)
         {
             hitBoxTex = textureManager.FullTex;
@@ -158,8 +190,8 @@ namespace TLW_Plattformer.RipyGame.Globals
             #region Players
             Vector2 player1Pos = new Vector2(
                 GameValues.LevelStartPos.X + GameValues.ColumnWidth * 2,
-                GameValues.LevelEndPos.Y - GameValues.RowHeight * 4);
-            float p1Scale = 4F;
+                GameValues.LevelEndPos.Y - GameValues.RowHeight * 6);
+            float p1Scale = 0.35F;
             float p1MoveSpeed = 12F;
             float p1JumpSpeed = 16F;
             float p1FallSpeed = 8F;

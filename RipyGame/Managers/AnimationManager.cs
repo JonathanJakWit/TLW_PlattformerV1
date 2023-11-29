@@ -54,18 +54,18 @@ namespace TLW_Plattformer.RipyGame.Managers
             this.playerActionAnimations = new Dictionary<PlayerActions, Animation>();
 
             // Idle Animation
-            int playerIdleAnimDurationSeconds = 1;
-            int playerIdleFramesX = 1;
+            int playerIdleAnimDurationSeconds = 3;
+            int playerIdleFramesX = 6;
             float playerIdleFrameTime = 0.5f;
             Color playerIdleColor = Color.White;
-            Vector2 playerIdleStartPos = new Vector2(0, 32);
+            Vector2 playerIdleStartPos = new Vector2(0, 20);
             bool playerIdleIsRepeating = true;
             SpriteEffects playerIdleSpriteEffects = SpriteEffects.None;
-            int playerIdleFrameWidth = 16; int playerIdleFrameHeight = 16;
+            int playerIdleFrameWidth = 340; int playerIdleFrameHeight = 963;
             this.playerIdleAnim = new Animation
             (
                 playerIdleAnimDurationSeconds,
-                textureManager.PlayerSpritesheet,
+                textureManager.EmberaxIdleSpritesheet,
                 playerIdleFramesX,
                 playerIdleFrameTime,
                 playerIdleColor,

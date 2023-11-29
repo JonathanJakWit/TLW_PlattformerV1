@@ -41,8 +41,10 @@ namespace TLW_Plattformer.RipyGame.Managers
 
         #region SpriteSheets
         public Texture2D PlayerSpritesheet {  get; private set; }
+        public Texture2D EmberaxIdleSpritesheet { get; private set; }
         #endregion SpriteSheets
 
+        #region Plattforms
         private Rectangle plattformMiddle_1;
         private Rectangle plattformMiddle_2;
         private Rectangle plattformMiddle_3;
@@ -58,6 +60,7 @@ namespace TLW_Plattformer.RipyGame.Managers
         private Rectangle plattformBottomSpikes;
 
         public Dictionary<PlattformTextureTypes, List<Rectangle>> PlattformSourceRectangles { get; private set; }
+        #endregion Plattforms
 
         public TextureManager(ContentManager Content, int currentLevelIndex)
         {
@@ -90,6 +93,7 @@ namespace TLW_Plattformer.RipyGame.Managers
 
             #region Spritesheets
             PlayerSpritesheet = Content.Load<Texture2D>(GamePaths.PlayerSpriteSheetPath);
+            EmberaxIdleSpritesheet = Content.Load<Texture2D>(GamePaths.Emberax_Idle_SpriteSheetPath);
             #endregion Spritesheets
             #endregion Initialize Textures
 

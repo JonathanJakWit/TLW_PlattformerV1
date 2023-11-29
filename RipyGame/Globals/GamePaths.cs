@@ -39,6 +39,7 @@ namespace TLW_Plattformer.RipyGame.Globals
         #region SpriteSheets
         public static string SpriteSheetsPath { get; private set; }
         public static string PlayerSpriteSheetPath { get; private set; }
+        public static string Emberax_Idle_SpriteSheetPath { get; private set; }
         #endregion SpriteSheets
 
         #region Tilesets
@@ -83,6 +84,7 @@ namespace TLW_Plattformer.RipyGame.Globals
 
             SpriteSheetsPath = "Spritesheets/";
             PlayerSpriteSheetPath = SpriteSheetsPath + "player_spritesheet";
+            Emberax_Idle_SpriteSheetPath = SpriteSheetsPath + "emberax_idle_spritesheet";
 
             TilesetsPath = "Tilesets/";
             LevelOneTilesetPath = TilesetsPath + "level_one_tileset";

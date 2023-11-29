@@ -35,12 +35,12 @@ namespace TLW_Plattformer.RipyGame.Models
         public void Update(GameObject target)
         {
             dx = GameValues.WindowCenter.X - target.Position.X;
-            dx = MathHelper.Clamp(dx, -GameValues.LevelBounds.Width + GameValues.WindowSize.X, GameValues.ColumnWidth / 2);
-            //dx = MathHelper.Clamp(dx, - GameValues.LevelBounds.Width + GameValues.WindowSize.X + (GameValues.ColumnWidth / 2), GameValues.ColumnWidth / 2);
+            //dx = MathHelper.Clamp(dx, -GameValues.LevelBounds.Width + GameValues.WindowSize.X, GameValues.ColumnWidth / 2);
+            dx = MathHelper.Clamp(dx, -GameValues.LevelBounds.Width + GameValues.WindowSize.X - (GameValues.ColumnWidth), GameValues.ColumnWidth / 8);
 
             dy = GameValues.WindowCenter.Y - target.Position.Y;
-            dy = MathHelper.Clamp(dy, -GameValues.LevelBounds.Height + GameValues.WindowSize.Y, GameValues.RowHeight / 2);
-            //dy = MathHelper.Clamp(dy, - GameValues.LevelBounds.Height + GameValues.WindowSize.Y + (GameValues.RowHeight / 2), GameValues.RowHeight / 2);
+            //dy = MathHelper.Clamp(dy, -GameValues.LevelBounds.Height + GameValues.WindowSize.Y, GameValues.RowHeight / 2);
+            dy = MathHelper.Clamp(dy, -GameValues.LevelBounds.Height + GameValues.WindowSize.Y - (GameValues.RowHeight), GameValues.RowHeight / 8);
             Transform = Matrix.CreateTranslation(dx, dy, 0F);
 
             if (!IsUpdated && old_dx == dx && old_dy == dy)

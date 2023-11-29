@@ -70,6 +70,10 @@ namespace TLW_Plattformer.RipyGame.Models
                     crouchKey = GameValues.P1_CrouchKey;
                     break;
                 case PlayerIndex.Two:
+                    moveLeftKey = GameValues.P2_MoveLeftKey;
+                    moveRightKey = GameValues.P2_MoveRightKey;
+                    jumpKey = GameValues.P2_JumpKey;
+                    crouchKey = GameValues.P2_CrouchKey;
                     break;
                 case PlayerIndex.Three:
                     break;

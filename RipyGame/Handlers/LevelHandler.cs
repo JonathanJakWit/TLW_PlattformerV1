@@ -36,12 +36,13 @@ namespace TLW_Plattformer.RipyGame.Handlers
 
             if (CurrentLevelIndex == 1)
             {
-                //LoadedGameLevel.Load(animationManager, textureManager);
-                LoadedGameLevel.LoadLevel(GamePaths.JsonLevelDataFilesPath + "test_level_data.json", animationManager, textureManager);
+                //LoadedGameLevel.Load(animationManager, textureManager); // From Code Value Levels
+                //LoadedGameLevel.LoadLevel(GamePaths.JsonLevelDataFilesPath + "test_level_data.json", animationManager, textureManager);
+                LoadedGameLevel.LoadLevel(GamePaths.JsonLevelOneDataPath, animationManager, textureManager);
             }
             else
             {
-                //LoadedGameLevel.Load(animationManager, textureManager);
+                throw new Exception("Didnt start at lvl 1, wtf");
             }
 
             this.LevelCamera = new Camera();
@@ -65,13 +66,26 @@ namespace TLW_Plattformer.RipyGame.Handlers
 
         }
 
-        public void ChangeLevelTo(int levelIndex)
+        public void ChangeLevelTo(int levelIndex, AnimationManager animationManager, TextureManager textureManager)
         {
+            LoadedGameLevel.UnloadLevel();
 
+            if (levelIndex == 1)
+            {
+                LoadedGameLevel.LoadLevel(GamePaths.JsonLevelOneDataPath, animationManager, textureManager);
+            }
+            else if (levelIndex == 2)
+            {
+                LoadedGameLevel.LoadLevel(GamePaths.JsonLevelTwoDataPath, animationManager, textureManager);
+            }
+            else
+            {
+                LoadedGameLevel.LoadLevel(GamePaths.JsonLevelOneDataPath, animationManager, textureManager);
+            }
         }
-        public void ChangeLevelBy(int increment)
+        public void ChangeLevelBy(int increment, AnimationManager animationManager, TextureManager textureManager)
         {
-            ChangeLevelTo(CurrentLevelIndex + increment);
+            ChangeLevelTo(CurrentLevelIndex + increment, animationManager, textureManager);
         }
 
         public int GetHighestPlayerScore()

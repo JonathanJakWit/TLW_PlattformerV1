@@ -18,6 +18,7 @@ namespace TLW_Plattformer.RipyGame.Globals
     {
         private static Texture2D hitBoxTex {  get; set; }
         public static bool DrawHitboxes { get; set; }
+        public static int CurrentEnemyAmount { get; private set; }
 
         public static Dictionary<GameObjectTypes, List<GameObject>> GameObjects { get; set; }
 
@@ -233,6 +234,7 @@ namespace TLW_Plattformer.RipyGame.Globals
                 enemies.Add(GetEnemy(enemyTypeList[curEnemyIndex], enemyBounds, textureManager, animationManager));
                 curEnemyIndex++;
             }
+            CurrentEnemyAmount = curEnemyIndex;
 
             GameObjects.Add(GameObjectTypes.PLayer, players);
             GameObjects.Add(GameObjectTypes.Plattform, plattforms);
@@ -240,6 +242,11 @@ namespace TLW_Plattformer.RipyGame.Globals
 
             List<GameObject> items = new List<GameObject>();
             GameObjects.Add(GameObjectTypes.Item, items);
+        }
+
+        public static void UnloadLevel()
+        {
+            GameObjects.Clear();
         }
 
         public static void WriteLevel(string path)

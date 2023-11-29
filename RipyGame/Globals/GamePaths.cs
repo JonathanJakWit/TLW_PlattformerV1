@@ -60,6 +60,7 @@ namespace TLW_Plattformer.RipyGame.Globals
         public static string JsonDataFilesPath { get; private set; }
         public static string JsonLevelDataFilesPath { get; private set; }
         public static string JsonLevelOneDataPath { get; private set; }
+        public static string JsonLevelTwoDataPath { get; private set; }
         #endregion JsonDataFiles
 
 
@@ -106,6 +107,7 @@ namespace TLW_Plattformer.RipyGame.Globals
             JsonDataFilesPath = "JsonDataFiles/";
             JsonLevelDataFilesPath = JsonDataFilesPath + "LevelDataFiles/";
             JsonLevelOneDataPath = JsonLevelDataFilesPath + "level_one_data.json";
+            JsonLevelTwoDataPath = JsonLevelDataFilesPath + "level_two_data.json";
         }
     }
 }

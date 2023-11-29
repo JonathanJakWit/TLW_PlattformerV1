@@ -26,6 +26,11 @@ namespace TLW_Plattformer.RipyGame.Globals
         public static Keys P1_JumpKey { get; private set; }
         public static Keys P1_CrouchKey { get; private set; }
 
+        public static Keys P2_MoveLeftKey { get; private set; }
+        public static Keys P2_MoveRightKey { get; private set; }
+        public static Keys P2_JumpKey { get; private set; }
+        public static Keys P2_CrouchKey { get; private set; }
+
         public static int TileRowCount { get; private set; }
         public static int TileColumnCount { get; private set; }
         public static int TileWidth { get; private set; }
@@ -86,6 +91,11 @@ namespace TLW_Plattformer.RipyGame.Globals
             P1_MoveRightKey = Keys.D;
             P1_JumpKey = Keys.Space;
             P1_CrouchKey = Keys.S;
+
+            P2_MoveLeftKey = Keys.Left;
+            P2_MoveRightKey = Keys.Right;
+            P2_JumpKey = Keys.Up;
+            P2_CrouchKey = Keys.Down;
 
             TileRowCount = 9;
             TileColumnCount = 16;

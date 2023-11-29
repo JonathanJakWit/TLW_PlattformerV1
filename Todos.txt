@@ -1,5 +1,5 @@
 ﻿--- GrundKrav ---
-[0] - [] - Bana från Json
+[0] - [/] - Bana från Json
 [0] - [/] - Enemies
 [0] - [/] - Hoppar på plattformar
 [0] - [/] - Minst en abstract class (Massor (GameObject))
@@ -8,7 +8,7 @@
 [0] - [X] - Inga placeholders
 
 --- Extra ---
-[1p] - [M] - Korrekt collison med plattformar
+[1p] - [/] - Korrekt collison med plattformar
 [2p] - [W] - Flera Nivåer
 [2p] - [/] - Permanent Highscore Lista (Ordnad med XML)
 [1p] - [/] - Meny Val (Flera)
@@ -20,9 +20,10 @@
 [1p] - [/] - Moveable Enemies
 
 - Total Points -
-Guaranteed - 9
-Maybe - 1
+Guaranteed - 10
+
 Pausa - 1
+Grafisk Hud för Spelare - Minst 1
 Multiplayer - Minst 1
 
 --- Egen Funktionalitet ---

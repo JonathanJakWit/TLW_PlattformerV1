@@ -217,7 +217,7 @@ namespace TLW_Plattformer.RipyGame
 
                 if (_LevelHandler.CurrentLevelIndex == 1)
                 {
-                    _LevelHandler.ChangeLevelBy(1);
+                    _LevelHandler.ChangeLevelBy(1, _AnimationManager, _TextureManager);
                 }
             }
             else if (_LevelHandler.GetLowestPlayerHealth() <= 0)

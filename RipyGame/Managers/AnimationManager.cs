@@ -186,16 +186,27 @@ namespace TLW_Plattformer.RipyGame.Managers
             int crystalGuardianIdleFrameWidth = 340; int crystalGuardianIdleFrameHeight = 963;
             this.crystalGuardianIdleAnim = new Animation
             (
-                crystalGuardianIdleAnimDurationSeconds,
+                playerIdleAnimDurationSeconds,
                 textureManager.EmberaxIdleSpritesheet,
-                crystalGuardianIdleFramesX,
-                crystalGuardianIdleFrameTime,
-                crystalGuardianIdleColor,
-                crystalGuardianIdleStartPos,
-                crystalGuardianIdleIsRepeating,
-                crystalGuardianIdleSpriteEffects,
-                crystalGuardianIdleFrameWidth, crystalGuardianIdleFrameHeight
+                playerIdleFramesX,
+                playerIdleFrameTime,
+                playerIdleColor,
+                playerIdleStartPos,
+                playerIdleIsRepeating,
+                playerIdleSpriteEffects,
+                playerIdleFrameWidth, playerIdleFrameHeight
             );
+            //(
+            //    crystalGuardianIdleAnimDurationSeconds,
+            //    textureManager.EmberaxIdleSpritesheet,
+            //    crystalGuardianIdleFramesX,
+            //    crystalGuardianIdleFrameTime,
+            //    crystalGuardianIdleColor,
+            //    crystalGuardianIdleStartPos,
+            //    crystalGuardianIdleIsRepeating,
+            //    crystalGuardianIdleSpriteEffects,
+            //    crystalGuardianIdleFrameWidth, crystalGuardianIdleFrameHeight
+            //);
 
             crystalGuardianActionAnimations.Add(EnemyActions.Idle, crystalGuardianIdleAnim);
             #endregion Enemy Animations
@@ -226,7 +237,7 @@ namespace TLW_Plattformer.RipyGame.Managers
             {
                 case EnemyTypes.CrystalGuardian:
                     return crystalGuardianActionAnimations;
-                    break;
+                    
                 case EnemyTypes.FrostWraith:
                     break;
                 case EnemyTypes.ShadowPhantom:

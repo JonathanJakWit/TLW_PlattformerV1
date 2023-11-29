@@ -352,7 +352,7 @@ namespace TLW_Plattformer.RipyGame.Models
                 if (Bounds.Intersects(plattform.Bounds))
                 {
                     MoveableDirections colDir = GameValues.GetCollisionDirection(this, plattform);
-                    Debug.WriteLine(colDir.ToString());
+                    //Debug.WriteLine(colDir.ToString());
                     if (colDir == MoveableDirections.Left)
                     {
                         canMoveLeft = false;

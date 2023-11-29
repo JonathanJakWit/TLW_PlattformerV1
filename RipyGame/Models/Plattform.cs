@@ -29,7 +29,7 @@ namespace TLW_Plattformer.RipyGame.Models
             this.Position = position;
             this.Width = width;
             this.Height = height;
-            this.Bounds = new Rectangle((int)position.X, (int)position.Y, width * (int)GameValues.TileScale.X, height * (int)GameValues.TileScale.Y);
+            this.Bounds = new Rectangle((int)position.X, (int)position.Y, width * (int)GameValues.TileScale.X, height * (int)GameValues.TileScale.Y / 2);
             this.Center = new Vector2(position.X + Bounds.Width / 2, position.Y + Bounds.Height / 2);
 
             this.tileRowCount = height / GameValues.TileHeight;

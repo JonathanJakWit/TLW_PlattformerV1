@@ -17,7 +17,6 @@ namespace TLW_Plattformer.RipyGame.Models
         private float old_dx;
         private float old_dy;
         
-        //private float followSpeed = 2F;
         public bool IsUpdated { get; set; } 
         public MoveableDirections CurrentDirection { get; private set; }
 

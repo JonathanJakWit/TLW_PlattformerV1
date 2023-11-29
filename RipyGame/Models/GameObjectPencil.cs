@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
@@ -36,8 +37,14 @@ namespace TLW_Plattformer.RipyGame.Models
             Plattform plattform = new Plattform(textureManager, PlattformTypes.Solid, new(0, 0), GameValues.ColumnWidth, GameValues.TileHeight);
             return plattform;
         }
-        private Plattform GetPlattform(TextureManager textureManager, PlattformTypes plattformType, Vector2 position)
+        private Plattform GetPlattform(TextureManager textureManager, PlattformTypes plattformType, Vector2 position, int width=0, int height=0)
         {
+            if (width != 0 && height != 0)
+            {
+                Plattform combinedPlattform = new Plattform(textureManager, plattformType, position, width, GameValues.RowHeight);
+                return combinedPlattform;
+            }
+
             Plattform plattform = new Plattform(textureManager, plattformType, position, GameValues.ColumnWidth, GameValues.RowHeight);
             return plattform;
         }
@@ -48,21 +55,35 @@ namespace TLW_Plattformer.RipyGame.Models
             //SelectedPlattform = new Plattform(textureManager, PlattformTypes.Solid, GameValues.)
         }
 
+        private bool IsInPlattform(Vector2 newPLattformPos)
+        {
+            for (int i = 0; i < DrawnGameObjects.Count; i++)
+            {
+                if (DrawnGameObjects[i] is Plattform)
+                {
+                    if (DrawnGameObjects[i].Bounds.Contains(newPLattformPos))
+                    {
+                        DrawnGameObjects.Add(GetPlattform(textureManager, PlattformTypes.Solid, DrawnGameObjects[i].Position, DrawnGameObjects[i].Bounds.Width + GameValues.ColumnWidth, DrawnGameObjects[i].Bounds.Height));
+                        DrawnGameObjects.RemoveAt(i);
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         public void Update(Vector2 displacedPosition)
         {
             if (GameValues.IsLeftMouseClicked())
             {
-                //SelectedPosition = new Vector2(GameValues.NewMouseState.X / GameValues.ColumnWidth, GameValues.NewMouseState.Y / GameValues.RowHeight);
-                //SelectedPosition = new Vector2(GameValues.NewMouseState.X, GameValues.NewMouseState.Y);
-                //SelectedPosition = new Vector2(GameValues.WindowCenter.X, GameValues.WindowCenter.Y);
-                //UpdateSelectedObjects();
                 switch (SelectedType)
                 {
                     case GameObjectTypes.Plattform:
-                        Vector2 cursorPos = new Vector2(GameValues.NewMouseState.X + displacedPosition.X, GameValues.NewMouseState.Y);
-                        DrawnGameObjects.Add(GetPlattform(textureManager, PlattformTypes.Solid, GameValues.NewMouseState.Position.ToVector2()));
-                        //DrawnGameObjects.Add(new Plattform(textureManager, PlattformTypes.Solid, GameValues.WindowCenter, new(GameValues.WindowCenter.X + 32, GameValues.WindowCenter.Y)));
-                        //DrawnGameObjects.Add(SelectedPlattform);
+                        Vector2 cursorPos = new Vector2(GameValues.NewMouseState.X + displacedPosition.X - GameValues.WindowCenter.X, GameValues.NewMouseState.Y);
+                        if (!IsInPlattform(cursorPos))
+                        {
+                            DrawnGameObjects.Add(GetPlattform(textureManager, PlattformTypes.Solid, cursorPos));
+                        }
                         break;
                     case GameObjectTypes.Item:
                         break;
@@ -73,6 +94,14 @@ namespace TLW_Plattformer.RipyGame.Models
                     default:
                         break;
                 }
+            }
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            foreach (GameObject gameObject in DrawnGameObjects)
+            {
+                LoadedGameLevel.DrawHitBox(spriteBatch, gameObject);
             }
         }
     }

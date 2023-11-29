@@ -22,6 +22,20 @@ namespace TLW_Plattformer.RipyGame.Models
             EnemyType = enemyType;
             animations = animationManager.GetEnemyAnimations(enemyType);
             activeAnimation = animations.GetValueOrDefault(EnemyActions.Idle);
+            float thisEnemyScale = 1F;
+            switch (enemyType)
+            {
+                case EnemyTypes.CrystalGuardian:
+                    thisEnemyScale = 0.25F;
+                    break;
+                case EnemyTypes.FrostWraith:
+                    break;
+                case EnemyTypes.ShadowPhantom:
+                    break;
+                default:
+                    break;
+            }
+            scale = scale * thisEnemyScale;
         }
 
         public override void Update(GameTime gameTime)

@@ -53,6 +53,7 @@ namespace TLW_Plattformer.RipyGame.Globals
         public static float PlayerJumpSpeed { get; private set; }
         public static float PlayerFallSpeed { get; private set; }
         public static Vector2 EnemyScale { get; private set; }
+        public static float CrystalGuardianScale { get; private set; }
 
         public static SpriteFont ArcadeFont { get; private set; }
 
@@ -111,6 +112,8 @@ namespace TLW_Plattformer.RipyGame.Globals
             Vector2 tempPlayerStartPos = new Vector2(0, 0);
             PlayerScale = new Vector2(4, 10);
             PlayerBounds = new Rectangle((int)tempPlayerStartPos.X, (int)tempPlayerStartPos.Y, TileWidth * (int)PlayerScale.X, TileHeight * (int)PlayerScale.Y);
+            EnemyScale = new Vector2(1, 1);
+            CrystalGuardianScale = 0.25F;
 
             ArcadeFont = Content.Load<SpriteFont>(GamePaths.ArcadeFontPath);
         }

@@ -39,11 +39,10 @@ namespace TLW_Plattformer.RipyGame.Models
             editorTiles.Add(new EditorTile(plattformRect, GameObjectTypes.Plattform, firstTilePos));
         }
 
-        public void Update(Camera camera)
+        public void Update()
         {
             cameraTarget.Update();
-            Vector2 displacedPos = new Vector2(camera.Transform.Translation.X, 0);
-            objectPencil.Update(displacedPos);
+            objectPencil.Update(cameraTarget.Position);
 
             foreach (EditorTile editorTile in editorTiles)
             {
@@ -80,6 +79,7 @@ namespace TLW_Plattformer.RipyGame.Models
                     editorTile.Draw(spriteBatch, levelTileset);
                 }
             }
+            objectPencil.Draw(spriteBatch);
 
             //foreach (GameObject gameObject in objectPencil.DrawnGameObjects)
             //{

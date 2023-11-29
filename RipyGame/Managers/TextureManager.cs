@@ -62,6 +62,10 @@ namespace TLW_Plattformer.RipyGame.Managers
         public Dictionary<PlattformTextureTypes, List<Rectangle>> PlattformSourceRectangles { get; private set; }
         #endregion Plattforms
 
+        #region Enemies
+        public Texture2D CrystalShardTex { get; private set; }
+        #endregion Enemies
+
         public TextureManager(ContentManager Content, int currentLevelIndex)
         {
             #region Initialize Textures
@@ -95,6 +99,10 @@ namespace TLW_Plattformer.RipyGame.Managers
             PlayerSpritesheet = Content.Load<Texture2D>(GamePaths.PlayerSpriteSheetPath);
             EmberaxIdleSpritesheet = Content.Load<Texture2D>(GamePaths.Emberax_Idle_SpriteSheetPath);
             #endregion Spritesheets
+
+            #region Enemies
+            //CrystalShardTex = Content.Load<Texture2D>(GamePaths.CrystalShardTexPath);
+            #endregion Enemies
             #endregion Initialize Textures
 
             #region Initialize Rectangles

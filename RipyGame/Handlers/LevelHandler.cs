@@ -36,13 +36,12 @@ namespace TLW_Plattformer.RipyGame.Handlers
 
             if (CurrentLevelIndex == 1)
             {
-                LoadedGameLevel.Load(animationManager, textureManager);
-                //LoadedGameLevel.Load(GamePaths.LevelOneDataPath, animationManager, textureManager);
+                //LoadedGameLevel.Load(animationManager, textureManager);
+                LoadedGameLevel.LoadLevel(GamePaths.JsonLevelDataFilesPath + "test_level_data.json", animationManager, textureManager);
             }
             else
             {
-                LoadedGameLevel.Load(animationManager, textureManager);
-                //LoadedGameLevel.Load(GamePaths.LevelOneDataPath, animationManager, textureManager);
+                //LoadedGameLevel.Load(animationManager, textureManager);
             }
 
             this.LevelCamera = new Camera();

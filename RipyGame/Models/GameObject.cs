@@ -8,7 +8,7 @@ using TLW_Plattformer.RipyGame.Globals;
 
 namespace TLW_Plattformer.RipyGame.Models
 {
-    public class GameObject
+    public abstract class GameObject
     {
         public Vector2 Position { get; protected set; }
         public Vector2 Center { get; protected set; }
@@ -16,7 +16,7 @@ namespace TLW_Plattformer.RipyGame.Models
         public Vector2 HitBoxPosition { get; protected set; }
         public Rectangle HitBox { get; protected set; }
         public bool HasHitBox { get; protected set; }
-        public bool IsAlive { get; protected set; }
+        public bool IsAlive { get; set; }
 
         //public GameObject Parent { get; protected set; }
 
@@ -41,14 +41,9 @@ namespace TLW_Plattformer.RipyGame.Models
             //    return;
             //}
         }
-
-        //public virtual void Update(GameTime gameTime)
-        //{
-
-        //}
     }
 
-    public class MoveableGameObject : GameObject
+    public abstract class MoveableGameObject : GameObject
     {
         public Vector2 velocity = Vector2.Zero;
         public Vector2 Velocity 
@@ -65,6 +60,7 @@ namespace TLW_Plattformer.RipyGame.Models
             IsAlive = true;
 
             Velocity = velocity;
+            this.velocity = velocity;
         }
 
         public virtual void MoveBy(Vector2 distance)

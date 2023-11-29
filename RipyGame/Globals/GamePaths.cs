@@ -34,6 +34,7 @@ namespace TLW_Plattformer.RipyGame.Globals
 
         #region Sprites
         public static string SpritesPath { get; private set; }
+        public static string CrystalShardTexPath { get; private set; }
         #endregion Sprites
 
         #region SpriteSheets
@@ -87,6 +88,7 @@ namespace TLW_Plattformer.RipyGame.Globals
             //LevelOneBackgroundPath = BackgroundsPath + "level_one_background";
 
             SpritesPath = "Sprites/";
+            CrystalShardTexPath = SpritesPath + "crystal_shard";
 
             SpriteSheetsPath = "Spritesheets/";
             PlayerSpriteSheetPath = SpriteSheetsPath + "player_spritesheet";

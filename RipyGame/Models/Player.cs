@@ -169,20 +169,51 @@ namespace TLW_Plattformer.RipyGame.Models
                 //}
             }
 
-            //base.HandleCollision(other);
+            if (other is Enemy)
+            {
+                Vector2 knockback = Vector2.Zero;
+                if (collsionDirection == MoveableDirections.Right)
+                {
+                    knockback = new Vector2(-Bounds.Width / 2, 0);
+                }
+                else if (collsionDirection == MoveableDirections.Left)
+                {
+                    knockback = new Vector2(Bounds.Width / 2, 0);
+                }
+                else // If the player is above or below the enemy when colliding
+                {
+                    Score += GameValues.EnemyPointValue;
+                    other.IsAlive = false;
+                    return;
+                }
+                MovePlayerBy(knockback);
+                Health--;
+                //Debug.WriteLine("Health: " + Health);
+                return;
+            }
 
-            //if (other is Player)
-            //{
-            //    return;
-            //}
-            //else if (other is Plattform)
-            //{
-            //    if (!IsGrounded)
-            //    {
-            //        canMoveDown = false;
-            //        IsGrounded = true;
-            //    }
-            //}
+            if (other is Projectile)
+            {
+                return;
+            }
+        }
+        public void HandleProjectile(Projectile projectile)
+        {
+            switch (projectile.ProjectileType)
+            {
+                case ProjectileTypes.FireBall:
+                    return;
+                case ProjectileTypes.Icicle:
+                    Health -= projectile.DamageValue;
+                    projectile.IsAlive = false;
+                    return;
+                case ProjectileTypes.CrystalShard:
+                    Health -= projectile.DamageValue;
+                    projectile.IsAlive = false;
+                    return;
+                default:
+                    break;
+            }
         }
 
         private void MovePlayerBy(Vector2 distance)

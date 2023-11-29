@@ -48,11 +48,13 @@ namespace TLW_Plattformer.RipyGame.Globals
         public static float PlayerDrawLayer { get; private set; }
 
         public static Vector2 PlayerScale { get; private set; }
+        public static float PlayerSizedScale { get; private set; }
         public static Rectangle PlayerBounds { get; private set; }
         public static float PlayerMoveSpeed { get; private set; }
         public static float PlayerJumpSpeed { get; private set; }
         public static float PlayerFallSpeed { get; private set; }
         public static Vector2 EnemyScale { get; private set; }
+        public static int EnemyPointValue { get; private set; }
         public static float CrystalGuardianScale { get; private set; }
 
         public static SpriteFont ArcadeFont { get; private set; }
@@ -110,10 +112,17 @@ namespace TLW_Plattformer.RipyGame.Globals
             PlayerDrawLayer = 0.10F;
 
             Vector2 tempPlayerStartPos = new Vector2(0, 0);
-            PlayerScale = new Vector2(4, 10);
-            PlayerBounds = new Rectangle((int)tempPlayerStartPos.X, (int)tempPlayerStartPos.Y, TileWidth * (int)PlayerScale.X, TileHeight * (int)PlayerScale.Y);
+            PlayerMoveSpeed = 12F;
+            PlayerJumpSpeed = 20F;
+            PlayerFallSpeed = 10F;
+            PlayerScale = new Vector2(3, 7);
+            PlayerSizedScale = 0.25F;
+            //PlayerBounds = new Rectangle((int)tempPlayerStartPos.X, (int)tempPlayerStartPos.Y, TileWidth * (int)PlayerScale.X, TileHeight * (int)PlayerScale.Y);
+            //PlayerBounds = new Rectangle((int)tempPlayerStartPos.X, (int)tempPlayerStartPos.Y, (int)PlayerScale.X * PlayerSizedScale, (int)PlayerScale.Y * PlayerSizedScale);
+            PlayerBounds = new Rectangle(0, 0, (int)PlayerScale.X * TileWidth, (int)PlayerScale.Y * TileHeight);
             EnemyScale = new Vector2(1, 1);
-            CrystalGuardianScale = 0.25F;
+            EnemyPointValue = 100;
+            CrystalGuardianScale = 0.20F;
 
             ArcadeFont = Content.Load<SpriteFont>(GamePaths.ArcadeFontPath);
         }

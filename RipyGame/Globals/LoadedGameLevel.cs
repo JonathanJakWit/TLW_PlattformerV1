@@ -62,6 +62,23 @@ namespace TLW_Plattformer.RipyGame.Globals
                     //    //plattform.HandleCollision(player);
                     //}
                 }
+
+                foreach (Enemy enemy in GameObjects.GetValueOrDefault(GameObjectTypes.Enemy))
+                {
+                    if (enemy.IsAlive && player.Bounds.Intersects(enemy.Bounds))
+                    {
+                        MoveableDirections colDir = GameValues.GetCollisionDirection(player, enemy);
+                        player.HandleCollision(enemy, colDir);
+                    }
+                    foreach (Projectile projectile in enemy.ShotProjectiles)
+                    {
+                        if (projectile.IsAlive && player.Bounds.Intersects(projectile.Bounds))
+                        {
+                            player.HandleProjectile(projectile);
+                        }
+                    }
+                }
+
                 player.Update(gameTime);
             }
 
@@ -140,9 +157,9 @@ namespace TLW_Plattformer.RipyGame.Globals
             else if (playerIndex == 3) { curPlayerIndex = PlayerIndex.Three; }
             else if (playerIndex == 4) { curPlayerIndex = PlayerIndex.Four; }
 
-            Player madePlayer = new Player(curPlayerIndex, animationManager,
-                new(playerBounds.X, playerBounds.Y), Color.White, GameValues.PlayerScale.X,
-                GameValues.PlayerMoveSpeed, GameValues.PlayerJumpSpeed, GameValues.PlayerFallSpeed);
+            Vector2 playerPos = new Vector2(playerBounds.X, playerBounds.Y);
+
+            Player madePlayer = new Player(curPlayerIndex, animationManager, playerPos, Color.White, GameValues.PlayerSizedScale, GameValues.PlayerMoveSpeed, GameValues.PlayerJumpSpeed, GameValues.PlayerFallSpeed);
             return madePlayer;
         }
 
@@ -150,14 +167,14 @@ namespace TLW_Plattformer.RipyGame.Globals
         {
             Plattform madePlattform = new Plattform(textureManager, plattformType,
                 new(plattformBounds.X, plattformBounds.Y),
-                plattformBounds.Width / (int)GameValues.TileScale.X / (int)GameValues.ColumnWidth,
-                plattformBounds.Height / (int)GameValues.TileScale.Y / (GameValues.RowHeight));
+                plattformBounds.Width,
+                plattformBounds.Height);
             return madePlattform;
         }
 
-        private static Enemy GetEnemy(EnemyTypes enemyType, Rectangle enemyBounds, AnimationManager animationManager)
+        private static Enemy GetEnemy(EnemyTypes enemyType, Rectangle enemyBounds, TextureManager textureManager, AnimationManager animationManager)
         {
-            Enemy madeEnemy = new Enemy(enemyType, animationManager, enemyBounds, new(0, 0));
+            Enemy madeEnemy = new Enemy(enemyType, textureManager, animationManager, enemyBounds, new(0, 0));
             return madeEnemy;
         }
 
@@ -176,6 +193,10 @@ namespace TLW_Plattformer.RipyGame.Globals
 
             if (File.Exists(levelDataPath))
             {
+                int levelOneWidth = 2688 * 4;
+                GameValues.LevelEndPos = new Vector2(GameValues.LevelStartPos.X + levelOneWidth, GameValues.LevelEndPos.Y);
+                GameValues.LevelBounds = new Rectangle(GameValues.LevelStartPos.ToPoint(), GameValues.LevelEndPos.ToPoint());
+
                 playerBoundsList = JsonParser.GetRectangleList(levelDataPath, "players");
                 plattformBoundsList = JsonParser.GetRectangleList(levelDataPath, "platforms");
                 enemyBoundsList = JsonParser.GetRectangleList(levelDataPath, "enemies");
@@ -209,13 +230,16 @@ namespace TLW_Plattformer.RipyGame.Globals
             int curEnemyIndex = 0;
             foreach (Rectangle enemyBounds in enemyBoundsList)
             {
-                enemies.Add(GetEnemy(enemyTypeList[curEnemyIndex], enemyBounds, animationManager));
+                enemies.Add(GetEnemy(enemyTypeList[curEnemyIndex], enemyBounds, textureManager, animationManager));
                 curEnemyIndex++;
             }
 
             GameObjects.Add(GameObjectTypes.PLayer, players);
             GameObjects.Add(GameObjectTypes.Plattform, plattforms);
             GameObjects.Add(GameObjectTypes.Enemy, enemies);
+
+            List<GameObject> items = new List<GameObject>();
+            GameObjects.Add(GameObjectTypes.Item, items);
         }
 
         public static void WriteLevel(string path)
@@ -291,7 +315,7 @@ namespace TLW_Plattformer.RipyGame.Globals
             Rectangle e1Bounds = new Rectangle((int)enemy1Pos.X, (int)enemy1Pos.Y, GameValues.ColumnWidth * (int)e1Scale, GameValues.RowHeight * 2 * (int)e1Scale);
 
             List<GameObject> enemies = new List<GameObject>();
-            enemies.Add(new Enemy(EnemyTypes.CrystalGuardian, animationManager,  e1Bounds, new(0, 0)));
+            enemies.Add(new Enemy(EnemyTypes.CrystalGuardian, textureManager, animationManager,  e1Bounds, new(0, 0)));
 
             GameObjects.Add(GameObjectTypes.Enemy, enemies);
             #endregion Enemies

@@ -10,17 +10,12 @@ using Newtonsoft.Json;
 using TLW_Plattformer.RipyGame.Managers;
 using TLW_Plattformer.RipyGame.Models;
 using System.IO;
+using TLW_Plattformer.RipyGame.Components;
 
 namespace TLW_Plattformer.RipyGame.Globals
 {
     public static class LoadedGameLevel
     {
-        //public static List<Plattform> Plattforms { get; set; }
-        //public static List<Item> Items { get; set; }
-        //public static List<Player> Players { get; set; }
-
-        //public static Dictionary<GameObjectTypes, List<GameObject>> GameObjects { get; set; }
-
         private static Texture2D hitBoxTex {  get; set; }
         public static bool DrawHitboxes { get; set; }
 
@@ -118,23 +113,35 @@ namespace TLW_Plattformer.RipyGame.Globals
             }
         }
 
-        private static void LoadPlattforms(string levelDataJson)
+        private static Player GetPlayer(int playerIndex, Rectangle playerBounds, AnimationManager animationManager)
         {
-            List<GameObject> plattforms = new List<GameObject>();
+            PlayerIndex curPlayerIndex = PlayerIndex.One;
+            if (playerIndex == 1) { curPlayerIndex = PlayerIndex.One; }
+            else if (playerIndex == 2) { curPlayerIndex = PlayerIndex.Two; }
+            else if (playerIndex == 3) { curPlayerIndex = PlayerIndex.Three; }
+            else if (playerIndex == 4) { curPlayerIndex = PlayerIndex.Four; }
 
+            Player madePlayer = new Player(curPlayerIndex, animationManager,
+                new(playerBounds.X, playerBounds.Y), Color.White, GameValues.PlayerScale.X,
+                GameValues.PlayerMoveSpeed, GameValues.PlayerJumpSpeed, GameValues.PlayerFallSpeed);
+            return madePlayer;
         }
-        private static void LoadPlayers(string levelDataJson)
+
+        private static Plattform GetPlattform(PlattformTypes plattformType, Rectangle plattformBounds, TextureManager textureManager)
         {
-            List<GameObject> players = new List<GameObject>();
+            Plattform madePlattform = new Plattform(textureManager, plattformType,
+                new(plattformBounds.X, plattformBounds.Y),
+                plattformBounds.Width / (int)GameValues.TileScale.X / (int)GameValues.ColumnWidth,
+                plattformBounds.Height / (int)GameValues.TileScale.Y / (GameValues.RowHeight));
+            return madePlattform;
         }
-        private static void LoadEnemies(string levelDataJson)
+
+        private static Enemy GetEnemy(EnemyTypes enemyType, Rectangle enemyBounds, AnimationManager animationManager)
         {
-            List<GameObject> enemies = new List<GameObject>();
+            Enemy madeEnemy = new Enemy(enemyType, animationManager, enemyBounds, new(0, 0));
+            return madeEnemy;
         }
-        private static void LoadItems(string levelDataJson)
-        {
-            // Later if time
-        }
+
         public static void LoadLevel(string levelDataPath, AnimationManager animationManager, TextureManager textureManager)
         {
             hitBoxTex = textureManager.FullTex;
@@ -142,13 +149,69 @@ namespace TLW_Plattformer.RipyGame.Globals
 
             GameObjects = new Dictionary<GameObjectTypes, List<GameObject>>();
 
+            List<Rectangle> playerBoundsList = new List<Rectangle>();
+            List<Rectangle> plattformBoundsList = new List<Rectangle>();
+            List<Rectangle> enemyBoundsList = new List<Rectangle>();
+            List<PlattformTypes> plattformTypeList = new List<PlattformTypes>();
+            List<EnemyTypes> enemyTypeList = new List<EnemyTypes>();
+
             if (File.Exists(levelDataPath))
             {
-                string lvlDataJson = File.ReadAllText(levelDataPath);
+                playerBoundsList = JsonParser.GetRectangleList(levelDataPath, "players");
+                plattformBoundsList = JsonParser.GetRectangleList(levelDataPath, "platforms");
+                enemyBoundsList = JsonParser.GetRectangleList(levelDataPath, "enemies");
+
+                plattformTypeList = JsonParser.GetPlattformTypeList(levelDataPath);
+                enemyTypeList = JsonParser.GetEnemyTypeList(levelDataPath);
+            }
+            else
+            {
+                throw new Exception("Level Does Not Exist");
+            }
+
+            List<GameObject> players = new List<GameObject>();
+            List<GameObject> plattforms = new List<GameObject>();
+            List<GameObject> enemies = new List<GameObject>();
+
+            int curPlayerIndex = 1;
+            foreach (Rectangle playerBounds in playerBoundsList)
+            {
+                players.Add(GetPlayer(curPlayerIndex, playerBounds, animationManager));
+                curPlayerIndex++;
+            }
+
+            int curPlattformIndex = 0;
+            foreach (Rectangle plattformBounds in plattformBoundsList)
+            {
+                plattforms.Add(GetPlattform(plattformTypeList[curPlattformIndex], plattformBounds, textureManager));
+                curPlattformIndex++;
+            }
+
+            int curEnemyIndex = 0;
+            foreach (Rectangle enemyBounds in enemyBoundsList)
+            {
+                enemies.Add(GetEnemy(enemyTypeList[curEnemyIndex], enemyBounds, animationManager));
+                curEnemyIndex++;
+            }
+
+            GameObjects.Add(GameObjectTypes.PLayer, players);
+            GameObjects.Add(GameObjectTypes.Plattform, plattforms);
+            GameObjects.Add(GameObjectTypes.Enemy, enemies);
+        }
+
+        public static void WriteLevel(string path)
+        {
+            if (File.Exists(path))
+            {
+                JsonParser.WriteJsonToFile(path);
+            }
+            else
+            {
+                throw new Exception("Level File Does Not Exist");
             }
         }
 
-        public static void Load(string levelDataPath, AnimationManager animationManager, TextureManager textureManager)
+        public static void Load(AnimationManager animationManager, TextureManager textureManager)
         {
             hitBoxTex = textureManager.FullTex;
             DrawHitboxes = true;

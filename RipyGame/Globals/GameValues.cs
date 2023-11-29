@@ -49,6 +49,10 @@ namespace TLW_Plattformer.RipyGame.Globals
 
         public static Vector2 PlayerScale { get; private set; }
         public static Rectangle PlayerBounds { get; private set; }
+        public static float PlayerMoveSpeed { get; private set; }
+        public static float PlayerJumpSpeed { get; private set; }
+        public static float PlayerFallSpeed { get; private set; }
+        public static Vector2 EnemyScale { get; private set; }
 
         public static SpriteFont ArcadeFont { get; private set; }
 

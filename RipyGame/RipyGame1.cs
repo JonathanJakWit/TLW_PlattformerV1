@@ -195,6 +195,11 @@ namespace TLW_Plattformer.RipyGame
             }
             #endregion TestingPlaying
 
+            if (GameValues.IsKeyPressed(Keys.L))
+            {
+                LoadedGameLevel.WriteLevel(GamePaths.JsonLevelDataFilesPath + "testLevel.json");
+            }
+
             _LevelHandler.Update(gameTime);
             if (_LevelHandler.GetHighestPlayerScore() > currentHighscore)
             {

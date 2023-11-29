@@ -56,7 +56,7 @@ namespace TLW_Plattformer.RipyGame.Managers
             // Idle Animation
             int playerIdleAnimDurationSeconds = 3;
             int playerIdleFramesX = 6;
-            float playerIdleFrameTime = 0.5f;
+            float playerIdleFrameTime = 0.2f;
             Color playerIdleColor = Color.White;
             Vector2 playerIdleStartPos = new Vector2(0, 20);
             bool playerIdleIsRepeating = true;

@@ -55,6 +55,12 @@ namespace TLW_Plattformer.RipyGame.Globals
         public static string LevelOneDataPath { get; private set; }
         #endregion DataFiles
 
+        #region JsonDataFiles
+        public static string JsonDataFilesPath { get; private set; }
+        public static string JsonLevelDataFilesPath { get; private set; }
+        public static string JsonLevelOneDataPath { get; private set; }
+        #endregion JsonDataFiles
+
 
         public static void InitializePaths()
         {
@@ -94,6 +100,10 @@ namespace TLW_Plattformer.RipyGame.Globals
             HighscoreDataPath = DataFilesPath + "Highscores/highscoreData.xml";
             LevelsDataPath = DataFilesPath + "Levels/";
             LevelOneDataPath = LevelsDataPath + "levelOneData.json";
+
+            JsonDataFilesPath = "JsonDataFiles/";
+            JsonLevelDataFilesPath = JsonDataFilesPath + "LevelDataFiles/";
+            JsonLevelOneDataPath = JsonLevelDataFilesPath + "level_one_data.json";
         }
     }
 }

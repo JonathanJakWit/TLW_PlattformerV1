@@ -17,6 +17,8 @@ namespace TLW_Plattformer.RipyGame.Models
     public class Player : AnimatedSprite
     {
         private PlayerIndex _playerIndex;
+        public PlayerIndex PlayerIndex { get { return _playerIndex; } }
+
         private Keys moveLeftKey;
         private Keys moveRightKey;
         private Keys jumpKey;

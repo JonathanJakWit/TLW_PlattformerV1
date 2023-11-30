@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using SharpDX.Direct3D9;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ namespace TLW_Plattformer.RipyGame.Models
     {
         public PlattformTypes PlattformType { get; set; }
         public PlattformAttributes PlattformAttribute { get; set; }
+
         public int Width { get; set; }
         public int Height { get; set; }
 
@@ -24,10 +26,21 @@ namespace TLW_Plattformer.RipyGame.Models
         private List<Rectangle> _destinationRectangles;
         private List<Rectangle> _sourceRects;
 
+        public int Health { get; set; }
+
+        private Texture2D interactablesTex;
+
         public Plattform(TextureManager textureManager, PlattformTypes plattformType, Vector2 position, int width, int height, PlattformAttributes plattformAttribute=PlattformAttributes.None)
         {
             this.PlattformType = plattformType;
             this.PlattformAttribute = plattformAttribute;
+            if (plattformType == PlattformTypes.Interactable)
+            {
+                this.PlattformAttribute = PlattformAttributes.Dangerous;
+            }
+
+            Health = 3;
+            IsAlive = true;
 
             this.Position = position;
             this.Width = width;
@@ -48,6 +61,8 @@ namespace TLW_Plattformer.RipyGame.Models
 
             this._sourceRects = new List<Rectangle>();
             InitializeSourceRectangles(textureManager.PlattformSourceRectangles);
+
+            this.interactablesTex = textureManager.InteractablesPlattformTilesetTex;
         }
 
         //public Plattform(TextureManager textureManager, PlattformTypes plattformType, Vector2 startPos, Vector2 endPos)
@@ -84,6 +99,20 @@ namespace TLW_Plattformer.RipyGame.Models
                 }
                 _sourceRects.Add(plattformSourceRects.GetValueOrDefault(PlattformTextureTypes.Plattform_Right)[0]);
             }
+            else if (PlattformType == PlattformTypes.Breakable)
+            {
+                for (int i = 0; i < tileColumnCount; i++)
+                {
+                    _sourceRects.Add(plattformSourceRects.GetValueOrDefault(PlattformTextureTypes.Plattform_Breakable)[0]);
+                }
+            }
+            else if (PlattformType == PlattformTypes.Gimmick)
+            {
+                for (int i = 0; i < tileColumnCount; i++)
+                {
+                    _sourceRects.Add(plattformSourceRects.GetValueOrDefault(PlattformTextureTypes.Plattform_Middle)[0]);
+                }
+            }
             else if (PlattformType == PlattformTypes.Interactable)
             {
                 switch (PlattformAttribute)
@@ -98,8 +127,29 @@ namespace TLW_Plattformer.RipyGame.Models
                         break;
                     case PlattformAttributes.Dangerous:
                         _sourceRects.Add(plattformSourceRects.GetValueOrDefault(PlattformTextureTypes.PlattformBottom_Spikes)[0]);
+                        IsDangerous = true;
                         break;
                     case PlattformAttributes.ItemSpawn:
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        public void HandleProjectile(Projectile projectile)
+        {
+            if (PlattformType == PlattformTypes.Breakable)
+            {
+                switch (projectile.ProjectileType)
+                {
+                    case ProjectileTypes.FireBall:
+                        Health -= projectile.DamageValue;
+                        projectile.IsAlive = false;
+                        break;
+                    case ProjectileTypes.Icicle:
+                        break;
+                    case ProjectileTypes.CrystalShard:
                         break;
                     default:
                         break;
@@ -115,11 +165,44 @@ namespace TLW_Plattformer.RipyGame.Models
             Bounds = new Rectangle((int)Position.X, (int)Position.Y, Bounds.Width, Bounds.Height);
         }
 
+        public void Update()
+        {
+            if (!IsAlive) { return; }
+            if (Health <= 0)
+            {
+                IsAlive = false;
+                return;
+            }
+        }
+
         public void Draw(SpriteBatch spriteBatch, Texture2D tileSet)
         {
-            for (int i = 0; i < tileColumnCount; i++)
+            if (!IsAlive) { return; }
+
+            if (PlattformType == PlattformTypes.Solid)
             {
-                spriteBatch.Draw(tileSet, _destinationRectangles[i], _sourceRects[i], Color.White);
+                for (int i = 0; i < tileColumnCount; i++)
+                {
+                    spriteBatch.Draw(tileSet, _destinationRectangles[i], _sourceRects[i], Color.White);
+                }
+            }
+            else if (PlattformType == PlattformTypes.Breakable)
+            {
+                for (int i = 0; i < tileColumnCount; i++)
+                {
+                    spriteBatch.Draw(tileSet, _destinationRectangles[i], _sourceRects[i], Color.White);
+                }
+            }
+            else if (PlattformType == PlattformTypes.Gimmick)
+            {
+                for (int i = 0; i < tileColumnCount; i++)
+                {
+                    spriteBatch.Draw(tileSet, _destinationRectangles[i], _sourceRects[i], Color.White);
+                }
+            }
+            else
+            {
+                spriteBatch.Draw(interactablesTex, Bounds, Color.White);
             }
         }
     }
@@ -127,6 +210,8 @@ namespace TLW_Plattformer.RipyGame.Models
     public enum PlattformTypes
     {
         Solid,
+        Breakable,
+        Gimmick,
         Interactable
     }
 

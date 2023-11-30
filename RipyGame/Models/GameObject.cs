@@ -18,6 +18,8 @@ namespace TLW_Plattformer.RipyGame.Models
         public bool HasHitBox { get; protected set; }
         public bool IsAlive { get; set; }
 
+        public bool IsDangerous { get; protected set; }
+
         //public GameObject Parent { get; protected set; }
 
         public bool IsCentered()

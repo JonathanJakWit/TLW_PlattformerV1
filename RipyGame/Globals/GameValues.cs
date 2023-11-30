@@ -127,8 +127,8 @@ namespace TLW_Plattformer.RipyGame.Globals
 
             Vector2 tempPlayerStartPos = new Vector2(0, 0);
             PlayerMoveSpeed = 12F;
-            PlayerJumpSpeed = 30F;
-            PlayerFallSpeed = 20F;
+            PlayerJumpSpeed = 32F;
+            PlayerFallSpeed = 12F;
             PlayerScale = new Vector2(3, 7);
             PlayerSizedScale = 0.25F;
             //PlayerBounds = new Rectangle((int)tempPlayerStartPos.X, (int)tempPlayerStartPos.Y, TileWidth * (int)PlayerScale.X, TileHeight * (int)PlayerScale.Y);

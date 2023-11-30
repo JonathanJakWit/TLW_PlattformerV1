@@ -60,7 +60,29 @@ namespace TLW_Plattformer.RipyGame.Globals
                     {
                         MoveableDirections colDir = GameValues.GetCollisionDirection(player, plattform);
                         player.HandleCollision(plattform, colDir);
+                        //if (plattform.PlattformType == PlattformTypes.Interactable)
+                        //{
+                        //    player.HandleSpikes(plattform, colDir);
+                        //}
+                        if (plattform.PlattformAttribute == PlattformAttributes.Dangerous)
+                        {
+                            player.HandleSpikes(plattform, colDir);
+                        }
+
+                        if (plattform.PlattformType == PlattformTypes.Gimmick)
+                        {
+                            plattform.IsAlive = false;
+                        }
                     }
+
+                    foreach (Projectile projectile in player.ShotProjectiles)
+                    {
+                        if (projectile.IsAlive && plattform.Bounds.Intersects(projectile.Bounds))
+                        {
+                            plattform.HandleProjectile(projectile);
+                        }
+                    }
+                    plattform.Update();
                 }
 
                 foreach (Enemy enemy in GameObjects.GetValueOrDefault(GameObjectTypes.Enemy))
@@ -100,15 +122,33 @@ namespace TLW_Plattformer.RipyGame.Globals
             spriteBatch.Draw(hitBoxTex, gameObject.Bounds, Color.Red);
         }
 
-        public static void Draw(SpriteBatch spriteBatch, Texture2D levelTileset, Texture2D plattformTileset)
+        public static void Draw(SpriteBatch spriteBatch, Texture2D levelTileset, Texture2D plattformTileset, Texture2D interactablesPlattformTileset)
         {
             foreach (Plattform plattform in GameObjects.GetValueOrDefault(GameObjectTypes.Plattform))
             {
-                if (DrawHitboxes)
+                if (plattform.IsAlive)
                 {
-                    DrawHitBox(spriteBatch, plattform);
+                    if (DrawHitboxes)
+                    {
+                        DrawHitBox(spriteBatch, plattform);
+                    }
+                    if (plattform.PlattformType == PlattformTypes.Breakable)
+                    {
+                        plattform.Draw(spriteBatch, plattformTileset);
+                    }
+                    else if (plattform.PlattformType == PlattformTypes.Gimmick)
+                    {
+                        plattform.Draw(spriteBatch, plattformTileset);
+                    }
+                    else if (plattform.PlattformAttribute == PlattformAttributes.None)
+                    {
+                        plattform.Draw(spriteBatch, plattformTileset);
+                    }
+                    else // Its spikes
+                    {
+                        plattform.Draw(spriteBatch, interactablesPlattformTileset);
+                    }
                 }
-                plattform.Draw(spriteBatch, plattformTileset);
             }
 
             foreach (Item item in GameObjects.GetValueOrDefault(GameObjectTypes.Item))

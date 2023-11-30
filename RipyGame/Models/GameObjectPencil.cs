@@ -25,16 +25,13 @@ namespace TLW_Plattformer.RipyGame.Models
         {
             this.textureManager = textureManager;
             SelectedType = GameObjectTypes.Plattform;
-            //SelectedPlattform = GetDefaultPlattform();
+            //SelectedPlattformAttribute = PlattformAttributes.Dangerous;
+            SelectedPlattformAttribute = PlattformAttributes.None;
+            SelectedPlattformType = PlattformTypes.Breakable;
             DrawnGameObjects = new List<GameObject>();
         }
 
-        private Plattform GetDefaultPlattform()
-        {
-            Plattform plattform = new Plattform(textureManager, PlattformTypes.Solid, new(0, 0), GameValues.ColumnWidth, GameValues.TileHeight);
-            return plattform;
-        }
-        private Plattform GetPlattform(TextureManager textureManager, PlattformTypes plattformType, Vector2 position, int width=0, int height=0)
+        private Plattform GetPlattform(TextureManager textureManager, PlattformTypes plattformType, Vector2 position, PlattformAttributes plattformAttribute, int width=0, int height=0)
         {
             if (width != 0 && height != 0)
             {
@@ -46,12 +43,6 @@ namespace TLW_Plattformer.RipyGame.Models
             return plattform;
         }
 
-        private void UpdateSelectedObjects()
-        {
-            //SelectedPlattform.MoveTo(SelectedPosition);
-            //SelectedPlattform = new Plattform(textureManager, PlattformTypes.Solid, GameValues.)
-        }
-
         private bool IsInPlattform(Vector2 newPLattformPos)
         {
             for (int i = 0; i < DrawnGameObjects.Count; i++)
@@ -60,7 +51,7 @@ namespace TLW_Plattformer.RipyGame.Models
                 {
                     if (DrawnGameObjects[i].Bounds.Contains(newPLattformPos))
                     {
-                        DrawnGameObjects.Add(GetPlattform(textureManager, PlattformTypes.Solid, DrawnGameObjects[i].Position, DrawnGameObjects[i].Bounds.Width + GameValues.ColumnWidth, DrawnGameObjects[i].Bounds.Height));
+                        DrawnGameObjects.Add(GetPlattform(textureManager, SelectedPlattformType, DrawnGameObjects[i].Position, SelectedPlattformAttribute, DrawnGameObjects[i].Bounds.Width + GameValues.ColumnWidth, DrawnGameObjects[i].Bounds.Height));
                         DrawnGameObjects.RemoveAt(i);
                         return true;
                     }
@@ -79,7 +70,7 @@ namespace TLW_Plattformer.RipyGame.Models
                         Vector2 cursorPos = new Vector2(GameValues.NewMouseState.X + displacedPosition.X - GameValues.WindowCenter.X, GameValues.NewMouseState.Y);
                         if (!IsInPlattform(cursorPos))
                         {
-                            DrawnGameObjects.Add(GetPlattform(textureManager, PlattformTypes.Solid, cursorPos));
+                            DrawnGameObjects.Add(GetPlattform(textureManager, SelectedPlattformType, cursorPos, SelectedPlattformAttribute));
                         }
                         break;
                     case GameObjectTypes.Item:

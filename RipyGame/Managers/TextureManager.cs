@@ -38,6 +38,7 @@ namespace TLW_Plattformer.RipyGame.Managers
         #region Tilesets
         public Texture2D LevelOneTilesetTex { get; private set; }
         public Texture2D StonePlattformTilesetTex { get; private set; }
+        public Texture2D InteractablesPlattformTilesetTex { get; private set; }
         #endregion Tilesets
 
         #region SpriteSheets
@@ -102,6 +103,7 @@ namespace TLW_Plattformer.RipyGame.Managers
             #region Tilesets
             LevelOneTilesetTex = Content.Load<Texture2D>(GamePaths.LevelOneTilesetPath);
             StonePlattformTilesetTex = Content.Load<Texture2D>(GamePaths.StonePlattformTilesetPath);
+            InteractablesPlattformTilesetTex = Content.Load<Texture2D>(GamePaths.InteractablesPlattformTilesetPath);
             #endregion Tilesets
 
             #region Spritesheets
@@ -112,7 +114,7 @@ namespace TLW_Plattformer.RipyGame.Managers
 
             #region Projectiles
             #region Players
-            //FireBallTex = Content.Load<Texture2D>(GamePaths.FireBallTexPath);
+            FireBallTex = Content.Load<Texture2D>(GamePaths.FireBallTexPath);
             #endregion Players
 
             #region Enemies
@@ -122,6 +124,8 @@ namespace TLW_Plattformer.RipyGame.Managers
             #endregion Initialize Textures
 
             #region Initialize Rectangles
+            //int tileWidth = 824 / 10;
+            //int tileHeight = 640 / 10;
             int tileWidth = 824 / 10;
             int tileHeight = 640 / 10;
 
@@ -134,13 +138,14 @@ namespace TLW_Plattformer.RipyGame.Managers
             plattformRight = new Rectangle(tileWidth * 4, tileHeight * 0, tileWidth, tileHeight);
 
             plattformPortal = new Rectangle(tileWidth * 0, tileHeight * 2, tileWidth, tileHeight);
-            plattformBreakable = new Rectangle(tileWidth * 1, tileHeight * 2, tileWidth, tileHeight);
+            plattformBreakable = new Rectangle(tileWidth * 2, tileHeight * 0, tileWidth, tileHeight);
             plattformMysteryBox = new Rectangle(tileWidth * 2, tileHeight * 2, tileWidth, tileHeight);
 
             plattformLeftSpikes = new Rectangle(tileWidth * 0, tileHeight * 3, tileWidth, tileHeight);
             plattformRightSpikes = new Rectangle(tileWidth * 1, tileHeight * 3, tileWidth, tileHeight);
             plattformTopSpikes = new Rectangle(tileWidth * 2, tileHeight * 3, tileWidth, tileHeight);
-            plattformBottomSpikes = new Rectangle(tileWidth * 3, tileHeight * 3, tileWidth, tileHeight);
+            plattformBottomSpikes = new Rectangle(tileWidth * 0, tileHeight * 0, tileWidth, tileHeight);
+            //plattformBottomSpikes = new Rectangle(0, 0, tileWidth, tileHeight);
             #endregion Plattforms
 
             #region Hud

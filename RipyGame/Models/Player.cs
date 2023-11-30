@@ -151,11 +151,11 @@ namespace TLW_Plattformer.RipyGame.Models
             this.jumpSpeed = new Vector2(0, -jumpSpeed);
             this.fallSpeed = new Vector2(0, +fallSpeed);
 
-            //this.fireBallTex = textureManager.FireBallTex;
-            this.fireBallTex = textureManager.FullTex;
+            //this.fireBallTex = textureManager.FullTex;
+            this.fireBallTex = textureManager.FireBallTex;
             this.fireBallWidth = 15;
             this.fireBallHeight = 15;
-            this.fireBallSpeed = 10;
+            this.fireBallSpeed = 20;
             this.ShotProjectiles = new List<Projectile>();
 
             this.og_scale = scale;
@@ -168,46 +168,25 @@ namespace TLW_Plattformer.RipyGame.Models
         {
             if (other is Plattform)
             {
+                //if (other.IsDangerous)
+                //{
+                //    Vector2 knockback = Vector2.Zero;
+                //    if (collsionDirection == MoveableDirections.Right)
+                //    {
+                //        knockback = new Vector2(-Bounds.Width / 2, 0);
+                //    }
+                //    else if (collsionDirection == MoveableDirections.Left)
+                //    {
+                //        knockback = new Vector2(Bounds.Width / 2, 0);
+                //    }
+                //    else // If the player is above or below the dangerous plattform when colliding
+                //    {
+                //        knockback = new Vector2(Bounds.Height / 2, 0);
+                //    }
+                //    MovePlayerBy(knockback);
+                //    Health--;
+                //}
                 return;
-                //if (Center.Y < other.Center.Y)
-                //{
-                //    IsGrounded = true;
-                //    canMoveDown = false;
-                //}
-                //else if (Center.Y > other.Center.Y)
-                //{
-                //    canMoveUp = false;
-                //    canJump = false;
-                //}
-                //else if (Position.X + Bounds.Width < other.Center.X)
-                //{
-                //    canMoveRight = false;
-                //}
-                //else if (Center.X > other.Position.X + other.Bounds.Width)
-                //{
-                //    canMoveLeft = false;
-                //}
-
-                //switch (otherRelativePos)
-                //{
-                //    case MoveableDirections.Left:
-                //        canMoveLeft = false;
-                //        break;
-                //    case MoveableDirections.Right:
-                //        canMoveRight = false;
-                //        break;
-                //    case MoveableDirections.Up:
-                //        canMoveUp = false;
-                //        break;
-                //    case MoveableDirections.Down:
-                //        canMoveDown = false;
-                //        IsGrounded = true;
-                //        break;
-                //    case MoveableDirections.Idle:
-                //        break;
-                //    default:
-                //        break;
-                //}
             }
 
             if (other is Enemy)
@@ -229,7 +208,6 @@ namespace TLW_Plattformer.RipyGame.Models
                 }
                 MovePlayerBy(knockback);
                 Health--;
-                //Debug.WriteLine("Health: " + Health);
                 return;
             }
 
@@ -256,6 +234,25 @@ namespace TLW_Plattformer.RipyGame.Models
                     break;
             }
         }
+        public void HandleSpikes(Plattform plattform, MoveableDirections collsionDirection)
+        {
+            Vector2 knockback = Vector2.Zero;
+            if (collsionDirection == MoveableDirections.Right)
+            {
+                knockback = new Vector2(-Bounds.Width, 0);
+            }
+            else if (collsionDirection == MoveableDirections.Left)
+            {
+                knockback = new Vector2(Bounds.Width, 0);
+            }
+            else // If the player is above or below the dangerous plattform when colliding
+            {
+                knockback = new Vector2(Bounds.Height / 2, 0);
+            }
+            MovePlayerBy(knockback);
+            Health--;
+        }
+
 
         private void MovePlayerBy(Vector2 distance)
         {
@@ -457,7 +454,7 @@ namespace TLW_Plattformer.RipyGame.Models
             IsGrounded = false;
             foreach (Plattform plattform in LoadedGameLevel.GameObjects.GetValueOrDefault(GameObjectTypes.Plattform))
             {
-                if (Bounds.Intersects(plattform.Bounds))
+                if (plattform.IsAlive && Bounds.Intersects(plattform.Bounds))
                 {
                     MoveableDirections colDir = GameValues.GetCollisionDirection(this, plattform);
                     //Debug.WriteLine(colDir.ToString());
@@ -695,11 +692,13 @@ namespace TLW_Plattformer.RipyGame.Models
                 Vector2 curHpIconPos = Vector2.Zero;
                 if (_playerIndex == PlayerIndex.One)
                 {
-                    curHpIconPos = new Vector2(hudStartPos.X + LoadedGameLevel.GameObjects.GetValueOrDefault(GameObjectTypes.PLayer)[0].Position.X - GameValues.WindowCenter.X + healthIconWidth * i, hudStartPos.Y + GameValues.TileHeight / 4);
+                    //curHpIconPos = new Vector2(hudStartPos.X + LoadedGameLevel.GameObjects.GetValueOrDefault(GameObjectTypes.PLayer)[0].Position.X - GameValues.WindowCenter.X + healthIconWidth * i, hudStartPos.Y + GameValues.TileHeight / 4);
+                    curHpIconPos = new Vector2(hudStartPos.X + LoadedGameLevel.GameObjects.GetValueOrDefault(GameObjectTypes.PLayer)[0].Position.X - GameValues.WindowCenter.X + healthIconWidth * i, hudStartPos.Y + healthIconHeight / 2);
                 }
                 else
                 {
-                    curHpIconPos = new Vector2(LoadedGameLevel.GameObjects.GetValueOrDefault(GameObjectTypes.PLayer)[0].Position.X + GameValues.WindowCenter.X - healthIconWidth - healthIconWidth * i, hudStartPos.Y + GameValues.TileHeight / 4);
+                    //curHpIconPos = new Vector2(LoadedGameLevel.GameObjects.GetValueOrDefault(GameObjectTypes.PLayer)[0].Position.X + GameValues.WindowCenter.X - healthIconWidth - healthIconWidth * i, hudStartPos.Y + GameValues.TileHeight / 4);
+                    curHpIconPos = new Vector2(LoadedGameLevel.GameObjects.GetValueOrDefault(GameObjectTypes.PLayer)[0].Position.X + GameValues.WindowCenter.X - healthIconWidth - healthIconWidth * i, hudStartPos.Y + healthIconHeight / 2);
                 }
                 Rectangle curHpIconDestRect = new Rectangle((int)curHpIconPos.X, (int)curHpIconPos.Y, healthIconWidth, healthIconHeight);
                 spriteBatch.Draw(healthIconTex, curHpIconDestRect, Color.White);

@@ -8,19 +8,19 @@
 [0] - [X] - Inga placeholders
 
 --- Extra ---
-[1p] - [/] - Korrekt collison med plattformar
-[2p] - [/] - Flera Nivåer
-[2p] - [/] - Permanent Highscore Lista (Ordnad med XML)
-[1p] - [/] - Meny Val (Flera)
-[4p] - [X] - Olika bandelar (Portal, Breakable, Dangerous, Wine)
-[1p] - [/] - Fiender kan dödas på olika sätt (Jump above + Shoot)
+[4p] - [/] - Olika bandelar (Portal, Breakable, Dangerous, Wine) - [Spikes, Breakable, Gimmick]
 [3p] - [/] - Level Editor (Grafisk)
+[2p] - [/] - Permanent Highscore Lista (Ordnad med XML)
+[2p] - [/] - Flera Nivåer
+[1p] - [/] - Korrekt collison med plattformar
+[1p] - [/] - Meny Val (Flera)
+[1p] - [/] - Fiender kan dödas på olika sätt (Jump above + Shoot)
 [1p] - [/] - Bana större än skärmen
 [1p] - [/] - Paralaxscrollning (Ja med olika djup)
 [1p] - [/] - Moveable Enemies
 
 - Total Points -
-Guaranteed - 13
+Guaranteed - 16
 
 Pausa - 1
 Replay - 1
@@ -36,3 +36,8 @@ Multiplayer
 Xbox Control
 
 --- TODO ---
+New enemy spritesheet for crystalguardian
+New homescreen texture /
+New health icon texture /
+Check the spikes in the level editor /
+Background music

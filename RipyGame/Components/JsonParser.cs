@@ -72,9 +72,15 @@ namespace TLW_Plattformer.RipyGame.Components
                 case "solid":
                     plattformType = PlattformTypes.Solid;
                     break;
+
+                case "breakable":
+                    plattformType = PlattformTypes.Breakable;
+                    break;
+
                 case "interactable":
                     plattformType = PlattformTypes.Interactable;
                     break;
+
                 default:
                     plattformType = PlattformTypes.Solid;
                     break;
@@ -229,6 +235,12 @@ namespace TLW_Plattformer.RipyGame.Components
             {
                 case PlattformTypes.Solid:
                     pType = "solid";
+                    break;
+                case PlattformTypes.Breakable:
+                    pType = "breakable";
+                    break;
+                case PlattformTypes.Gimmick:
+                    pType = "gimmick";
                     break;
                 case PlattformTypes.Interactable:
                     pType = "interactable";

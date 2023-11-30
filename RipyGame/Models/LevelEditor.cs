@@ -27,22 +27,26 @@ namespace TLW_Plattformer.RipyGame.Models
             this.textureManager = textureManager;
             this.levelTileset = textureManager.LevelOneTilesetTex;
             this.plattformTileset = textureManager.StonePlattformTilesetTex;
-            this.plattformInteractablesTileset = textureManager.NoneTex; // FIX
+            this.plattformInteractablesTileset = textureManager.InteractablesPlattformTilesetTex;
             this.cameraTarget = new FreePlayer();
             this.objectPencil = new GameObjectPencil(textureManager);
             this.editorTiles = new List<EditorTile>();
             InitializeTiles();
         }
+
         private void InitializeTiles()
         {
             int edgeAlignment = 5;
             Vector2 firstTilePos = new Vector2(GameValues.WindowBounds.Width - edgeAlignment - GameValues.ColumnWidth * 1, edgeAlignment);
-            Vector2 secondTilePos = new Vector2(GameValues.WindowBounds.Width - edgeAlignment - GameValues.ColumnWidth * 2, edgeAlignment);
+            Vector2 secondTilePos = new Vector2(GameValues.WindowBounds.Width - edgeAlignment - GameValues.ColumnWidth * 4, edgeAlignment);
+            Vector2 thirdTilePos = new Vector2(GameValues.WindowBounds.Width - edgeAlignment - GameValues.ColumnWidth * 8, edgeAlignment);
             
             Rectangle plattformSourceRect = textureManager.PlattformSourceRectangles.GetValueOrDefault(PlattformTextureTypes.Plattform_Middle)[0];
             Rectangle spikePlattformSourceRect = textureManager.PlattformSourceRectangles.GetValueOrDefault(PlattformTextureTypes.PlattformBottom_Spikes)[0];
+            Rectangle breakablePlattformSourceRect = textureManager.PlattformSourceRectangles.GetValueOrDefault(PlattformTextureTypes.Plattform_Breakable)[0];
             editorTiles.Add(new EditorTile(plattformTileset, plattformSourceRect, GameObjectTypes.Plattform, firstTilePos));
-            editorTiles.Add(new EditorTile(plattformInteractablesTileset, spikePlattformSourceRect, GameObjectTypes.Plattform, secondTilePos));
+            editorTiles.Add(new EditorTile(plattformInteractablesTileset, spikePlattformSourceRect, GameObjectTypes.Plattform, secondTilePos, PlattformTypes.Interactable, PlattformAttributes.Dangerous));
+            editorTiles.Add(new EditorTile(plattformTileset, breakablePlattformSourceRect, GameObjectTypes.Plattform, thirdTilePos, PlattformTypes.Breakable, PlattformAttributes.Breakable));
         }
 
         public void Update()

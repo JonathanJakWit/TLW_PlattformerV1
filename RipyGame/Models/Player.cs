@@ -39,7 +39,6 @@ namespace TLW_Plattformer.RipyGame.Models
         private bool isJumping;
         private bool isFalling;
         private bool isIdle;
-        //private bool isMovementStarted;
 
         private int goIdleCooldown;
         private Timer goIdleTimer;
@@ -513,10 +512,6 @@ namespace TLW_Plattformer.RipyGame.Models
                 return true;
             }
 
-            if (false) // Check controller input
-            {
-                return true;
-            }
             return false;
         }
 

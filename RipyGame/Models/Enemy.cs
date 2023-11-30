@@ -58,7 +58,7 @@ namespace TLW_Plattformer.RipyGame.Models
                     switchDirectionTimer = new Timer(5, GameValues.Time);
                     switchDirectionEnabled = true;
                     thisEnemyScale = 0.25F;
-                    thisEnemyAttackCooldown = 3;
+                    thisEnemyAttackCooldown = 6;
                     hasProjectiles = true;
                     projectileSpeed = new Vector2(-10, 0);
                     projectileWidth = 10; projectileHeight = 10;

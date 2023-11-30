@@ -5,7 +5,7 @@
 [0] - [/] - Minst en abstract class (Massor (GameObject))
 [0] - [/] - Polymorphism (Massor)
 [0] - [/] - Bra kod + Managers/Handlers (Massor (LevelHandler))
-[0] - [X] - Inga placeholders
+[0] - [/] - Inga placeholders
 
 --- Extra ---
 [4p] - [/] - Olika bandelar (Portal, Breakable, Dangerous, Wine) - [Spikes, Breakable, Gimmick]

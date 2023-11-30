@@ -120,7 +120,7 @@ namespace TLW_Plattformer.RipyGame
             //this._UIManager.Reset(CurrentGameState);
             //this.currentTilemapDataPath = Paths.GetPath(Path.Level1TilemapDataFile);
 
-            this._LevelHandler.ResetLevel();
+            this._LevelHandler.ResetLevel(_AnimationManager, _TextureManager);
 
             this.oldMouseState = Mouse.GetState();
             this.newMouseState = oldMouseState;
@@ -207,7 +207,7 @@ namespace TLW_Plattformer.RipyGame
             }
             //_HudManager.Update(currentHighscore, _LevelHandler.CurrentPlayerScore);
 
-            if (false) // Change false to [Win/Increase level condition]
+            if (LoadedGameLevel.CurrentEnemyAmount <= 0) // Change false to [Win/Increase level condition]
             {
                 if (_LevelHandler.CurrentLevelIndex == 2)
                 {
@@ -220,11 +220,16 @@ namespace TLW_Plattformer.RipyGame
                     _LevelHandler.ChangeLevelBy(1, _AnimationManager, _TextureManager);
                 }
             }
-            else if (_LevelHandler.GetLowestPlayerHealth() <= 0)
+            else if (_LevelHandler.AllPlayersDead())
             {
                 gameIsDone = true;
                 _LevelHandler.LevelGameState = GameStates.GameOverLossMenu;
             }
+            //else if (_LevelHandler.GetLowestPlayerHealth() <= 0)
+            //{
+            //    gameIsDone = true;
+            //    _LevelHandler.LevelGameState = GameStates.GameOverLossMenu;
+            //}
         }
 
         public void Update(GameTime gameTime)

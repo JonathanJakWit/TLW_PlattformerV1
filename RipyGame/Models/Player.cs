@@ -23,6 +23,7 @@ namespace TLW_Plattformer.RipyGame.Models
         private Keys moveRightKey;
         private Keys jumpKey;
         private Keys crouchKey;
+        private Keys shootProjectileKey;
 
         private MoveableDirections currentDirectionX;
         private MoveableDirections currentDirectionY;
@@ -53,11 +54,27 @@ namespace TLW_Plattformer.RipyGame.Models
         public bool IsGrounded { get; set; }
         private Dictionary<PlayerActions, Animation> animations { get; set; }
 
+        private Texture2D fireBallTex;
+        private int fireBallWidth;
+        private int fireBallHeight;
+        private int fireBallSpeed;
+        public List<Projectile> ShotProjectiles { get; private set; }
+
+        private Vector2 hudStartPos;
+
+        private Texture2D healthIconTex;
+        private int healthIconWidth;
+        private int healthIconHeight;
         public string Name { get; set; }
         public int Score { get; private set; }
         public int Health { get; set; }
 
-        public Player(PlayerIndex playerIndex, AnimationManager animationManager, Vector2 position, Color color, float scale, float moveSpeed, float jumpSpeed, float fallSpeed)
+        private float og_scale;
+        private float moveScale;
+        private float jumpScale;
+        private float fallScale;
+
+        public Player(PlayerIndex playerIndex, TextureManager textureManager, AnimationManager animationManager, Vector2 position, Color color, float scale, float moveSpeed, float jumpSpeed, float fallSpeed)
             : base(position, new(0, 0), new((int)position.X, (int)position.Y, GameValues.PlayerBounds.Width, GameValues.PlayerBounds.Height), color, scale, GameValues.PlayerDrawLayer)
         {
             this._playerIndex = playerIndex;
@@ -68,12 +85,16 @@ namespace TLW_Plattformer.RipyGame.Models
                     moveRightKey = GameValues.P1_MoveRightKey;
                     jumpKey = GameValues.P1_JumpKey;
                     crouchKey = GameValues.P1_CrouchKey;
+                    shootProjectileKey = GameValues.P1_ShootProjectileKey;
+                    this.hudStartPos = new Vector2(0, 0);
                     break;
                 case PlayerIndex.Two:
                     moveLeftKey = GameValues.P2_MoveLeftKey;
                     moveRightKey = GameValues.P2_MoveRightKey;
                     jumpKey = GameValues.P2_JumpKey;
                     crouchKey = GameValues.P2_CrouchKey;
+                    shootProjectileKey = GameValues.P2_ShootProjectileKey;
+                    this.hudStartPos = new Vector2(GameValues.WindowSize.X - GameValues.ColumnWidth * 3, 0);
                     break;
                 case PlayerIndex.Three:
                     break;
@@ -105,7 +126,8 @@ namespace TLW_Plattformer.RipyGame.Models
             this.goIdleTimer = new Timer(goIdleCooldown, GameValues.Time);
             goIdleTimer.IsActive = false;
             this.jumpCooldown = 2;
-            this.jumpTimer = new Timer(jumpCooldown, GameValues.Time);
+            this.jumpTimer = new Timer(1, 3, 0.2F, GameValues.Time);
+            //this.jumpTimer = new Timer(jumpCooldown, GameValues.Time);
 
             Bounds = new Rectangle((int)Position.X, (int)Position.Y, Bounds.Width, Bounds.Height);
             HitBox = new Rectangle((int)Position.X, (int)Position.Y, Bounds.Width, Bounds.Height);
@@ -116,7 +138,10 @@ namespace TLW_Plattformer.RipyGame.Models
             // Temp
             activeAnimation = animations.GetValueOrDefault(PlayerActions.Idle);
             Name = "Jonathan";
-            Health = 10;
+            Health = 3;
+            this.healthIconTex = textureManager.HealthIcon;
+            this.healthIconWidth = 128;
+            this.healthIconHeight = 128;
             // Temp
 
             Score = 0;
@@ -125,6 +150,18 @@ namespace TLW_Plattformer.RipyGame.Models
             this.moveRightSpeed = new Vector2(+moveSpeed, 0);
             this.jumpSpeed = new Vector2(0, -jumpSpeed);
             this.fallSpeed = new Vector2(0, +fallSpeed);
+
+            //this.fireBallTex = textureManager.FireBallTex;
+            this.fireBallTex = textureManager.FullTex;
+            this.fireBallWidth = 15;
+            this.fireBallHeight = 15;
+            this.fireBallSpeed = 10;
+            this.ShotProjectiles = new List<Projectile>();
+
+            this.og_scale = scale;
+            this.moveScale = scale * 1.5F;
+            this.jumpScale = scale * 1.5F;
+            this.fallScale = scale * 1.5F;
         }
 
         public override void HandleCollision(GameObject other, MoveableDirections collsionDirection)
@@ -227,6 +264,7 @@ namespace TLW_Plattformer.RipyGame.Models
 
         private void StartGoIdle()
         {
+            scale = og_scale;
             isIdle = true;
             velocity.X = 0;
             currentDirectionX = MoveableDirections.Idle;
@@ -235,6 +273,7 @@ namespace TLW_Plattformer.RipyGame.Models
         }
         private void StartMoveLeft()
         {
+            scale = moveScale;
             //isMovementStarted = true;
             isIdle = false;
             if (currentDirectionX == MoveableDirections.Right)
@@ -253,6 +292,7 @@ namespace TLW_Plattformer.RipyGame.Models
         }
         private void StartMoveRight()
         {
+            scale = moveScale;
             //isMovementStarted = true;
             isIdle = false;
             if (currentDirectionX == MoveableDirections.Left)
@@ -271,13 +311,22 @@ namespace TLW_Plattformer.RipyGame.Models
         }
         private void StartJump()
         {
+            scale = jumpScale;
             isIdle = false;
             velocity.Y += jumpSpeed.Y;
             IsGrounded = false;
             isJumping = true;
             canJump = false;
             currentDirectionY = MoveableDirections.Up;
-            activeAnimation = animations.GetValueOrDefault(PlayerActions.Jump);
+            //activeAnimation = animations.GetValueOrDefault(PlayerActions.Jump);
+            if (velocity.X < 0)
+            {
+                activeAnimation = animations.GetValueOrDefault(PlayerActions.MoveLeft);
+            }
+            else
+            {
+                activeAnimation = animations.GetValueOrDefault(PlayerActions.MoveRight);
+            }
             jumpTimer.Reset(GameValues.Time);
         }
         private void EndJump()
@@ -291,10 +340,19 @@ namespace TLW_Plattformer.RipyGame.Models
         }
         private void StartFall()
         {
+            scale = fallScale;
             isIdle = false;
             velocity.Y += fallSpeed.Y;
             isFalling = true;
-            activeAnimation = animations.GetValueOrDefault(PlayerActions.Fall);
+            //activeAnimation = animations.GetValueOrDefault(PlayerActions.Fall);
+            if (velocity.X < 0)
+            {
+                activeAnimation = animations.GetValueOrDefault(PlayerActions.MoveLeft);
+            }
+            else
+            {
+                activeAnimation = animations.GetValueOrDefault(PlayerActions.MoveRight);
+            }
         }
         private void EndFall()
         {
@@ -305,69 +363,84 @@ namespace TLW_Plattformer.RipyGame.Models
         private void UpdateMoveLeft()
         {
             //MovePlayerBy(moveLeftSpeed);
+            scale = moveScale;
             activeAnimation = animations.GetValueOrDefault(PlayerActions.MoveLeft);
         }
         private void UpdateMoveRight()
         {
             //MovePlayerBy(moveRightSpeed);
+            scale = moveScale;
             activeAnimation = animations.GetValueOrDefault(PlayerActions.MoveRight);
         }
         private void UpdateJump()
         {
+            scale = jumpScale;
             //MoveBy(jumpSpeed);
-            activeAnimation = animations.GetValueOrDefault(PlayerActions.Jump);
+            //activeAnimation = animations.GetValueOrDefault(PlayerActions.Jump);
+            if (velocity.X < 0)
+            {
+                activeAnimation = animations.GetValueOrDefault(PlayerActions.MoveLeft);
+            }
+            else
+            {
+                activeAnimation = animations.GetValueOrDefault(PlayerActions.MoveRight);
+            }
         }
         private void UpdateFall()
         {
+            scale = fallScale;
             //MoveBy(fallSpeed);
-            activeAnimation = animations.GetValueOrDefault(PlayerActions.Fall);
+            //activeAnimation = animations.GetValueOrDefault(PlayerActions.Fall);
+            if (velocity.X < 0)
+            {
+                activeAnimation = animations.GetValueOrDefault(PlayerActions.MoveLeft);
+            }
+            else
+            {
+                activeAnimation = animations.GetValueOrDefault(PlayerActions.MoveRight);
+            }
         }
 
-        #region VIKTIGT SENARE
-        //private void CheckCollisionAndUpdateDirections(Rectangle hitBoxToCheck)
+        private void ShootFireball(bool shootUp=false)
+        {
+            Rectangle fbBounds = new Rectangle((int)Center.X, (int)Center.Y, fireBallWidth, fireBallHeight);
+            if (shootUp)
+            {
+                Vector2 fbSpeed = new Vector2(0, -fireBallSpeed - velocity.Y / 2);
+                ShotProjectiles.Add(new Projectile(ProjectileTypes.FireBall, Center, fbSpeed, fbBounds));
+            }
+            else if (spriteEffects == SpriteEffects.FlipHorizontally) // Looking Left
+            {
+                Vector2 fbSpeed = new Vector2(-fireBallSpeed - velocity.X / 2, 0);
+                ShotProjectiles.Add(new Projectile(ProjectileTypes.FireBall, Center, fbSpeed, fbBounds));
+            }
+            else if (spriteEffects == SpriteEffects.None) // Looking Right
+            {
+                Vector2 fbSpeed = new Vector2(fireBallSpeed + velocity.X / 2, 0);
+                ShotProjectiles.Add(new Projectile(ProjectileTypes.FireBall, Center, fbSpeed, fbBounds));
+            }
+        }
+
+        //private void ShootFireball()
         //{
-        //    if (Position.X > hitBoxToCheck.X && Position.X < hitBoxToCheck.X + hitBoxToCheck.Width)
+        //    Rectangle fbBounds = new Rectangle((int)Center.X, (int)Center.Y, fireBallWidth, fireBallHeight);
+        //    if (currentDirectionX == MoveableDirections.Left)
         //    {
-        //        if (canMoveLeft)
-        //        {
-        //            if (hitBoxToCheck.X + hitBoxToCheck.Width > Position.X - speed)
-        //            {
-        //                canMoveLeft = false;
-        //            }
-        //        }
-        //        if (canMoveRight)
-        //        {
-        //            if (Position.X + Bounds.Width + speed > hitBoxToCheck.X)
-        //            {
-        //                canMoveRight = false;
-        //            }
-        //        }
-        //        if (canMoveUp)
-        //        {
-        //            if (hitBoxToCheck.Y + hitBoxToCheck.Height > Position.Y - Velocity.Y)
-        //            {
-        //                canMoveUp = false;
-        //            }
-        //        }
-        //        if (canJump)
-        //        {
-        //            if (hitBoxToCheck.Y + hitBoxToCheck.Height > Position.Y - jumpSpeed)
-        //            {
-        //                canJump = false;
-        //            }
-        //        }
-        //        if (!IsGrounded && canMoveDown)
-        //        {
-        //            if (hitBoxToCheck.Y < Position.Y + Velocity.Y)
-        //            {
-        //                canMoveDown = false;
-        //                IsGrounded = true;
-        //                Position = new Vector2(Position.X, hitBoxToCheck.Y);
-        //            }
-        //        }
+        //        Vector2 fbSpeed = new Vector2(-fireBallSpeed, 0);
+        //        ShotProjectiles.Add(new Projectile(ProjectileTypes.FireBall, Center, fbSpeed, fbBounds));
+        //    }
+        //    else if (currentDirectionX == MoveableDirections.Left)
+        //    {
+        //        Vector2 fbSpeed = new Vector2(fireBallSpeed, 0);
+        //        ShotProjectiles.Add(new Projectile(ProjectileTypes.FireBall, Center, fbSpeed, fbBounds));
+        //    }
+        //    else // Shot it up
+        //    {
+        //        Vector2 fbSpeed = new Vector2(0, -fireBallSpeed);
+        //        ShotProjectiles.Add(new Projectile(ProjectileTypes.FireBall, Center, fbSpeed, fbBounds));
         //    }
         //}
-        #endregion VIKTIGT SENARE
+        
 
         public void UpdateAllowedDirections()
         {
@@ -438,6 +511,11 @@ namespace TLW_Plattformer.RipyGame.Models
             {
                 return true;
             }
+            if (IsLeftPressed() || IsRightPressed() || IsJumpPressed() || IsShootPressed())
+            {
+                return true;
+            }
+
             if (false) // Check controller input
             {
                 return true;
@@ -484,6 +562,19 @@ namespace TLW_Plattformer.RipyGame.Models
 
             return false;
         }
+        private bool IsShootPressed()
+        {
+            if (GameValues.IsKeyPressed(shootProjectileKey))
+            {
+                return true;
+            }
+            if (GamePad.GetState(_playerIndex).Buttons.X == ButtonState.Pressed)
+            {
+                return true;
+            }
+
+            return false;
+        }
 
         private void UpdateInputs()
         {
@@ -519,15 +610,40 @@ namespace TLW_Plattformer.RipyGame.Models
                 if (isJumping) { UpdateJump(); }
                 else { StartJump(); }
             }
+
+            if (IsShootPressed())
+            {
+                if (GameValues.NewKeyboardState.IsKeyDown(Keys.W))
+                {
+                    ShootFireball(true);
+                }
+                else
+                {
+                    ShootFireball();
+                }
+            }
         }
 
         #region V2
         public override void Update(GameTime gameTime)
         {
             if (!IsAlive) { return; }
+            if (Health <= 0)
+            {
+                IsAlive = false;
+                return;
+            }
 
             UpdateAllowedDirections();
             UpdateInputs();
+
+            foreach (Projectile projectile in ShotProjectiles)
+            {
+                if (projectile.IsAlive)
+                {
+                    projectile.Update(gameTime);
+                }
+            }
 
             if (!IsGrounded)
             {
@@ -571,179 +687,31 @@ namespace TLW_Plattformer.RipyGame.Models
         }
         #endregion V2
 
-        #region V1
-        //private bool IsStationary()
-        //{
-        //    if (currentDirectionX == MoveableDirections.Idle && currentDirectionY == MoveableDirections.Idle)
-        //    {
-        //        return true;
-        //    }
-        //    return false;
-        //}
-
-        //private void UpdateMovementInputs()
-        //{
-        //    if (!IsAnyInput())
-        //    {
-        //        if (IsStationary())
-        //        {
-        //            return;
-        //        }
-        //        else if (currentDirectionX != MoveableDirections.Idle && currentDirectionY != MoveableDirections.Idle)
-        //        {
-        //            if (!isJumping && !isFalling)
-        //            {
-        //                StartGoIdle(); // Change to check for outside forces affecting movement velocity before going idle
-        //            }
-        //        }
-        //    }
-
-        //    if (canMoveLeft && GameValues.NewKeyboardState.IsKeyDown(moveLeftKey))
-        //    {
-        //        if (currentDirectionX == MoveableDirections.Left)
-        //        {
-        //            UpdateMoveLeft();
-        //        }
-        //        else
-        //        {
-        //            StartMoveLeft();
-        //        }
-        //    }
-        //    if (canMoveRight && GameValues.NewKeyboardState.IsKeyDown(moveRightKey))
-        //    {
-        //        if (currentDirectionX == MoveableDirections.Right)
-        //        {
-        //            UpdateMoveRight();
-        //        }
-        //        else
-        //        {
-        //            StartMoveRight();
-        //        }
-        //    }
-        //    if (canJump || isJumping)
-        //    {
-        //        if (isJumping)
-        //        {
-        //            UpdateJump();
-        //        }
-        //        else if (GameValues.IsKeyPressed(jumpKey))
-        //        {
-        //            StartJump();
-        //        }
-        //    }
-        //}
-
-        //public override void Update(GameTime gameTime)
-        //{
-        //    if (!IsAlive) { return; }
-
-        //    if (!IsGrounded)
-        //    {
-        //        if (canMoveDown)
-        //        {
-        //            if (isFalling)
-        //            {
-        //                UpdateFall();
-        //            }
-        //            else
-        //            {
-        //                StartFall();
-        //            }
-        //        }
-        //    }
-        //    if (IsGrounded)
-        //    {
-        //        isFalling = false;
-        //        canJump = true;
-        //    }
-
-        //    if (IsGrounded && !IsAnyInput())
-        //    {
-        //        activeAnimation = animations.GetValueOrDefault(PlayerActions.Idle);
-        //    }
-
-        //    if (Velocity.X == 0 && Velocity.Y == 0)
-        //    {
-        //        isMoving = false;
-        //    }
-        //    else
-        //    {
-        //        isMoving = true;
-        //    }
-
-        //    UpdateMovementInputs();
-
-        //    if (isJumping)
-        //    {
-        //        jumpTimer.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
-        //        if (jumpTimer.TimerFinished)
-        //        {
-        //            EndJump();
-        //        }
-        //    }
-
-        //    if (!IsStationary())
-        //    {
-        //        // Stop movement if player can't move in the direction anymore
-        //        switch (currentDirectionX)
-        //        {
-        //            case MoveableDirections.Left:
-        //                if (!canMoveLeft)
-        //                {
-        //                    Velocity = new Vector2(0, Velocity.Y);
-        //                    currentDirectionX = MoveableDirections.Idle;
-        //                }
-        //                break;
-        //            case MoveableDirections.Right:
-        //                if (!canMoveRight)
-        //                {
-        //                    Velocity = new Vector2(0, Velocity.Y);
-        //                    currentDirectionX = MoveableDirections.Idle;
-        //                }
-        //                break;
-
-        //            default:
-        //                break;
-        //        }
-        //        switch (currentDirectionY)
-        //        {
-        //            case MoveableDirections.Up:
-        //                if (!canMoveUp)
-        //                {
-        //                    Velocity = new Vector2(Velocity.X, 0);
-        //                    currentDirectionY = MoveableDirections.Idle;
-        //                }
-        //                break;
-        //            case MoveableDirections.Down:
-        //                if (!canMoveDown)
-        //                {
-        //                    Velocity = new Vector2(Velocity.X, 0);
-        //                    currentDirectionY = MoveableDirections.Idle;
-        //                }
-        //                break;
-
-        //            default:
-        //                break;
-        //        }
-        //    }
-
-        //    base.Update(gameTime);
-        //}
-
-        //public void UpdatePlayer(GameTime gameTime)
-        //{
-        //    UpdateAllowedDirections();
-        //    Update(gameTime);
-        //    canMoveLeft = true;
-        //    canMoveRight = true;
-        //    canMoveUp = true;
-        //    canMoveDown = true;
-        //}
-        #endregion V1
-
         public override void Draw(SpriteBatch spriteBatch)
         {
             // Draw health icons and points
+            for (int i = 0; i < Health; i++)
+            {
+                Vector2 curHpIconPos = Vector2.Zero;
+                if (_playerIndex == PlayerIndex.One)
+                {
+                    curHpIconPos = new Vector2(hudStartPos.X + LoadedGameLevel.GameObjects.GetValueOrDefault(GameObjectTypes.PLayer)[0].Position.X - GameValues.WindowCenter.X + healthIconWidth * i, hudStartPos.Y + GameValues.TileHeight / 4);
+                }
+                else
+                {
+                    curHpIconPos = new Vector2(LoadedGameLevel.GameObjects.GetValueOrDefault(GameObjectTypes.PLayer)[0].Position.X + GameValues.WindowCenter.X - healthIconWidth - healthIconWidth * i, hudStartPos.Y + GameValues.TileHeight / 4);
+                }
+                Rectangle curHpIconDestRect = new Rectangle((int)curHpIconPos.X, (int)curHpIconPos.Y, healthIconWidth, healthIconHeight);
+                spriteBatch.Draw(healthIconTex, curHpIconDestRect, Color.White);
+            }
+
+            foreach (Projectile projectile in ShotProjectiles)
+            {
+                if (projectile.IsAlive)
+                {
+                    spriteBatch.Draw(fireBallTex, projectile.Bounds, Color.OrangeRed);
+                }
+            }
 
             base.Draw(spriteBatch);
         }

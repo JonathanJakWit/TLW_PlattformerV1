@@ -16,6 +16,7 @@ namespace TLW_Plattformer.RipyGame.Globals
         #region Hud
         public static string HudPath { get; private set; }
         public static string PauseIconPath { get; private set; }
+        public static string HeartIconPath { get; private set; }
         public static string MenuButtonPath { get; private set; }
         #endregion Hud
 
@@ -34,6 +35,7 @@ namespace TLW_Plattformer.RipyGame.Globals
 
         #region Sprites
         public static string SpritesPath { get; private set; }
+        public static string FireBallTexPath { get; private set; }
         public static string CrystalShardTexPath { get; private set; }
         #endregion Sprites
 
@@ -41,6 +43,7 @@ namespace TLW_Plattformer.RipyGame.Globals
         public static string SpriteSheetsPath { get; private set; }
         public static string PlayerSpriteSheetPath { get; private set; }
         public static string Emberax_Idle_SpriteSheetPath { get; private set; }
+        public static string Emberax_Running_SpriteSheetPath { get; private set; }
         #endregion SpriteSheets
 
         #region Tilesets
@@ -73,6 +76,7 @@ namespace TLW_Plattformer.RipyGame.Globals
             ArcadeFontPath = FontsPath + "arcadeFont";
 
             HudPath = "Hud/";
+            HeartIconPath = HudPath + "heart_on_fire_icon";
             PauseIconPath = HudPath + "pause_icon";
             MenuButtonPath = HudPath + "menu_button";
 
@@ -89,11 +93,13 @@ namespace TLW_Plattformer.RipyGame.Globals
             //LevelOneBackgroundPath = BackgroundsPath + "level_one_background";
 
             SpritesPath = "Sprites/";
+            FireBallTexPath = SpritesPath + "fire_ball";
             CrystalShardTexPath = SpritesPath + "crystal_shard";
 
             SpriteSheetsPath = "Spritesheets/";
             PlayerSpriteSheetPath = SpriteSheetsPath + "player_spritesheet";
             Emberax_Idle_SpriteSheetPath = SpriteSheetsPath + "emberax_idle_spritesheet";
+            Emberax_Running_SpriteSheetPath = SpriteSheetsPath + "emberax_running_spritesheet";
 
             TilesetsPath = "Tilesets/";
             LevelOneTilesetPath = TilesetsPath + "level_one_tileset";

@@ -19,7 +19,7 @@ namespace TLW_Plattformer.RipyGame.Models
             switch (projectileType)
             {
                 case ProjectileTypes.FireBall:
-                    DamageValue = 3;
+                    DamageValue = 2;
                     break;
                 case ProjectileTypes.Icicle:
                     DamageValue = 2;

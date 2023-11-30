@@ -29,7 +29,7 @@ namespace TLW_Plattformer.RipyGame.Models
         private Dictionary<EnemyActions, Animation> animations;
         private Texture2D projectileTexture;
 
-        // List of projectiles
+        public int Health { get; protected set; }
 
         public Enemy(EnemyTypes enemyType, TextureManager textureManager, AnimationManager animationManager, Rectangle bounds, Vector2 velocity)
             : base(new(bounds.X, bounds.Y), velocity, bounds, Color.White, GameValues.EnemyScale.X, GameValues.EnemyDrawLayer)
@@ -46,6 +46,7 @@ namespace TLW_Plattformer.RipyGame.Models
             switch (enemyType)
             {
                 case EnemyTypes.CrystalGuardian:
+                    Health = 3;
                     currentDirection = MoveableDirections.Left;
                     speed = 1;
                     moveSpeed = new Vector2(-speed, 0);
@@ -69,6 +70,23 @@ namespace TLW_Plattformer.RipyGame.Models
             }
             scale = scale * thisEnemyScale;
             attackTimer = new Timer(thisEnemyAttackCooldown, GameValues.Time);
+        }
+
+        public void HandleProjectile(Projectile projectile)
+        {
+            switch (projectile.ProjectileType)
+            {
+                case ProjectileTypes.FireBall:
+                    Health -= projectile.DamageValue;
+                    projectile.IsAlive = false;
+                    return;
+                case ProjectileTypes.Icicle:
+                    return;
+                case ProjectileTypes.CrystalShard:
+                    return;
+                default:
+                    break;
+            }
         }
 
         private Projectile GetProjectile(ProjectileTypes projectileType)
@@ -120,6 +138,12 @@ namespace TLW_Plattformer.RipyGame.Models
         public override void Update(GameTime gameTime)
         {
             if (!IsAlive) { return; }
+            if (Health <= 0)
+            {
+                IsAlive = false;
+                LoadedGameLevel.CurrentEnemyAmount--;
+                return;
+            }
 
             attackTimer.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
             if (attackTimer.TimerFinished)

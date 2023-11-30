@@ -16,6 +16,7 @@ namespace TLW_Plattformer.RipyGame.Models
         private TextureManager textureManager;
         private Texture2D levelTileset;
         private Texture2D plattformTileset;
+        private Texture2D plattformInteractablesTileset;
 
         public FreePlayer cameraTarget;
         private GameObjectPencil objectPencil;
@@ -26,6 +27,7 @@ namespace TLW_Plattformer.RipyGame.Models
             this.textureManager = textureManager;
             this.levelTileset = textureManager.LevelOneTilesetTex;
             this.plattformTileset = textureManager.StonePlattformTilesetTex;
+            this.plattformInteractablesTileset = textureManager.NoneTex; // FIX
             this.cameraTarget = new FreePlayer();
             this.objectPencil = new GameObjectPencil(textureManager);
             this.editorTiles = new List<EditorTile>();
@@ -35,8 +37,12 @@ namespace TLW_Plattformer.RipyGame.Models
         {
             int edgeAlignment = 5;
             Vector2 firstTilePos = new Vector2(GameValues.WindowBounds.Width - edgeAlignment - GameValues.ColumnWidth * 1, edgeAlignment);
-            Rectangle plattformRect = textureManager.PlattformSourceRectangles.GetValueOrDefault(PlattformTextureTypes.Plattform_Middle)[0];
-            editorTiles.Add(new EditorTile(plattformRect, GameObjectTypes.Plattform, firstTilePos));
+            Vector2 secondTilePos = new Vector2(GameValues.WindowBounds.Width - edgeAlignment - GameValues.ColumnWidth * 2, edgeAlignment);
+            
+            Rectangle plattformSourceRect = textureManager.PlattformSourceRectangles.GetValueOrDefault(PlattformTextureTypes.Plattform_Middle)[0];
+            Rectangle spikePlattformSourceRect = textureManager.PlattformSourceRectangles.GetValueOrDefault(PlattformTextureTypes.PlattformBottom_Spikes)[0];
+            editorTiles.Add(new EditorTile(plattformTileset, plattformSourceRect, GameObjectTypes.Plattform, firstTilePos));
+            editorTiles.Add(new EditorTile(plattformInteractablesTileset, spikePlattformSourceRect, GameObjectTypes.Plattform, secondTilePos));
         }
 
         public void Update()
@@ -50,6 +56,8 @@ namespace TLW_Plattformer.RipyGame.Models
                 if (editorTile.IsClicked)
                 {
                     objectPencil.SelectedType = editorTile.objectType;
+                    objectPencil.SelectedPlattformType = editorTile.plattformType;
+                    objectPencil.SelectedPlattformAttribute = editorTile.plattformAttribute;
                     editorTile.IsClicked = false;
                 }
             }
@@ -72,19 +80,14 @@ namespace TLW_Plattformer.RipyGame.Models
             {
                 if (editorTile.objectType == GameObjectTypes.Plattform)
                 {
-                    editorTile.Draw(spriteBatch, plattformTileset);
+                    editorTile.Draw(spriteBatch);
                 }
                 else
                 {
-                    editorTile.Draw(spriteBatch, levelTileset);
+                    editorTile.Draw(spriteBatch);
                 }
             }
             objectPencil.Draw(spriteBatch);
-
-            //foreach (GameObject gameObject in objectPencil.DrawnGameObjects)
-            //{
-            //    gameObject
-            //}
         }
     }
 }

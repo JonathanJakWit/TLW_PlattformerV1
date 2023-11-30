@@ -18,6 +18,7 @@ namespace TLW_Plattformer.RipyGame.Managers
         #endregion Extras
 
         #region HUD
+        public Texture2D HealthIcon {  get; private set; }
         public Texture2D PauseIcon {  get; private set; }
         public Rectangle PauseIconDestRect { get; private set; }
         public Texture2D MenuButton {  get; private set; }
@@ -42,6 +43,7 @@ namespace TLW_Plattformer.RipyGame.Managers
         #region SpriteSheets
         public Texture2D PlayerSpritesheet {  get; private set; }
         public Texture2D EmberaxIdleSpritesheet { get; private set; }
+        public Texture2D EmberaxRunningSpritesheet { get; private set; }
         #endregion SpriteSheets
 
         #region Plattforms
@@ -62,9 +64,15 @@ namespace TLW_Plattformer.RipyGame.Managers
         public Dictionary<PlattformTextureTypes, List<Rectangle>> PlattformSourceRectangles { get; private set; }
         #endregion Plattforms
 
+        #region Projectiles
+        #region Players
+        public Texture2D FireBallTex { get; private set; }
+        #endregion Players
+
         #region Enemies
         public Texture2D CrystalShardTex { get; private set; }
         #endregion Enemies
+        #endregion Projectiles
 
         public TextureManager(ContentManager Content, int currentLevelIndex)
         {
@@ -75,6 +83,7 @@ namespace TLW_Plattformer.RipyGame.Managers
             #endregion Extras
 
             #region Hud
+            HealthIcon = Content.Load<Texture2D>(GamePaths.HeartIconPath);
             PauseIcon = Content.Load<Texture2D>(GamePaths.PauseIconPath);
             MenuButton = Content.Load<Texture2D>(GamePaths.MenuButtonPath);
             #endregion Hud
@@ -98,11 +107,18 @@ namespace TLW_Plattformer.RipyGame.Managers
             #region Spritesheets
             PlayerSpritesheet = Content.Load<Texture2D>(GamePaths.PlayerSpriteSheetPath);
             EmberaxIdleSpritesheet = Content.Load<Texture2D>(GamePaths.Emberax_Idle_SpriteSheetPath);
+            EmberaxRunningSpritesheet = Content.Load<Texture2D>(GamePaths.Emberax_Running_SpriteSheetPath);
             #endregion Spritesheets
+
+            #region Projectiles
+            #region Players
+            //FireBallTex = Content.Load<Texture2D>(GamePaths.FireBallTexPath);
+            #endregion Players
 
             #region Enemies
             //CrystalShardTex = Content.Load<Texture2D>(GamePaths.CrystalShardTexPath);
             #endregion Enemies
+            #endregion Projectiles
             #endregion Initialize Textures
 
             #region Initialize Rectangles

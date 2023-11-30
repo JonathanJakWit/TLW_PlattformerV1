@@ -9,25 +9,30 @@
 
 --- Extra ---
 [1p] - [/] - Korrekt collison med plattformar
-[2p] - [W] - Flera Nivåer
+[2p] - [/] - Flera Nivåer
 [2p] - [/] - Permanent Highscore Lista (Ordnad med XML)
 [1p] - [/] - Meny Val (Flera)
 [4p] - [X] - Olika bandelar (Portal, Breakable, Dangerous, Wine)
-[1p] - [W] - Fiender kan dödas på olika sätt (Jump above working)
+[1p] - [/] - Fiender kan dödas på olika sätt (Jump above + Shoot)
 [3p] - [/] - Level Editor (Grafisk)
 [1p] - [/] - Bana större än skärmen
 [1p] - [/] - Paralaxscrollning (Ja med olika djup)
 [1p] - [/] - Moveable Enemies
 
 - Total Points -
-Guaranteed - 10
+Guaranteed - 13
 
 Pausa - 1
+Replay - 1
 Grafisk Hud för Spelare - Minst 1
 Multiplayer - Minst 1
+Xbox Control - 1
 
 --- Egen Funktionalitet ---
 Pausa
+Replay
+Grafisk Hud för spelare
 Multiplayer
+Xbox Control
 
 --- TODO ---

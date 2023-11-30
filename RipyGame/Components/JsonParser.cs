@@ -96,6 +96,39 @@ namespace TLW_Plattformer.RipyGame.Components
             return plattformTypeList;
         }
 
+        public static PlattformAttributes GetPlattformAttribute(JObject obj)
+        {
+            string pAttribute = Convert.ToString(obj.GetValue("plattformAttribute"));
+            PlattformAttributes plattformAttribute = PlattformAttributes.None;
+            switch (pAttribute)
+            {
+                case "none":
+                    plattformAttribute = PlattformAttributes.None;
+                    break;
+                case "dangerous":
+                    plattformAttribute = PlattformAttributes.Dangerous;
+                    break;
+                default:
+                    plattformAttribute= PlattformAttributes.None;
+                    break;
+            }
+            return plattformAttribute;
+        }
+
+        public static List<PlattformAttributes> GetPlattformAttributeList(string path)
+        {
+            string propertyName = "platforms";
+            LoadObjectFromFile(path);
+            List<PlattformAttributes> plattformAttributeList = new List<PlattformAttributes>();
+            JArray arrayObj = (JArray)wholeObj.GetValue(propertyName);
+            foreach (JObject obj in arrayObj)
+            {
+                plattformAttributeList.Add(GetPlattformAttribute(obj));
+            }
+
+            return plattformAttributeList;
+        }
+
         public static EnemyTypes GetEnemyType(JObject obj)
         {
             string eType = Convert.ToString(obj.GetValue("enemyType"));
@@ -143,7 +176,7 @@ namespace TLW_Plattformer.RipyGame.Components
             }
             foreach (Plattform plattformObj in LoadedGameLevel.GameObjects.GetValueOrDefault(GameObjectTypes.Plattform))
             {
-                JObject curObj = CreatePlattformObject(plattformObj.PlattformType, plattformObj.Bounds);
+                JObject curObj = CreatePlattformObject(plattformObj.PlattformType, plattformObj.PlattformAttribute, plattformObj.Bounds);
                 platformArray.Add(curObj);
             }
             foreach (Enemy enemyObj in LoadedGameLevel.GameObjects.GetValueOrDefault(GameObjectTypes.Enemy))
@@ -189,7 +222,7 @@ namespace TLW_Plattformer.RipyGame.Components
             return obj;
         }
 
-        private static JObject CreatePlattformObject(PlattformTypes plattformType, Rectangle bounds)
+        private static JObject CreatePlattformObject(PlattformTypes plattformType, PlattformAttributes plattformAttribute, Rectangle bounds)
         {
             string pType = "";
             switch (plattformType)
@@ -205,8 +238,34 @@ namespace TLW_Plattformer.RipyGame.Components
                     break;
             }
 
+            string pAttribute = "";
+            switch (plattformAttribute)
+            {
+                case PlattformAttributes.None:
+                    pAttribute = "none";
+                    break;
+                case PlattformAttributes.Passage:
+                    pAttribute = "passage";
+                    break;
+                case PlattformAttributes.Portal:
+                    pAttribute = "portal";
+                    break;
+                case PlattformAttributes.Breakable:
+                    pAttribute = "breakable";
+                    break;
+                case PlattformAttributes.Dangerous:
+                    pAttribute = "dangerous";
+                    break;
+                case PlattformAttributes.ItemSpawn:
+                    pAttribute = "itemSpawn";
+                    break;
+                default:
+                    break;
+            }
+
             JObject obj = new JObject();
             obj.Add("plattformType", pType);
+            obj.Add("plattformAttribute", pAttribute);
             obj.Add("positionX", bounds.X);
             obj.Add("positionY", bounds.Y);
             obj.Add("width", bounds.Width);

@@ -25,11 +25,13 @@ namespace TLW_Plattformer.RipyGame.Globals
         public static Keys P1_MoveRightKey { get; private set; }
         public static Keys P1_JumpKey { get; private set; }
         public static Keys P1_CrouchKey { get; private set; }
+        public static Keys P1_ShootProjectileKey { get; private set; }
 
         public static Keys P2_MoveLeftKey { get; private set; }
         public static Keys P2_MoveRightKey { get; private set; }
         public static Keys P2_JumpKey { get; private set; }
         public static Keys P2_CrouchKey { get; private set; }
+        public static Keys P2_ShootProjectileKey { get; private set; }
 
         public static int TileRowCount { get; private set; }
         public static int TileColumnCount { get; private set; }
@@ -91,11 +93,13 @@ namespace TLW_Plattformer.RipyGame.Globals
             P1_MoveRightKey = Keys.D;
             P1_JumpKey = Keys.Space;
             P1_CrouchKey = Keys.S;
+            P1_ShootProjectileKey = Keys.LeftShift;
 
             P2_MoveLeftKey = Keys.Left;
             P2_MoveRightKey = Keys.Right;
             P2_JumpKey = Keys.Up;
             P2_CrouchKey = Keys.Down;
+            P2_ShootProjectileKey = Keys.NumPad4;
 
             TileRowCount = 9;
             TileColumnCount = 16;
@@ -123,8 +127,8 @@ namespace TLW_Plattformer.RipyGame.Globals
 
             Vector2 tempPlayerStartPos = new Vector2(0, 0);
             PlayerMoveSpeed = 12F;
-            PlayerJumpSpeed = 20F;
-            PlayerFallSpeed = 10F;
+            PlayerJumpSpeed = 30F;
+            PlayerFallSpeed = 20F;
             PlayerScale = new Vector2(3, 7);
             PlayerSizedScale = 0.25F;
             //PlayerBounds = new Rectangle((int)tempPlayerStartPos.X, (int)tempPlayerStartPos.Y, TileWidth * (int)PlayerScale.X, TileHeight * (int)PlayerScale.Y);

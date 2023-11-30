@@ -14,6 +14,7 @@ namespace TLW_Plattformer.RipyGame.Models
     public class Plattform : GameObject
     {
         public PlattformTypes PlattformType { get; set; }
+        public PlattformAttributes PlattformAttribute { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
 
@@ -23,9 +24,11 @@ namespace TLW_Plattformer.RipyGame.Models
         private List<Rectangle> _destinationRectangles;
         private List<Rectangle> _sourceRects;
 
-        public Plattform(TextureManager textureManager, PlattformTypes plattformType, Vector2 position, int width, int height)
+        public Plattform(TextureManager textureManager, PlattformTypes plattformType, Vector2 position, int width, int height, PlattformAttributes plattformAttribute=PlattformAttributes.None)
         {
             this.PlattformType = plattformType;
+            this.PlattformAttribute = plattformAttribute;
+
             this.Position = position;
             this.Width = width;
             this.Height = height;
@@ -80,6 +83,27 @@ namespace TLW_Plattformer.RipyGame.Models
                     _sourceRects.Add(plattformSourceRects.GetValueOrDefault(PlattformTextureTypes.Plattform_Middle)[0]);
                 }
                 _sourceRects.Add(plattformSourceRects.GetValueOrDefault(PlattformTextureTypes.Plattform_Right)[0]);
+            }
+            else if (PlattformType == PlattformTypes.Interactable)
+            {
+                switch (PlattformAttribute)
+                {
+                    case PlattformAttributes.None:
+                        break;
+                    case PlattformAttributes.Passage:
+                        break;
+                    case PlattformAttributes.Portal:
+                        break;
+                    case PlattformAttributes.Breakable:
+                        break;
+                    case PlattformAttributes.Dangerous:
+                        _sourceRects.Add(plattformSourceRects.GetValueOrDefault(PlattformTextureTypes.PlattformBottom_Spikes)[0]);
+                        break;
+                    case PlattformAttributes.ItemSpawn:
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 

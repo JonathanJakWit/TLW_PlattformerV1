@@ -128,6 +128,18 @@
 /processorParam:TextureFormat=Color
 /build:fullTex.png
 
+#begin Hud/heart_on_fire_icon.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Hud/heart_on_fire_icon.png
+
 #begin Hud/icon.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -140,18 +152,6 @@
 /processorParam:TextureFormat=Color
 /build:Hud/icon.png
 
-#begin Hud/menu_button.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Hud/menu_button.png
-
 #begin Hud/menu_button_2.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -163,6 +163,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Hud/menu_button_2.png
+
+#begin Hud/menu_button.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Hud/menu_button.png
 
 #begin Hud/pause_icon.png
 /importer:TextureImporter
@@ -199,6 +211,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Spritesheets/emberax_idle_spritesheet.png
+
+#begin Spritesheets/emberax_running_spritesheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Spritesheets/emberax_running_spritesheet.png
 
 #begin Spritesheets/player_spritesheet.png
 /importer:TextureImporter

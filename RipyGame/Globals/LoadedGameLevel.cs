@@ -18,7 +18,7 @@ namespace TLW_Plattformer.RipyGame.Globals
     {
         private static Texture2D hitBoxTex {  get; set; }
         public static bool DrawHitboxes { get; set; }
-        public static int CurrentEnemyAmount { get; private set; }
+        public static int CurrentEnemyAmount { get; set; }
 
         public static Dictionary<GameObjectTypes, List<GameObject>> GameObjects { get; set; }
 
@@ -49,6 +49,11 @@ namespace TLW_Plattformer.RipyGame.Globals
 
             foreach (Player player in GameObjects.GetValueOrDefault(GameObjectTypes.PLayer))
             {
+                if (!player.IsAlive)
+                {
+                    continue;
+                }
+
                 foreach (Plattform plattform in GameObjects.GetValueOrDefault(GameObjectTypes.Plattform))
                 {
                     if (player.Bounds.Intersects(plattform.Bounds))
@@ -56,12 +61,6 @@ namespace TLW_Plattformer.RipyGame.Globals
                         MoveableDirections colDir = GameValues.GetCollisionDirection(player, plattform);
                         player.HandleCollision(plattform, colDir);
                     }
-
-                    //if (player.Bounds.Intersects(plattform.Bounds))
-                    //{
-                    //    player.HandleCollision(plattform);
-                    //    //plattform.HandleCollision(player);
-                    //}
                 }
 
                 foreach (Enemy enemy in GameObjects.GetValueOrDefault(GameObjectTypes.Enemy))
@@ -78,6 +77,13 @@ namespace TLW_Plattformer.RipyGame.Globals
                             player.HandleProjectile(projectile);
                         }
                     }
+                    foreach (Projectile playerProjectile in player.ShotProjectiles)
+                    {
+                        if (playerProjectile.IsAlive && enemy.Bounds.Intersects(playerProjectile.Bounds))
+                        {
+                            enemy.HandleProjectile(playerProjectile);
+                        }
+                    }
                 }
 
                 player.Update(gameTime);
@@ -87,23 +93,6 @@ namespace TLW_Plattformer.RipyGame.Globals
             {
                 enemy.Update(gameTime);
             }
-
-            //foreach (GameObject current in GameObjects)
-            //{
-            //    //current.Update(gameTime);
-            //    foreach (GameObject other in GameObjects)
-            //    {
-            //        if (current == other)
-            //        {
-            //            continue;
-            //        }
-
-            //        if (current.Bounds.Intersects(other.Bounds))
-            //        {
-            //            current.HandleCollision(other);
-            //        }
-            //    }
-            //}
         }
 
         public static void DrawHitBox(SpriteBatch spriteBatch, GameObject gameObject)
@@ -133,24 +122,30 @@ namespace TLW_Plattformer.RipyGame.Globals
 
             foreach (Enemy enemy in GameObjects.GetValueOrDefault(GameObjectTypes.Enemy))
             {
-                if (DrawHitboxes)
+                if (enemy.IsAlive)
                 {
-                    DrawHitBox(spriteBatch, enemy);
+                    if (DrawHitboxes)
+                    {
+                        DrawHitBox(spriteBatch, enemy);
+                    }
+                    enemy.Draw(spriteBatch);
                 }
-                enemy.Draw(spriteBatch);
             }
 
             foreach (Player player in GameObjects.GetValueOrDefault(GameObjectTypes.PLayer))
             {
-                if (DrawHitboxes)
+                if (player.IsAlive)
                 {
-                    DrawHitBox(spriteBatch, player);
+                    if (DrawHitboxes)
+                    {
+                        DrawHitBox(spriteBatch, player);
+                    }
+                    player.Draw(spriteBatch);
                 }
-                player.Draw(spriteBatch);
             }
         }
 
-        private static Player GetPlayer(int playerIndex, Rectangle playerBounds, AnimationManager animationManager)
+        private static Player GetPlayer(int playerIndex, Rectangle playerBounds, TextureManager textureManager, AnimationManager animationManager)
         {
             PlayerIndex curPlayerIndex = PlayerIndex.One;
             if (playerIndex == 1) { curPlayerIndex = PlayerIndex.One; }
@@ -160,16 +155,16 @@ namespace TLW_Plattformer.RipyGame.Globals
 
             Vector2 playerPos = new Vector2(playerBounds.X, playerBounds.Y);
 
-            Player madePlayer = new Player(curPlayerIndex, animationManager, playerPos, Color.White, GameValues.PlayerSizedScale, GameValues.PlayerMoveSpeed, GameValues.PlayerJumpSpeed, GameValues.PlayerFallSpeed);
+            Player madePlayer = new Player(curPlayerIndex, textureManager,  animationManager, playerPos, Color.White, GameValues.PlayerSizedScale, GameValues.PlayerMoveSpeed, GameValues.PlayerJumpSpeed, GameValues.PlayerFallSpeed);
             return madePlayer;
         }
 
-        private static Plattform GetPlattform(PlattformTypes plattformType, Rectangle plattformBounds, TextureManager textureManager)
+        private static Plattform GetPlattform(PlattformTypes plattformType, PlattformAttributes plattformAttribute, Rectangle plattformBounds, TextureManager textureManager)
         {
             Plattform madePlattform = new Plattform(textureManager, plattformType,
                 new(plattformBounds.X, plattformBounds.Y),
                 plattformBounds.Width,
-                plattformBounds.Height);
+                plattformBounds.Height, plattformAttribute);
             return madePlattform;
         }
 
@@ -182,7 +177,7 @@ namespace TLW_Plattformer.RipyGame.Globals
         public static void LoadLevel(string levelDataPath, AnimationManager animationManager, TextureManager textureManager)
         {
             hitBoxTex = textureManager.FullTex;
-            DrawHitboxes = true;
+            DrawHitboxes = false;
 
             GameObjects = new Dictionary<GameObjectTypes, List<GameObject>>();
 
@@ -190,6 +185,7 @@ namespace TLW_Plattformer.RipyGame.Globals
             List<Rectangle> plattformBoundsList = new List<Rectangle>();
             List<Rectangle> enemyBoundsList = new List<Rectangle>();
             List<PlattformTypes> plattformTypeList = new List<PlattformTypes>();
+            List<PlattformAttributes> plattformAttributeList = new List<PlattformAttributes>();
             List<EnemyTypes> enemyTypeList = new List<EnemyTypes>();
 
             if (File.Exists(levelDataPath))
@@ -203,6 +199,7 @@ namespace TLW_Plattformer.RipyGame.Globals
                 enemyBoundsList = JsonParser.GetRectangleList(levelDataPath, "enemies");
 
                 plattformTypeList = JsonParser.GetPlattformTypeList(levelDataPath);
+                plattformAttributeList = JsonParser.GetPlattformAttributeList(levelDataPath);
                 enemyTypeList = JsonParser.GetEnemyTypeList(levelDataPath);
             }
             else
@@ -217,14 +214,14 @@ namespace TLW_Plattformer.RipyGame.Globals
             int curPlayerIndex = 1;
             foreach (Rectangle playerBounds in playerBoundsList)
             {
-                players.Add(GetPlayer(curPlayerIndex, playerBounds, animationManager));
+                players.Add(GetPlayer(curPlayerIndex, playerBounds, textureManager, animationManager));
                 curPlayerIndex++;
             }
 
             int curPlattformIndex = 0;
             foreach (Rectangle plattformBounds in plattformBoundsList)
             {
-                plattforms.Add(GetPlattform(plattformTypeList[curPlattformIndex], plattformBounds, textureManager));
+                plattforms.Add(GetPlattform(plattformTypeList[curPlattformIndex], plattformAttributeList[curPlattformIndex], plattformBounds, textureManager));
                 curPlattformIndex++;
             }
 
@@ -309,7 +306,7 @@ namespace TLW_Plattformer.RipyGame.Globals
             float p1FallSpeed = 8F;
 
             List<GameObject> players = new List<GameObject>();
-            players.Add(new Player(PlayerIndex.One, animationManager, player1Pos, Color.White, p1Scale, p1MoveSpeed, p1JumpSpeed, p1FallSpeed));
+            players.Add(new Player(PlayerIndex.One, textureManager, animationManager, player1Pos, Color.White, p1Scale, p1MoveSpeed, p1JumpSpeed, p1FallSpeed));
 
             GameObjects.Add(GameObjectTypes.PLayer, players);
             #endregion Players

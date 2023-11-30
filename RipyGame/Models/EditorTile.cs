@@ -11,18 +11,24 @@ namespace TLW_Plattformer.RipyGame.Models
 {
     public class EditorTile : Clickable
     {
-        Rectangle sourceRect;
+        private Texture2D tileSet;
+        private Rectangle sourceRect;
         public GameObjectTypes objectType {  get; private set; }
+        public PlattformTypes plattformType { get; private set; }
+        public PlattformAttributes plattformAttribute { get; private set; }
         Color color;
         bool isFocused;
 
-        public EditorTile(Rectangle sourceRect, GameObjectTypes objectType, Vector2 position)
+        public EditorTile(Texture2D tileSet, Rectangle sourceRect, GameObjectTypes objectType, Vector2 position, PlattformTypes plattformType=PlattformTypes.Solid, PlattformAttributes plattformAttribute=PlattformAttributes.None)
             : base(new((int)position.X, (int)position.Y, GameValues.ColumnWidth, GameValues.RowHeight), position)
         {
+            this.tileSet = tileSet;
             this.sourceRect = sourceRect;
             this.objectType = objectType;
             this.color = Color.White;
             this.isFocused = false;
+            this.plattformType = plattformType;
+            this.plattformAttribute = plattformAttribute;
         }
 
         public void Update()
@@ -47,9 +53,9 @@ namespace TLW_Plattformer.RipyGame.Models
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch, Texture2D tileSheet)
+        public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(tileSheet, _bounds, sourceRect, color);
+            spriteBatch.Draw(tileSet, _bounds, sourceRect, color);
         }
     }
 }

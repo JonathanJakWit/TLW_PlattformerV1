@@ -83,23 +83,21 @@ namespace TLW_Plattformer.RipyGame.Managers
             );
 
             // Move Animations
-            int playerMoveAnimDurationSeconds = 1;
-            int playerMoveFramesX = 2;
-            float playerMoveFrameTime = 0.25f;
+            int playerMoveAnimDurationSeconds = 3;
+            int playerMoveFramesX = 8;
+            float playerMoveFrameTime = 0.1f;
             Color playerMoveColor = Color.White;
 
-            //Vector2 playerMoveLeftStartPos = new Vector2(0, 0);
             Vector2 playerMoveStartPos = new Vector2(0, 0);
             Vector2 playerJumpStartPos = new Vector2(0, 16);
             Vector2 playerFallStartPos = new Vector2(0, 32);
             Vector2 playerCrouchStartPos = new Vector2(0, 16);
 
             bool playerMoveIsRepeating = true;
-            //SpriteEffects playerMoveLeftSpriteEffects = SpriteEffects.FlipHorizontally;
             SpriteEffects playerMoveSpriteEffects = SpriteEffects.None;
             SpriteEffects playerJumpSpriteEffects = SpriteEffects.None;
             SpriteEffects playerCrouchSpriteEffects = SpriteEffects.None;
-            int playerMoveFrameWidth = 16; int playerMoveFrameHeight = 16;
+            int playerMoveFrameWidth = 496; int playerMoveFrameHeight = 617;
             //this.playerMoveLeftAnim = new Animation
             //(
             //    playerMoveAnimDurationSeconds,
@@ -115,7 +113,7 @@ namespace TLW_Plattformer.RipyGame.Managers
             this.playerMoveAnim = new Animation
             (
                 playerMoveAnimDurationSeconds,
-                textureManager.PlayerSpritesheet,
+                textureManager.EmberaxRunningSpritesheet,
                 playerMoveFramesX,
                 playerMoveFrameTime,
                 playerMoveColor,
@@ -185,28 +183,28 @@ namespace TLW_Plattformer.RipyGame.Managers
             //int crystalGuardianIdleFrameWidth = GameValues.ColumnWidth * 2; int crystalGuardianIdleFrameHeight = GameValues.RowHeight * 4;
             int crystalGuardianIdleFrameWidth = 340; int crystalGuardianIdleFrameHeight = 963;
             this.crystalGuardianIdleAnim = new Animation
-            (
-                playerIdleAnimDurationSeconds,
-                textureManager.EmberaxIdleSpritesheet,
-                playerIdleFramesX,
-                playerIdleFrameTime,
-                playerIdleColor,
-                playerIdleStartPos,
-                playerIdleIsRepeating,
-                playerIdleSpriteEffects,
-                playerIdleFrameWidth, playerIdleFrameHeight
-            );
             //(
-            //    crystalGuardianIdleAnimDurationSeconds,
+            //    playerIdleAnimDurationSeconds,
             //    textureManager.EmberaxIdleSpritesheet,
-            //    crystalGuardianIdleFramesX,
-            //    crystalGuardianIdleFrameTime,
-            //    crystalGuardianIdleColor,
-            //    crystalGuardianIdleStartPos,
-            //    crystalGuardianIdleIsRepeating,
-            //    crystalGuardianIdleSpriteEffects,
-            //    crystalGuardianIdleFrameWidth, crystalGuardianIdleFrameHeight
+            //    playerIdleFramesX,
+            //    playerIdleFrameTime,
+            //    playerIdleColor,
+            //    playerIdleStartPos,
+            //    playerIdleIsRepeating,
+            //    playerIdleSpriteEffects,
+            //    playerIdleFrameWidth, playerIdleFrameHeight
             //);
+            (
+                crystalGuardianIdleAnimDurationSeconds,
+                textureManager.EmberaxIdleSpritesheet,
+                crystalGuardianIdleFramesX,
+                crystalGuardianIdleFrameTime,
+                crystalGuardianIdleColor,
+                crystalGuardianIdleStartPos,
+                crystalGuardianIdleIsRepeating,
+                crystalGuardianIdleSpriteEffects,
+                crystalGuardianIdleFrameWidth, crystalGuardianIdleFrameHeight
+            );
 
             crystalGuardianActionAnimations.Add(EnemyActions.Idle, crystalGuardianIdleAnim);
             #endregion Enemy Animations

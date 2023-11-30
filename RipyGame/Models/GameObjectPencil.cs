@@ -16,11 +16,8 @@ namespace TLW_Plattformer.RipyGame.Models
         private TextureManager textureManager;
 
         public GameObjectTypes SelectedType { get; set; }
-        //public Vector2 SelectedPosition { get; set; }
-
-        //public Plattform SelectedPlattform { get; set; }
-        //public Item SelectedItem { get; set; }
-        //public Player SelectedPlayer { get; set; }
+        public PlattformTypes SelectedPlattformType { get; set; }
+        public PlattformAttributes SelectedPlattformAttribute { get; set; }
 
         public List<GameObject> DrawnGameObjects { get; set; }
 

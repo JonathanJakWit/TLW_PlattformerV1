@@ -61,9 +61,9 @@ namespace TLW_Plattformer.RipyGame.Handlers
             return newPxBG;
         }
 
-        public void ResetLevel()
+        public void ResetLevel(AnimationManager animationManager, TextureManager textureManager)
         {
-
+            ChangeLevelTo(1, animationManager, textureManager);
         }
 
         public void ChangeLevelTo(int levelIndex, AnimationManager animationManager, TextureManager textureManager)
@@ -82,6 +82,7 @@ namespace TLW_Plattformer.RipyGame.Handlers
             {
                 LoadedGameLevel.LoadLevel(GamePaths.JsonLevelOneDataPath, animationManager, textureManager);
             }
+            CurrentLevelIndex = levelIndex;
         }
         public void ChangeLevelBy(int increment, AnimationManager animationManager, TextureManager textureManager)
         {
@@ -115,6 +116,20 @@ namespace TLW_Plattformer.RipyGame.Handlers
                 }
             }
             return lPH;
+        }
+
+        public bool AllPlayersDead()
+        {
+            bool allAreDead = true;
+            foreach (Player player in LoadedGameLevel.GameObjects.GetValueOrDefault(GameObjectTypes.PLayer))
+            {
+                if (player.IsAlive)
+                {
+                    allAreDead = false;
+                }
+            }
+
+            return allAreDead;
         }
 
         public void Update(GameTime gameTime)

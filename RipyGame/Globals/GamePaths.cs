@@ -44,6 +44,8 @@ namespace TLW_Plattformer.RipyGame.Globals
         public static string PlayerSpriteSheetPath { get; private set; }
         public static string Emberax_Idle_SpriteSheetPath { get; private set; }
         public static string Emberax_Running_SpriteSheetPath { get; private set; }
+        public static string CrystalGuardian_Idle_SpriteSheetPath { get; private set; }
+        public static string CrystalGuardian_Running_SpriteSheetPath { get; private set; }
         #endregion SpriteSheets
 
         #region Tilesets
@@ -82,8 +84,8 @@ namespace TLW_Plattformer.RipyGame.Globals
             MenuButtonPath = HudPath + "menu_button";
 
             BackgroundsPath = "Backgrounds/";
-            //MainMenuBackgroundPath = BackgroundsPath + "main_menu_background";
-            MainMenuBackgroundPath = BackgroundsPath + "EmbersOdysseyTitleScreen";
+            MainMenuBackgroundPath = BackgroundsPath + "main_menu_background";
+            //MainMenuBackgroundPath = BackgroundsPath + "EmbersOdysseyTitleScreen";
             HighscoreMenuBackgroundPath = BackgroundsPath + "highscore_menu_background";
             GameOverWinMenuBackgroundPath = BackgroundsPath + "game_over_win_background";
             GameOverLoseMenuBackgroundPath = BackgroundsPath + "game_over_lose_background";
@@ -102,6 +104,8 @@ namespace TLW_Plattformer.RipyGame.Globals
             PlayerSpriteSheetPath = SpriteSheetsPath + "player_spritesheet";
             Emberax_Idle_SpriteSheetPath = SpriteSheetsPath + "emberax_idle_spritesheet";
             Emberax_Running_SpriteSheetPath = SpriteSheetsPath + "emberax_running_spritesheet";
+            CrystalGuardian_Idle_SpriteSheetPath = SpriteSheetsPath + "crystalGuardian_idle_spritesheet";
+            CrystalGuardian_Running_SpriteSheetPath = SpriteSheetsPath + "crystalGuardian_running_spritesheet";
 
             TilesetsPath = "Tilesets/";
             LevelOneTilesetPath = TilesetsPath + "level_one_tileset";

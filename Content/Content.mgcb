@@ -109,7 +109,7 @@
 /processorParam:TextureFormat=Color
 /build:Backgrounds/LevelOne/level_one_near_background.png
 
-#begin Backgrounds/main_menu_background.jpg
+#begin Backgrounds/main_menu_background.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -119,7 +119,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Backgrounds/main_menu_background.jpg
+/build:Backgrounds/main_menu_background.png
 
 #begin Fonts/arcadeFont.spritefont
 /importer:FontDescriptionImporter
@@ -223,6 +223,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sprites/fire_ball.png
+
+#begin Spritesheets/crystalGuardian_idle_spritesheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Spritesheets/crystalGuardian_idle_spritesheet.png
+
+#begin Spritesheets/crystalGuardian_running_spritesheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Spritesheets/crystalGuardian_running_spritesheet.png
 
 #begin Spritesheets/emberax_idle_spritesheet.png
 /importer:TextureImporter

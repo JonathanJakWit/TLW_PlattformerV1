@@ -45,6 +45,8 @@ namespace TLW_Plattformer.RipyGame.Managers
         public Texture2D PlayerSpritesheet {  get; private set; }
         public Texture2D EmberaxIdleSpritesheet { get; private set; }
         public Texture2D EmberaxRunningSpritesheet { get; private set; }
+        public Texture2D CrystalGuardianIdleSpritesheet { get; private set; }
+        public Texture2D CrystalGuardianRunningSpritesheet { get; private set; }
         #endregion SpriteSheets
 
         #region Plattforms
@@ -110,6 +112,8 @@ namespace TLW_Plattformer.RipyGame.Managers
             PlayerSpritesheet = Content.Load<Texture2D>(GamePaths.PlayerSpriteSheetPath);
             EmberaxIdleSpritesheet = Content.Load<Texture2D>(GamePaths.Emberax_Idle_SpriteSheetPath);
             EmberaxRunningSpritesheet = Content.Load<Texture2D>(GamePaths.Emberax_Running_SpriteSheetPath);
+            CrystalGuardianIdleSpritesheet = Content.Load<Texture2D>(GamePaths.CrystalGuardian_Idle_SpriteSheetPath);
+            CrystalGuardianRunningSpritesheet = Content.Load<Texture2D>(GamePaths.CrystalGuardian_Running_SpriteSheetPath);
             #endregion Spritesheets
 
             #region Projectiles

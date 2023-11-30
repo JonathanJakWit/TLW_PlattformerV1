@@ -29,6 +29,9 @@ namespace TLW_Plattformer.RipyGame.Models
         private Dictionary<EnemyActions, Animation> animations;
         private Texture2D projectileTexture;
 
+        private float og_scale;
+        private float moveScale;
+
         public int Health { get; protected set; }
 
         public Enemy(EnemyTypes enemyType, TextureManager textureManager, AnimationManager animationManager, Rectangle bounds, Vector2 velocity)
@@ -39,7 +42,8 @@ namespace TLW_Plattformer.RipyGame.Models
             switchDirectionEnabled = false;
             hasProjectiles = false;
             animations = animationManager.GetEnemyAnimations(enemyType);
-            activeAnimation = animations.GetValueOrDefault(EnemyActions.Idle);
+            //activeAnimation = animations.GetValueOrDefault(EnemyActions.Idle);
+            activeAnimation = animations.GetValueOrDefault(EnemyActions.Walk);
             ShotProjectiles = new List<Projectile>();
             float thisEnemyScale = 1F;
             int thisEnemyAttackCooldown = 1;
@@ -48,6 +52,7 @@ namespace TLW_Plattformer.RipyGame.Models
                 case EnemyTypes.CrystalGuardian:
                     Health = 3;
                     currentDirection = MoveableDirections.Left;
+                    ChangeSpriteEffect(SpriteEffects.FlipHorizontally);
                     speed = 1;
                     moveSpeed = new Vector2(-speed, 0);
                     switchDirectionTimer = new Timer(5, GameValues.Time);
@@ -68,7 +73,10 @@ namespace TLW_Plattformer.RipyGame.Models
                 default:
                     break;
             }
-            scale = scale * thisEnemyScale;
+            og_scale = scale * thisEnemyScale;
+            moveScale = og_scale * 1.5F;
+            scale = moveScale;
+            //scale = scale * thisEnemyScale;
             attackTimer = new Timer(thisEnemyAttackCooldown, GameValues.Time);
         }
 
@@ -109,8 +117,8 @@ namespace TLW_Plattformer.RipyGame.Models
                 currentDirection = MoveableDirections.Left;
             }
 
-            //activeAnimation = animations.GetValueOrDefault(EnemyActions.Walk);
-            activeAnimation = animations.GetValueOrDefault(EnemyActions.Idle);
+            //activeAnimation = animations.GetValueOrDefault(EnemyActions.Idle);
+            activeAnimation = animations.GetValueOrDefault(EnemyActions.Walk);
             if (spriteEffects == SpriteEffects.None) { 
                 ChangeSpriteEffect(SpriteEffects.FlipHorizontally);
             }

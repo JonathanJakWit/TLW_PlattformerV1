@@ -28,6 +28,7 @@ namespace TLW_Plattformer.RipyGame.Managers
 
         #region Enemy Animations
         private readonly Animation crystalGuardianIdleAnim;
+        private readonly Animation crystalGuardianMoveAnim;
         private readonly Dictionary<EnemyActions, Animation> crystalGuardianActionAnimations;
         //private readonly Animation frostWraithIdleAnim;
         #endregion Enemy Animations
@@ -98,18 +99,6 @@ namespace TLW_Plattformer.RipyGame.Managers
             SpriteEffects playerJumpSpriteEffects = SpriteEffects.None;
             SpriteEffects playerCrouchSpriteEffects = SpriteEffects.None;
             int playerMoveFrameWidth = 496; int playerMoveFrameHeight = 617;
-            //this.playerMoveLeftAnim = new Animation
-            //(
-            //    playerMoveAnimDurationSeconds,
-            //    textureManager.PlayerSpritesheet,
-            //    playerMoveFramesX,
-            //    playerMoveFrameTime,
-            //    playerMoveColor,
-            //    playerMoveLeftStartPos,
-            //    playerMoveIsRepeating,
-            //    playerMoveLeftSpriteEffects,
-            //    playerMoveFrameWidth, playerMoveFrameHeight
-            //);
             this.playerMoveAnim = new Animation
             (
                 playerMoveAnimDurationSeconds,
@@ -180,23 +169,11 @@ namespace TLW_Plattformer.RipyGame.Managers
             Vector2 crystalGuardianIdleStartPos = new Vector2(0, 20);
             bool crystalGuardianIdleIsRepeating = true;
             SpriteEffects crystalGuardianIdleSpriteEffects = SpriteEffects.None;
-            //int crystalGuardianIdleFrameWidth = GameValues.ColumnWidth * 2; int crystalGuardianIdleFrameHeight = GameValues.RowHeight * 4;
             int crystalGuardianIdleFrameWidth = 340; int crystalGuardianIdleFrameHeight = 963;
             this.crystalGuardianIdleAnim = new Animation
-            //(
-            //    playerIdleAnimDurationSeconds,
-            //    textureManager.EmberaxIdleSpritesheet,
-            //    playerIdleFramesX,
-            //    playerIdleFrameTime,
-            //    playerIdleColor,
-            //    playerIdleStartPos,
-            //    playerIdleIsRepeating,
-            //    playerIdleSpriteEffects,
-            //    playerIdleFrameWidth, playerIdleFrameHeight
-            //);
             (
                 crystalGuardianIdleAnimDurationSeconds,
-                textureManager.EmberaxIdleSpritesheet,
+                textureManager.CrystalGuardianIdleSpritesheet,
                 crystalGuardianIdleFramesX,
                 crystalGuardianIdleFrameTime,
                 crystalGuardianIdleColor,
@@ -206,7 +183,32 @@ namespace TLW_Plattformer.RipyGame.Managers
                 crystalGuardianIdleFrameWidth, crystalGuardianIdleFrameHeight
             );
 
+            // Move Animations
+            int crystalGuardianMoveAnimDurationSeconds = 3;
+            int crystalGuardianMoveFramesX = 8;
+            float crystalGuardianMoveFrameTime = 0.1f;
+            Color crystalGuardianMoveColor = Color.White;
+
+            Vector2 crystalGuardianMoveStartPos = new Vector2(0, 0);
+
+            bool crystalGuardianMoveIsRepeating = true;
+            SpriteEffects crystalGuardianMoveSpriteEffects = SpriteEffects.None;
+            int crystalGuardianMoveFrameWidth = 496; int crystalGuardianMoveFrameHeight = 617;
+            this.crystalGuardianMoveAnim = new Animation
+            (
+                crystalGuardianMoveAnimDurationSeconds,
+                textureManager.CrystalGuardianRunningSpritesheet,
+                crystalGuardianMoveFramesX,
+                crystalGuardianMoveFrameTime,
+                crystalGuardianMoveColor,
+                crystalGuardianMoveStartPos,
+                crystalGuardianMoveIsRepeating,
+                crystalGuardianMoveSpriteEffects,
+                crystalGuardianMoveFrameWidth, crystalGuardianMoveFrameHeight
+            );
+
             crystalGuardianActionAnimations.Add(EnemyActions.Idle, crystalGuardianIdleAnim);
+            crystalGuardianActionAnimations.Add(EnemyActions.Walk, crystalGuardianMoveAnim);
             #endregion Enemy Animations
         }
 

@@ -176,6 +176,7 @@ namespace TLW_Plattformer.RipyGame
                 else if (CurrentGameState == GameStates.GameOverWinMenu)
                 {
                     _BackgroundTexture = _TextureManager.GameOverWinMenuBackgroundTex;
+                    SaveHighscoreData();
                 }
                 else if (CurrentGameState == GameStates.GameOverLossMenu)
                 {

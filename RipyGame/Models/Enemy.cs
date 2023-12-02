@@ -150,6 +150,7 @@ namespace TLW_Plattformer.RipyGame.Models
             {
                 IsAlive = false;
                 LoadedGameLevel.CurrentEnemyAmount--;
+                LoadedGameLevel.AddPlayerScore(GameValues.EnemyPointValue);
                 return;
             }
 

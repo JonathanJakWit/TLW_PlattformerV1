@@ -1,23 +1,23 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Highscores>
-	<Player1>
-		<Name>Pog1</Name>
-		<Score>2500</Score>
-	</Player1>
-	<Player2>
-		<Name>Pog2</Name>
-		<Score>2000</Score>
-	</Player2>
-	<Player3>
-		<Name>Pog3</Name>
-		<Score>1800</Score>
-	</Player3>
-	<Player4>
-		<Name>Pog4</Name>
-		<Score>1050</Score>
-	</Player4>
-	<Player5>
-		<Name>Pog5</Name>
-		<Score>480</Score>
-	</Player5>
+  <Player1>
+    <Name>Jonathan</Name>
+    <Score>100</Score>
+  </Player1>
+  <Player2>
+    <Name>Jonathan</Name>
+    <Score>100</Score>
+  </Player2>
+  <Player3>
+    <Name>Pog1</Name>
+    <Score>50</Score>
+  </Player3>
+  <Player4>
+    <Name>Pog2</Name>
+    <Score>40</Score>
+  </Player4>
+  <Player5>
+    <Name>Pog3</Name>
+    <Score>30</Score>
+  </Player5>
 </Highscores>

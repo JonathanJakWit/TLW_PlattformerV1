@@ -65,7 +65,7 @@ namespace TLW_Plattformer.RipyGame.Models
         private int healthIconWidth;
         private int healthIconHeight;
         public string Name { get; set; }
-        public int Score { get; private set; }
+        public int Score { get; set; }
         public int Health { get; set; }
 
         private float og_scale;
@@ -161,6 +161,11 @@ namespace TLW_Plattformer.RipyGame.Models
             this.moveScale = scale * 1.5F;
             this.jumpScale = scale * 1.5F;
             this.fallScale = scale * 1.5F;
+        }
+
+        public void AddScore(int scoreAmount)
+        {
+            Score += scoreAmount;
         }
 
         public override void HandleCollision(GameObject other, MoveableDirections collsionDirection)

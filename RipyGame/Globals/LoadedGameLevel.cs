@@ -11,6 +11,7 @@ using TLW_Plattformer.RipyGame.Managers;
 using TLW_Plattformer.RipyGame.Models;
 using System.IO;
 using TLW_Plattformer.RipyGame.Components;
+using System.Diagnostics;
 
 namespace TLW_Plattformer.RipyGame.Globals
 {
@@ -38,6 +39,15 @@ namespace TLW_Plattformer.RipyGame.Globals
         public static void AddEnemy(GameObject enemyObj)
         {
             GameObjects.GetValueOrDefault(GameObjectTypes.Enemy).Add(enemyObj);
+        }
+
+        public static void AddPlayerScore(int amount)
+        {
+            foreach (Player player in GameObjects.GetValueOrDefault(GameObjectTypes.PLayer))
+            {
+                player.AddScore(amount);
+                Debug.WriteLine(player.Score);
+            }
         }
 
         public static void Update(GameTime gameTime)
